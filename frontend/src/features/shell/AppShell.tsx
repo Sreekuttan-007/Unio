@@ -5,6 +5,7 @@ import { api } from '@/platform/api/client'
 import { useAuth } from '@/platform/auth/AuthProvider'
 import { useTheme } from '@/platform/theme/ThemeProvider'
 import { AppFrame, BottomNav, SideNav, TopBar, type NavEntryView } from '@/ui'
+import { NotificationCentre } from './NotificationCentre'
 
 const BADGE_POLL_MS = 15_000
 
@@ -47,6 +48,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           theme={theme}
           onThemeChange={setTheme}
           onSignOut={handleSignOut}
+          actions={<NotificationCentre unread={badges.data?.['notifications.unread'] ?? 0} />}
         />
       }
       sideNav={<SideNav items={items} activePath={pathname} roleLabel={bootstrap.role.label} onNavigate={navigate} />}

@@ -54,6 +54,12 @@ const SAMPLE_AUDIT: AuditPage = {
 }
 
 /** Fresh handlers with fresh in-memory state. Tests call this per test so nothing leaks between them. */
+// A small notification centre for mock mode. The real list comes from the outbox (Phase 11).
+const mockNotifications = [
+  { id: 'n1', title: 'Deadline at risk', body: 'INC-1041 reached escalation level 1.', read: false, at: new Date(Date.now() - 6 * 60_000).toISOString() },
+  { id: 'n2', title: 'Request waiting for you', body: 'APR-610 needs a decision.', read: false, at: new Date(Date.now() - 31 * 60_000).toISOString() },
+]
+
 export function createHandlers() {
   const roleByEmail = new Map(fixtures.users.items.map((user) => [user.email, user.roleKey]))
   let users: UserDto[] = structuredClone(fixtures.users.items)
@@ -85,7 +91,13 @@ export function createHandlers() {
       const body = bootstrapFor(request)
       return body ? HttpResponse.json(body) : error(401, 'UNAUTHENTICATED', 'Please sign in to continue.')
     }),
-    http.get(`${BASE}/me/badges`, () => HttpResponse.json({})),
+    http.get(`${BASE}/me/badges`, () => HttpResponse.json({ 'notifications.unread': mockNotifications.filter((item) => !item.read).length })),
+    http.get(`${BASE}/notifications`, () => HttpResponse.json({ unread: mockNotifications.filter((item) => !item.read).length, items: mockNotifications })),
+    http.post(`${BASE}/notifications/read`, () => {
+      const marked = mockNotifications.filter((item) => !item.read).length
+      for (const item of mockNotifications) item.read = true
+      return HttpResponse.json({ marked })
+    }),
     http.get(`${BASE}/admin/users`, () => HttpResponse.json({ items: users, page: 0, size: 20, total: users.length })),
     http.post(`${BASE}/admin/users`, async ({ request }) => {
       const body = (await request.json()) as { name: string; email: string; roleKey: string }

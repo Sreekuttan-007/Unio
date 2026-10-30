@@ -2,6 +2,7 @@ from dataclasses import replace
 
 from fastapi import Depends, Request, Response
 
+from app.approvals.service import DECIDE
 from app.audit.service import AuditDomain
 from app.core.access import GuardedRouter, authenticated, public, require
 from app.core.authuser import AuthUser
@@ -76,9 +77,18 @@ async def bootstrap(
 
 
 @me_router.get("/badges", response_model=dict[str, int])
-async def badges(user: AuthUser = Depends(authenticated)) -> dict[str, int]:
-    """Live counts for navigation badges. Sources are added as their features are built."""
-    return {}
+async def badges(user: AuthUser = Depends(authenticated), services: Services = Depends(get_services)) -> dict[str, int]:
+    """Live counts for navigation badges, each limited to what this person can see and act on."""
+    db = services.db
+    counts = {"notifications.unread": await db["notifications"].count_documents({"userId": user.id, "readAt": None})}
+    if user.has(Permission.INCIDENT_TRIAGE):
+        counts["incident.triage"] = await db["incidents"].count_documents({"status": {"$in": ["SUBMITTED", "UNDER_REVIEW"]}})
+    if user.has(Permission.WORKORDER_EXECUTE):
+        counts["workorder.open"] = await db["work_orders"].count_documents({"assignedUserId": user.id, "status": {"$in": ["ASSIGNED", "ACCEPTED", "IN_PROGRESS", "BLOCKED"]}})
+    deciding = [kind for kind, permission in DECIDE.items() if user.has(permission)]
+    if deciding:
+        counts["approval.pending"] = await db["approvals"].count_documents({"type": {"$in": deciding}, "status": {"$in": ["SUBMITTED", "UNDER_REVIEW"]}, "requesterId": {"$ne": user.id}})
+    return counts
 
 
 @me_router.patch("/profile", response_model=BootstrapResponse)

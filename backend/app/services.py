@@ -3,6 +3,7 @@ from typing import Any
 
 from fastapi import Request
 
+from app.analytics.service import AnalyticsService
 from app.approvals.service import ApprovalService
 from app.audit.service import AuditService
 from app.bookings.service import BookingService
@@ -17,8 +18,10 @@ from app.incidents.service import IncidentService
 from app.inventory.ledger import StockLedger
 from app.inventory.service import InventoryService
 from app.ml.service import MlService
+from app.notify.service import NotificationService, WebhookService
 from app.procurement.service import ProcurementService
 from app.simulation.service import SimulationService
+from app.sla.board import SlaBoard
 from app.sla.service import SlaService
 from app.users.directory import UserDirectory
 from app.users.roles import RoleService
@@ -53,6 +56,10 @@ class Services:
     inventory: InventoryService
     approvals: ApprovalService
     procurement: ProcurementService
+    notifications: NotificationService
+    webhooks: WebhookService
+    sla_board: SlaBoard
+    analytics: AnalyticsService
 
 
 def build_services(settings: Settings, db: Any) -> Services:
@@ -78,6 +85,10 @@ def build_services(settings: Settings, db: Any) -> Services:
     inventory.approvals = approvals
     inventory.workorders = workorders
     workorders.inventory = inventory
+    notifications = NotificationService(db)
+    webhooks = WebhookService(db)
+    outbox.register(notifications)
+    outbox.register(webhooks)
     return Services(
         settings=settings,
         db=db,
@@ -102,6 +113,10 @@ def build_services(settings: Settings, db: Any) -> Services:
         inventory=inventory,
         approvals=approvals,
         procurement=procurement,
+        notifications=notifications,
+        webhooks=webhooks,
+        sla_board=SlaBoard(db, outbox),
+        analytics=AnalyticsService(db),
     )
 
 

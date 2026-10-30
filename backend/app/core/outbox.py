@@ -93,9 +93,12 @@ class OutboxService:
         return True
 
 
-async def run_outbox_loop(outbox: OutboxService, interval_seconds: float) -> None:
+async def run_outbox_loop(outbox: OutboxService, interval_seconds: float, sweep: Callable[[], Any] | None = None) -> None:
+    """Delivers events, and runs the SLA escalation sweep first so its events go out in the same tick."""
     while True:
         try:
+            if sweep is not None:
+                await sweep()
             await outbox.dispatch_due()
         except Exception as exc:  # noqa: BLE001 - the loop must survive a bad tick
             log.error("Outbox tick failed", exc_info=exc)

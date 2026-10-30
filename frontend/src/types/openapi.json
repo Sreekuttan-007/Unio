@@ -802,6 +802,19 @@
         "title": "ExtractRequest",
         "type": "object"
       },
+      "FeatureBody": {
+        "properties": {
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled"
+        ],
+        "title": "FeatureBody",
+        "type": "object"
+      },
       "FeedbackRequest": {
         "properties": {
           "fixed": {
@@ -1177,6 +1190,24 @@
           "name"
         ],
         "title": "ProfileUpdate",
+        "type": "object"
+      },
+      "ReadBody": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          }
+        },
+        "title": "ReadBody",
         "type": "object"
       },
       "ReasonBody": {
@@ -2008,6 +2039,95 @@
         ]
       }
     },
+    "/api/v1/admin/integrations": {
+      "get": {
+        "operationId": "integrations_api_v1_admin_integrations_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Integrations Api V1 Admin Integrations Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Integrations",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/integrations/features/{key}": {
+      "patch": {
+        "operationId": "set_feature_api_v1_admin_integrations_features__key__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeatureBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Set Feature Api V1 Admin Integrations Features  Key  Patch"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Set Feature",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
+        ]
+      }
+    },
     "/api/v1/admin/permissions": {
       "get": {
         "description": "Every permission key that exists, so the role editor can offer the full set.",
@@ -2209,6 +2329,35 @@
         ]
       }
     },
+    "/api/v1/admin/sla-policies": {
+      "get": {
+        "operationId": "sla_policies_api_v1_admin_sla_policies_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Sla Policies Api V1 Admin Sla Policies Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Sla Policies",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
+        ]
+      }
+    },
     "/api/v1/admin/staff": {
       "get": {
         "operationId": "admin_staff_api_v1_admin_staff_get",
@@ -2232,6 +2381,35 @@
         "summary": "Admin Staff",
         "tags": [
           "campus"
+        ]
+      }
+    },
+    "/api/v1/admin/system/health": {
+      "get": {
+        "operationId": "system_health_api_v1_admin_system_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response System Health Api V1 Admin System Health Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "System Health",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
         ]
       }
     },
@@ -2450,6 +2628,85 @@
         ],
         "summary": "Set User Status",
         "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/webhooks/{webhook_id}/test": {
+      "post": {
+        "operationId": "test_webhook_api_v1_admin_webhooks__webhook_id__test_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "webhook_id",
+            "required": true,
+            "schema": {
+              "title": "Webhook Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Test Webhook Api V1 Admin Webhooks  Webhook Id  Test Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Test Webhook",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/analytics/overview": {
+      "get": {
+        "operationId": "analytics_overview_api_v1_analytics_overview_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Analytics Overview Api V1 Analytics Overview Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Analytics Overview",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
           "admin"
         ]
       }
@@ -4471,7 +4728,7 @@
     },
     "/api/v1/me/badges": {
       "get": {
-        "description": "Live counts for navigation badges. Sources are added as their features are built.",
+        "description": "Live counts for navigation badges, each limited to what this person can see and act on.",
         "operationId": "badges_api_v1_me_badges_get",
         "responses": {
           "200": {
@@ -4595,6 +4852,92 @@
         "summary": "List Notices",
         "tags": [
           "incidents"
+        ]
+      }
+    },
+    "/api/v1/notifications": {
+      "get": {
+        "operationId": "my_notifications_api_v1_notifications_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response My Notifications Api V1 Notifications Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "My Notifications",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/notifications/read": {
+      "post": {
+        "description": "Marks one notification read, or all of them when no id is given.",
+        "operationId": "mark_read_api_v1_notifications_read_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/ReadBody"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Mark Read Api V1 Notifications Read Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Mark Read",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
         ]
       }
     },
@@ -4773,6 +5116,94 @@
         "summary": "Execute Plan",
         "tags": [
           "simulations"
+        ]
+      }
+    },
+    "/api/v1/sla/instances": {
+      "get": {
+        "operationId": "sla_instances_api_v1_sla_instances_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Sla Instances Api V1 Sla Instances Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Sla Instances",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/sla/summary": {
+      "get": {
+        "operationId": "sla_summary_api_v1_sla_summary_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Sla Summary Api V1 Sla Summary Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Sla Summary",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/sla/sweep": {
+      "post": {
+        "description": "Runs the escalation check now. It also runs on a timer; running it again never repeats an escalation.",
+        "operationId": "sla_sweep_api_v1_sla_sweep_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Sla Sweep Api V1 Sla Sweep Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Sla Sweep",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
         ]
       }
     },

@@ -1,5 +1,5 @@
 import { LogOut, Monitor, Moon, Sun } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
 import { Badge } from '../Badge'
 import { Brand } from '../Brand'
 import { cn } from '../cn'
@@ -13,13 +13,15 @@ export interface TopBarProps {
   theme: ThemePreference
   onThemeChange: (theme: ThemePreference) => void
   onSignOut: () => void
+  /** Extra controls before the theme switch, such as the notification bell. */
+  actions?: ReactNode
 }
 
 const NEXT_THEME: Record<ThemePreference, ThemePreference> = { light: 'dark', dark: 'system', system: 'light' }
 const THEME_ICON = { light: Sun, dark: Moon, system: Monitor }
 const TOP_STYLE = { paddingTop: 'env(safe-area-inset-top)' }
 
-export function TopBar({ roleLabel, userName, userEmail, initials, theme, onThemeChange, onSignOut }: TopBarProps) {
+export function TopBar({ roleLabel, userName, userEmail, initials, theme, onThemeChange, onSignOut, actions }: TopBarProps) {
   const [open, setOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const ThemeIcon = THEME_ICON[theme]
@@ -50,6 +52,7 @@ export function TopBar({ roleLabel, userName, userEmail, initials, theme, onThem
         <Brand />
         <Badge tone="accent" className="hidden sm:inline-flex">{roleLabel}</Badge>
         <div className="flex-1" />
+        {actions}
         <button
           type="button"
           aria-label={`Theme: ${theme}. Switch to ${NEXT_THEME[theme]}`}

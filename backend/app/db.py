@@ -35,3 +35,5 @@ async def ensure_indexes(db: Any) -> None:
     await db["approvals"].create_index([("status", 1), ("createdAt", -1)])
     await db["approvals"].create_index([("requesterId", 1), ("createdAt", -1)])
     await db["goods_receipts"].create_index([("purchaseOrderId", 1)])
+    await db["notifications"].create_index("dedupeKey", unique=True)
+    await db["notifications"].create_index([("userId", 1), ("createdAt", -1)])

@@ -15,6 +15,7 @@ export { EmptyState, ErrorState, NotPermitted, OfflineState, WakingBanner } from
 export { AppFrame, type AppFrameProps } from './shell/AppFrame'
 export { BottomNav, type BottomNavProps } from './shell/BottomNav'
 export { SideNav, type SideNavProps } from './shell/SideNav'
+export { NotificationBell, type NotificationBellProps } from './shell/NotificationBell'
 export { TopBar, type TopBarProps } from './shell/TopBar'
 export { isActivePath, type NavEntryView, type ThemePreference } from './shell/types'
 export { CampusMap, MapLegend, type CampusMapProps, type MapDecor, type MapMarker, type MapRegion, type RegionOverlay, type RegionState } from './CampusMap'
