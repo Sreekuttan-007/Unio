@@ -5,7 +5,7 @@ Updated 2026-10-30. Read `AGENTS.md` first. This handoff travels with the source
 ## Where things stand
 
 - Phases 7 to 12 are complete and each has a green tag: `phase-07-green` to `phase-12-green`. Phase 13 is done for the scenario reset and the security pass; what is left is listed under "Remaining work".
-- Gates on the final commit: backend tests pass (run `pytest -q`), the API contract check passes, frontend typecheck, lint, tests and build pass, and `scripts/phone-check.mjs` opens all 57 screens of the 7 roles at 360px with no sideways scroll, crash or console error, both against `npm run dev:mock` and against the real backend (`dev_server.py`).
+- Gates on the final commit: backend tests pass (run `pytest -q`), the API contract check passes, frontend typecheck, lint, tests and build pass, and `scripts/phone-check.mjs` opens all 57 screens of the 7 roles with no sideways scroll, crash or console error, at 360px and 1440px, light and dark, both against `npm run dev:mock` and against the real backend (`dev_server.py`).
 - Every phase is one commit on its own branch, stacked: `phase/07-work-orders` → … → `phase/13-harden`.
 
 ## What each phase added
@@ -51,7 +51,8 @@ The app runs on real MongoDB (`MONGODB_URI`, `MONGODB_DATABASE`; `docker compose
 | B4 | 9 | More simulator plans: "repair in the next free window", "use stock vs buy"; add an "SLA margin" metric to every plan | `app/simulation/planner.py` | Tests with known answers for each plan |
 | B5 | 11 | Webhook management screen: add, edit, disable, view the delivery log (`webhook_deliveries`) | backend routes in `app/notify/router.py`, screen in `features/admin` | Matrix rows plus a test that a disabled hook gets nothing |
 | B6 | 13 | Playwright click-through scripts for Scenarios A to D (use `POST /admin/scenarios/{id}/reset`, then drive the UI like `scripts/phone-check.mjs`) | `frontend/scripts/` | Two clean runs in a row |
-| B7 | 12 | Repeat `phone-check.mjs` at 1440px and in dark mode; check every screen has loading, empty, error, offline and no-permission states | `frontend/scripts/phone-check.mjs` (add a width argument) | Script passes for both widths and themes |
+| B7a | 12 | ~~Repeat `phone-check.mjs` at 1440px and in dark mode~~ Done: the script now takes a width and a `--dark` flag. All four combinations (360/1440 × light/dark) pass against both `dev:mock` and the real backend. Caught and fixed one real bug in the process: the invoice/discrepancy screens overflowed sideways at 1440px (a CSS grid column missing `min-w-0` let the table's intrinsic width push past the viewport instead of scrolling inside its own card). | `frontend/scripts/phone-check.mjs`, `frontend/src/features/procurement/ProcurementScreens.tsx` | Done |
+| B7b | 12 | Check every screen has loading, empty, error, offline and no-permission states | manual audit against `frontend/src/ui/states.tsx` | Not done: a 57-screen manual audit, not something `phone-check.mjs` itself can verify |
 
 ### C. Needs a person or an account
 
@@ -76,7 +77,10 @@ python -m tools.contract --check
 npm run typecheck && npm run lint && npm test && npm run build
 npm run dev                               # http://localhost:5173 against the backend
 npm run dev:mock                          # no backend needed
-NODE_PATH=$(npm root -g) node scripts/phone-check.mjs http://localhost:5173   # needs Playwright installed globally
+NODE_PATH=$(npm root -g) node scripts/phone-check.mjs http://localhost:5173              # 360px light, needs Playwright installed globally
+NODE_PATH=$(npm root -g) node scripts/phone-check.mjs http://localhost:5173 1440         # 1440px light
+NODE_PATH=$(npm root -g) node scripts/phone-check.mjs http://localhost:5173 360 --dark   # 360px dark
+NODE_PATH=$(npm root -g) node scripts/phone-check.mjs http://localhost:5173 1440 --dark  # 1440px dark
 ```
 
 On Windows use `.venv\Scripts\python` instead of `python`.

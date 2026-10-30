@@ -75,7 +75,7 @@ function InvoiceReview({ invoice }: { invoice: Invoice }) {
             <Badge tone={invoice.extractionSource === 'AI' ? 'accent' : 'neutral'}>{invoice.extractionSource === 'AI' ? 'Read by AI' : 'Typed in by hand'}</Badge>
           </CardBody>
         </Card>
-        <Card>
+        <Card className="min-w-0">
           <CardHeader title={`${invoice.supplier} · ${invoice.invoiceNumber}`} description={`Dated ${invoice.invoiceDate} · matched against ${invoice.purchaseOrderId}`} action={<Badge tone={INVOICE_STATUS[invoice.status]}>{titleCase(invoice.status)}</Badge>} />
           <DataTable caption="Invoice lines" columns={columns} rows={invoice.lines} rowKey={(line) => String(line.lineNo)} />
           <p className="border-t border-line px-4 py-3 text-right text-sm">Invoice total <span className="font-semibold tabular-nums">{money(invoice.totalPaise)}</span></p>
