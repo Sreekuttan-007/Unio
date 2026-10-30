@@ -12,6 +12,7 @@ from pymongo import AsyncMongoClient
 from app.audit.router import router as audit_router
 from app.bookings.router import router as bookings_router
 from app.campus.router import router as campus_router
+from app.cascade.router import router as cascade_router
 from app.collision.router import router as collisions_router
 from app.config import Settings, get_settings
 from app.core import correlation, idempotency
@@ -118,6 +119,7 @@ def create_app(settings: Settings | None = None, db: Any = None) -> FastAPI:
     app.include_router(collisions_router)
     app.include_router(bookings_router)
     app.include_router(workorders_router)
+    app.include_router(cascade_router)
     app.include_router(files_router)
     app.include_router(reserved)
     assert_all_routes_guarded(app)

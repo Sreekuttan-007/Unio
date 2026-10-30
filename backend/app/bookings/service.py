@@ -357,18 +357,10 @@ class BookingService:
         start, end, _ = local_day_bounds(day, utcnow())
         sessions = await self._sessions_for(user, start, end)
         disrupted = await self.disrupted_rooms()
-        reader = self._collisions.reader()
-        config = await self._collisions.config()
         out = []
         for session in sessions:
             reason = disrupted.get(session["roomId"])
-            alternative = None
-            if reason:
-                action = self._collisions.build_action(None, ActionType.MOVE_SESSION, {**self._payload(session["roomId"], ensure_utc(session["startAt"]), ensure_utc(session["endAt"]), session["headcount"], session["kind"], session["courseName"], []), "excludeSessionId": session["_id"]}, None)
-                for suggestion in await self._collisions.alternatives.rooms(action, reader, config):
-                    if suggestion["roomId"] not in disrupted:
-                        alternative = {"roomCode": suggestion["roomId"], "note": suggestion["reason"].rstrip(".")}
-                        break
+            alternative = await self.alternative_room(session, set(disrupted)) if reason else None
             out.append(
                 {
                     "id": session["_id"], "course": session["courseName"], "room": session["roomId"], "start": local_time(session["startAt"]), "end": local_time(session["endAt"]),
@@ -376,6 +368,14 @@ class BookingService:
                 }
             )
         return out
+
+    async def alternative_room(self, session: dict[str, Any], avoid: set[str]) -> dict[str, str] | None:
+        """The best free room for a class whose own room is out, skipping rooms that are affected too."""
+        action = self._collisions.build_action(None, ActionType.MOVE_SESSION, {**self._payload(session["roomId"], ensure_utc(session["startAt"]), ensure_utc(session["endAt"]), session["headcount"], session["kind"], session["courseName"], []), "excludeSessionId": session["_id"]}, None)
+        for suggestion in await self._collisions.alternatives.rooms(action, self._collisions.reader(), await self._collisions.config()):
+            if suggestion["roomId"] not in avoid:
+                return {"roomCode": suggestion["roomId"], "note": suggestion["reason"].rstrip(".")}
+        return None
 
     async def affected(self, room_ids: list[str], start: datetime, end: datetime) -> dict[str, Any]:
         """Classes that would lose their room if these rooms were unavailable in this window."""

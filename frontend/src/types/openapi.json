@@ -1068,6 +1068,27 @@
         "title": "ReasonBody",
         "type": "object"
       },
+      "RecomputeBody": {
+        "properties": {
+          "rootAssetIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 10,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rootassetids"
+          }
+        },
+        "title": "RecomputeBody",
+        "type": "object"
+      },
       "Reschedule": {
         "properties": {
           "acknowledgedCodes": {
@@ -2959,6 +2980,144 @@
         "summary": "Campus Rooms",
         "tags": [
           "campus"
+        ]
+      }
+    },
+    "/api/v1/cascading/academic": {
+      "get": {
+        "description": "Classes hit by open incidents, limited to the ones this person teaches, manages or attends.",
+        "operationId": "academic_impact_api_v1_cascading_academic_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Academic Impact Api V1 Cascading Academic Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Academic Impact",
+        "tags": [
+          "cascading"
+        ]
+      }
+    },
+    "/api/v1/cascading/impact/{incident_id}": {
+      "get": {
+        "operationId": "incident_impact_api_v1_cascading_impact__incident_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "incident_id",
+            "required": true,
+            "schema": {
+              "title": "Incident Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Incident Impact Api V1 Cascading Impact  Incident Id  Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Incident Impact",
+        "tags": [
+          "cascading"
+        ]
+      }
+    },
+    "/api/v1/cascading/impact/{incident_id}/recompute": {
+      "post": {
+        "operationId": "recompute_impact_api_v1_cascading_impact__incident_id__recompute_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "incident_id",
+            "required": true,
+            "schema": {
+              "title": "Incident Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/RecomputeBody"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Recompute Impact Api V1 Cascading Impact  Incident Id  Recompute Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Recompute Impact",
+        "tags": [
+          "cascading"
         ]
       }
     },

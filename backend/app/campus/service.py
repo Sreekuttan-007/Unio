@@ -39,6 +39,9 @@ async def region_overlays(db: Any, operational: bool) -> dict[str, dict[str, Any
     buildings = await db["buildings"].find({}).to_list(length=100)
     closed_rooms = Counter(room["buildingId"] for room in await db["rooms"].find({"status": "CLOSED"}).to_list(length=1000))
     incidents = await open_incidents(db)
+    # Buildings reached through dependencies (a shared transformer or switch) light up too, from the impact snapshots.
+    urgent = [item["_id"] for item in incidents if item["priority"] in ("P1", "P2")]
+    reached = {region async for snapshot in db["impact_snapshots"].find({"_id": {"$in": urgent}}) for region in snapshot.get("affectedRegionIds", [])}
     overlays: dict[str, dict[str, Any]] = {}
     for building in buildings:
         here = [item for item in incidents if item.get("buildingId") == building["_id"]]
@@ -47,7 +50,7 @@ async def region_overlays(db: Any, operational: bool) -> dict[str, dict[str, Any
             state = "CLOSED"
         elif status == "MAINTENANCE":
             state = "MAINTENANCE"
-        elif closed_rooms[building["_id"]] or any(item["priority"] in ("P1", "P2") for item in here):
+        elif closed_rooms[building["_id"]] or any(item["priority"] in ("P1", "P2") for item in here) or building["mapRegionId"] in reached:
             state = "AFFECTED"
         else:
             state = "OPEN"

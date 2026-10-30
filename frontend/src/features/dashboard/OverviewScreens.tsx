@@ -15,7 +15,6 @@ export function CommandCentreScreen() {
   const technicians = useApi<TechnicianCard[]>('/technicians', { refetchMs: 8_000 })
   const orders = useApi<{ items: WorkOrder[] }>('/work-orders', { refetchMs: 8_000 })
   const sla = useApi<SlaRow[]>('/sla/instances', { refetchMs: 8_000 })
-  const impact = useApi<ImpactReport>('/cascading/impact/INC-1041')
   const { go } = useNavTo()
 
   const open = (incidents.data?.items ?? []).filter(OPEN)
@@ -23,6 +22,7 @@ export function CommandCentreScreen() {
   const flagged = (orders.data?.items ?? []).filter((order) => order.needsReassignment)
   const atRisk = (sla.data ?? []).filter((row) => ['AT_RISK', 'BREACHED'].includes(row.state))
   const lead = open.find((incident) => incident.priority === 'P1')
+  const impact = useApi<ImpactReport>(`/cascading/impact/${lead?.id ?? 'none'}`, { enabled: !!lead })
 
   return (
     <div className="space-y-5">
@@ -71,9 +71,9 @@ export function CommandCentreScreen() {
 
       <div className="grid gap-4 xl:grid-cols-2">
         <Card>
-          <CardHeader title="Why it is happening" description="INC-1041 traced through stored relationships" />
+          <CardHeader title="Why it is happening" description={lead ? `${lead.id} traced through stored relationships` : 'No P1 incident right now'} />
           <div className="px-5 py-4">
-            <QueryBoundary query={impact}>{(data) => <ImpactChain steps={data.chain.slice(0, 5) as ImpactStep[]} />}</QueryBoundary>
+            {lead ? <QueryBoundary query={impact}>{(data) => <ImpactChain steps={data.chain.slice(0, 5) as ImpactStep[]} />}</QueryBoundary> : <p className="text-sm text-muted">Nothing is disrupting the campus.</p>}
           </div>
         </Card>
         <Card>

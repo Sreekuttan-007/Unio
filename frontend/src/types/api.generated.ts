@@ -468,6 +468,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/cascading/academic": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Academic Impact
+         * @description Classes hit by open incidents, limited to the ones this person teaches, manages or attends.
+         */
+        get: operations["academic_impact_api_v1_cascading_academic_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/cascading/impact/{incident_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Incident Impact */
+        get: operations["incident_impact_api_v1_cascading_impact__incident_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/cascading/impact/{incident_id}/recompute": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Recompute Impact */
+        post: operations["recompute_impact_api_v1_cascading_impact__incident_id__recompute_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/collisions": {
         parameters: {
             query?: never;
@@ -1623,6 +1677,11 @@ export interface components {
             /** Reason */
             reason?: string | null;
         };
+        /** RecomputeBody */
+        RecomputeBody: {
+            /** Rootassetids */
+            rootAssetIds?: string[] | null;
+        };
         /** Reschedule */
         Reschedule: {
             /** Acknowledgedcodes */
@@ -2643,6 +2702,92 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    academic_impact_api_v1_cascading_academic_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    incident_impact_api_v1_cascading_impact__incident_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                incident_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    recompute_impact_api_v1_cascading_impact__incident_id__recompute_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                incident_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["RecomputeBody"] | null;
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {

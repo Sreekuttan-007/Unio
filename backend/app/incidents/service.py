@@ -252,6 +252,7 @@ class IncidentService:
         report["incidentId"] = incident["_id"]
         await self._db["reports"].insert_one(report)
         await self._refresh_summary(incident["_id"])
+        await self.refresh_impact(incident["_id"])
         await self._audit.record(
             actor_id=reporter_id, actor_role=actor_role, action="report.submit", domain=AuditDomain.OPERATIONS, entity_type="REPORT", entity_id=report_id,
             after={"incidentId": incident["_id"], "joined": target is not None, "channel": channel},
@@ -528,6 +529,7 @@ class IncidentService:
             after={"buildingId": building["_id"], "mergedInto": merged_into},
         )
         await self._refresh_summary(merged_into or incident_id)
+        await self.refresh_impact(merged_into or incident_id)
         return await self._db["incidents"].find_one({"_id": merged_into or incident_id})
 
     async def link_duplicate(self, user: AuthUser, incident_id: str, target_id: str | None) -> str:
@@ -568,6 +570,8 @@ class IncidentService:
             {"$set": {"status": IncidentStatus.CLOSED.value, "duplicateOf": target_id, "updatedAt": utcnow()}, "$inc": {"version": 1}, "$push": {"timeline": public_event(f"d{target_id}", f"Linked to {target_id}", "neutral")}},
         )
         await self._sla.finish(incident_id)
+        await self.refresh_impact(target_id)
+        await self.refresh_impact(incident_id)
         return f"{incident_id} was linked to {target_id}. Nobody who reported was lost: {source['reportCount']} reports moved across."
 
     async def notices(self) -> list[dict[str, Any]]:

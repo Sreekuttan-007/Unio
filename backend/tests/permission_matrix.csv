@@ -69,3 +69,6 @@ PATCH,/api/v1/technicians/me/availability,DENY,DENY,DENY,DENY,DENY,ALLOW,DENY
 PATCH,/api/v1/technicians/x/availability,DENY,DENY,ALLOW,ALLOW,DENY,DENY,DENY
 GET,/api/v1/maintenance-history,DENY,DENY,DENY,ALLOW,DENY,ALLOW,DENY
 GET,/api/v1/files/x,ALLOW,ALLOW,ALLOW,ALLOW,ALLOW,ALLOW,ALLOW
+GET,/api/v1/cascading/academic,DENY,ALLOW,ALLOW,ALLOW,DENY,DENY,DENY
+GET,/api/v1/cascading/impact/x,DENY,ALLOW,ALLOW,ALLOW,DENY,DENY,DENY
+POST,/api/v1/cascading/impact/x/recompute,DENY,DENY,ALLOW,ALLOW,DENY,DENY,DENY

@@ -39,3 +39,6 @@ that affect behaviour must live in configuration, not hard-coded logic.
 | A17 | 2026-10-30 | Preemption and event-driven reassignment only flag work and propose a replacement. Nothing moves until a Facilities or Department manager confirms. | `WorkOrderService.flag` | Open |
 | A18 | 2026-10-30 | Work not accepted within 10/30/120/240 minutes (P1 to P4), or running 15 minutes past its slot, is flagged as late. | `app/workorders/policy.py` | Open |
 | A19 | 2026-10-30 | The person who did a repair cannot verify it. Verification is by a different user holding `workorder.verify`. | `WorkOrderService.verify` | Open |
+| A20 | 2026-10-30 | An outage is assumed to disturb the timetable for the next 24 hours, and an impact snapshot older than 15 minutes is recomputed on read. | `app/cascade/service.py` | Open |
+| A21 | 2026-10-30 | A report names rooms, not assets. Triage names the faulty asset (for example a transformer) through `POST /cascading/impact/{id}/recompute`, which is what extends the chain beyond the reported rooms. | `incident.assetIds` | Open |
+| A22 | 2026-10-30 | People told about an impact are only the lecturers and student-group members of the affected classes. | `CascadeService._recipients` | Open |

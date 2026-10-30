@@ -445,6 +445,13 @@ export function createDomainHandlers() {
       }
       return HttpResponse.json({ message: messages[String(params.key)] ?? 'Done.' })
     }),
+    http.get(`${BASE}/cascading/academic`, ({ request }) => {
+      const role = roleOf(request)
+      if (!role) return unauthenticated()
+      if (!['FACULTY', 'DEPARTMENT_MANAGER', 'FACILITIES_ADMIN'].includes(role)) return problem(403, 'FORBIDDEN', 'You do not have access to this.')
+      const lead = incidents.find((incident) => incident.id === 'INC-1041')
+      return HttpResponse.json(lead ? [{ incidentId: lead.id, title: lead.title, priority: lead.priority, sessions: buildImpact(lead.id).affectedSessions }] : [])
+    }),
     http.get(`${BASE}/cascading/impact/:id`, async ({ params, request }) => {
       if (!roleOf(request)) return unauthenticated()
       await lag()

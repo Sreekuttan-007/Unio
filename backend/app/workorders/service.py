@@ -253,6 +253,7 @@ class WorkOrderService:
             actor_id=actor_id, actor_role=actor_role, action="workorder.create", domain=AuditDomain.OPERATIONS, entity_type="WORK_ORDER", entity_id=order["_id"],
             after={"incidentId": incident["_id"], "priority": order["priority"], "category": category},
         )
+        await self._incidents.refresh_impact(incident["_id"])
         await self._incidents.note(incident["_id"], "Repair work scheduled", "accent", "A technician is being chosen.")
         await self._outbox.enqueue("workorder.created", {"workOrderId": order["_id"], "incidentId": incident["_id"], "priority": order["priority"], "roles": ["FACILITIES_ADMIN"]})
         if order["priority"] in URGENT:
@@ -398,6 +399,7 @@ class WorkOrderService:
         if not await try_guarded_update(self._db["work_orders"], order["_id"], order["version"], status, update):
             raise conflict("VERSION_CONFLICT", "This work order changed. Reload it and try again.")
         await self._log(order["_id"], event.value, status.value, target.value, actor_id, actor_role, notes)
+        await self._incidents.refresh_impact(order["incidentId"])
         await self._audit.record(
             actor_id=actor_id, actor_role=actor_role, action=f"workorder.{event.value.lower()}", domain=AuditDomain.OPERATIONS, entity_type="WORK_ORDER", entity_id=order["_id"],
             before={"status": status.value}, after={"status": target.value}, reason=notes,

@@ -5,6 +5,7 @@ from fastapi import Request
 
 from app.audit.service import AuditService
 from app.bookings.service import BookingService
+from app.cascade.service import CascadeService
 from app.collision.service import CollisionService
 from app.config import Settings
 from app.core.outbox import OutboxService
@@ -42,6 +43,7 @@ class Services:
     bookings: BookingService
     files: FileStore
     workorders: WorkOrderService
+    cascade: CascadeService
 
 
 def build_services(settings: Settings, db: Any) -> Services:
@@ -57,6 +59,9 @@ def build_services(settings: Settings, db: Any) -> Services:
     incidents = IncidentService(db, ml, sla, audit, outbox, settings.campus_id, collisions)
     files = FileStore(db)
     workorders = WorkOrderService(db, collisions, incidents, sla, audit, outbox, files, settings.campus_id)
+    bookings = BookingService(db, collisions, audit, outbox, settings.campus_id)
+    cascade = CascadeService(db, incidents, bookings, audit, settings.campus_id)
+    incidents.cascade = cascade
     return Services(
         settings=settings,
         db=db,
@@ -73,9 +78,10 @@ def build_services(settings: Settings, db: Any) -> Services:
         incidents=incidents,
         inbox=InboxService(db, ml, incidents, audit, sla),
         collisions=collisions,
-        bookings=BookingService(db, collisions, audit, outbox, settings.campus_id),
+        bookings=bookings,
         files=files,
         workorders=workorders,
+        cascade=cascade,
     )
 
 

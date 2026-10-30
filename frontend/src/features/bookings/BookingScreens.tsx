@@ -238,7 +238,10 @@ export function MyBookingsScreen({ title = 'My Bookings', description = 'Upcomin
 
 export function AcademicImpactScreen() {
   const sessions = useApi<TodaySession[]>('/timetable/today')
-  const impact = useApi<ImpactReport>('/cascading/impact/INC-1041')
+  // The incidents behind this person's affected classes, from the faculty-scoped impact view.
+  const academic = useApi<{ incidentId: string; title: string }[]>('/cascading/academic')
+  const source = academic.data?.[0]?.incidentId
+  const impact = useApi<ImpactReport>(`/cascading/impact/${source ?? 'none'}`, { enabled: !!source })
   const { go } = useNavTo()
   const affected = (sessions.data ?? []).filter((session) => session.status === 'AFFECTED')
 
@@ -272,7 +275,7 @@ export function AcademicImpactScreen() {
           </div>
         )}
       </QueryBoundary>
-      <QueryBoundary query={impact}>
+      {source ? <QueryBoundary query={impact}>
         {(data) => (
           <Card>
             <CardHeader title="Why these sessions are affected" description="Traced through stored relationships between the fault, rooms and timetable." />
@@ -281,7 +284,7 @@ export function AcademicImpactScreen() {
             </CardBody>
           </Card>
         )}
-      </QueryBoundary>
+      </QueryBoundary> : null}
     </div>
   )
 }
