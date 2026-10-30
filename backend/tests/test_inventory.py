@@ -81,6 +81,10 @@ async def test_a_missing_part_travels_from_technician_to_resumed_work_with_one_l
     assert invoice["status"] == "MATCHED" and invoice["lines"][0]["match"] == "OK" and invoice["invoiceNumber"] == "BE/2026/1201"
     assert await stock_hash(world.db) == before  # uploading an invoice never moves stock
 
+    again = await upload(world, po_id)  # same supplier, same invoice number: refused, not a second row
+    assert again.status_code == 409 and again.json()["code"] == "DUPLICATE_INVOICE"
+    assert await world.db["invoices"].count_documents({"invoiceNumber": "BE/2026/1201"}) == 1
+
     assert (await world.call("PROCUREMENT_APPROVER", "POST", f"/api/v1/invoices/{invoice['id']}/validate")).json()["status"] == "VALIDATED"
     receipt = (await world.call("PROCUREMENT_APPROVER", "GET", "/api/v1/goods-receipts")).json()[0]
     assert receipt["status"] == "PENDING" and receipt["lines"] == [{"name": "MCB 32A three pole", "ordered": 2, "received": 2}]

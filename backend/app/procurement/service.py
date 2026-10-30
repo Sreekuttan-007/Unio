@@ -11,6 +11,7 @@ import io
 import re
 from typing import Any
 
+from pymongo.errors import DuplicateKeyError
 from rapidfuzz import fuzz
 
 from app.audit.service import AuditDomain, AuditService
@@ -168,7 +169,10 @@ class ProcurementService:
             "totalPaise": sum(line["qty"] * line["unitPaise"] for line in lines), "fileName": meta["name"], "fileId": meta["_id"], "extractionSource": "MANUAL",
             "lines": lines, "discrepancies": problems, "uploadedBy": user.id, "createdAt": utcnow(), "version": 0, "campusId": self._campus_id,
         }
-        await self._db["invoices"].insert_one(invoice)  # an invoice is a document to check, never a stock movement
+        try:
+            await self._db["invoices"].insert_one(invoice)  # an invoice is a document to check, never a stock movement
+        except DuplicateKeyError:
+            raise conflict("DUPLICATE_INVOICE", f"Invoice {invoice['invoiceNumber']} from {invoice['supplier']} was already uploaded.") from None
         await self._audit.record_as(user, action="invoice.upload", domain=AuditDomain.PROCUREMENT, entity_type="INVOICE", entity_id=invoice["_id"], after={"purchaseOrderId": invoice["purchaseOrderId"], "status": invoice["status"], "fileId": meta["_id"]})
         return self.invoice_view(invoice)
 
