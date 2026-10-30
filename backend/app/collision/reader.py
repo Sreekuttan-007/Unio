@@ -121,6 +121,7 @@ class LiveStateReader(RecordingReader):
         found = [
             {
                 "id": row["_id"], "title": row.get("title", row["_id"]), "status": row["status"],
+                "priority": row.get("priority"), "buildingId": row.get("buildingId"), "estimatedMinutes": row.get("estimatedMinutes"),
                 "startAt": ensure_utc(row["scheduledStartAt"]) if row.get("scheduledStartAt") else None,
                 "endAt": ensure_utc(row["scheduledEndAt"]) if row.get("scheduledEndAt") else None,
             }

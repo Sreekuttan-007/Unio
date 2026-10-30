@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import logging
+import secrets
 from datetime import timedelta
 from typing import Any
 
 from app.audit.service import AuditDomain, AuditService
+from app.collision.models import ActionType
+from app.collision.service import CollisionService
 from app.core.authuser import AuthUser
 from app.core.clock import ensure_utc, utcnow
 from app.core.errors import conflict, not_found, rule
@@ -28,6 +32,7 @@ SIMILAR_ENOUGH = 0.6  # two reports that read this alike are the same fault
 RELATED_ENOUGH = 0.12  # for an area-wide fault, even a loose match joins an incident that already has company
 OUTAGE_ENOUGH = 0.2  # an area-wide fault joins a lone report when they plainly describe the same outage
 OPEN = [status.value for status in OPEN_STATUSES]
+log = logging.getLogger("unio.incidents")
 DONE_WORK = ("COMPLETED", "VERIFIED", "CLOSED", "CANCELLED")
 
 
@@ -36,13 +41,15 @@ def public_event(event_id: str, title: str, tone: str, detail: str | None = None
 
 
 class IncidentService:
-    def __init__(self, db: Any, ml: MlService, sla: SlaService, audit: AuditService, outbox: OutboxService, campus_id: str) -> None:
+    def __init__(self, db: Any, ml: MlService, sla: SlaService, audit: AuditService, outbox: OutboxService, campus_id: str, collisions: CollisionService | None = None) -> None:
         self._db = db
         self._ml = ml
         self._sla = sla
         self._audit = audit
         self._outbox = outbox
         self._campus_id = campus_id
+        self._collisions = collisions
+        self.cascade: Any = None  # set by build_services: recomputes the impact of an incident when it changes
 
     # ---- reading ----------------------------------------------------------------------------
 
@@ -124,11 +131,11 @@ class IncidentService:
             blocked = next((order for order in orders if order["status"] == "BLOCKED"), orders[0])
             state = "blocked and not yet completed" if blocked["status"] == "BLOCKED" else "not yet completed"
             return f"Work order {blocked['_id']} is {state}."
-        cause = incident.get("causedById")
-        if cause:
-            parent = await self._db["incidents"].find_one({"_id": cause})
-            if parent and parent["status"] in OPEN:
-                return f"The cause, {cause}, is not resolved yet."
+        if self._collisions is not None:
+            action = self._collisions.build_action(None, ActionType.RESOLVE_INCIDENT, {"incidentId": incident["_id"]}, None)
+            verdict = await self._collisions.evaluate(action, with_alternatives=False)
+            if verdict.findings:
+                return verdict.findings[0].message
         return None
 
     # ---- intake -----------------------------------------------------------------------------
@@ -400,13 +407,24 @@ class IncidentService:
             event = IncidentEvent(event_name)
         except ValueError:
             raise rule("UNKNOWN_EVENT", f"Unknown event {event_name}.") from None
+        if event is IncidentEvent.RESOLVE:
+            await self._check_resolvable(user, incident)
+        return await self._apply(incident, event, user.id, user.role_key)
+
+    async def _check_resolvable(self, user: AuthUser, incident: dict[str, Any]) -> None:
+        """Open work stops a resolve, and so does an unresolved cause. The cause check is the collision engine's DEP-001."""
+        orders = await self._open_orders(incident["_id"])
+        if orders:
+            raise rule("ILLEGAL_TRANSITION", await self._resolve_blocker(incident, orders) or "Work is still open.")
+        if self._collisions is not None:
+            await self._collisions.enforce(user, ActionType.RESOLVE_INCIDENT, {"incidentId": incident["_id"]})
+
+    async def _apply(self, incident: dict[str, Any], event: IncidentEvent, actor_id: str, actor_role: str) -> dict[str, Any]:
+        """One legal move of the state machine, as one compare-and-set, with its side effects."""
+        incident_id = incident["_id"]
         current = IncidentStatus(incident["status"])
         target = INCIDENT_MACHINE.next(current, event)
-        if event is IncidentEvent.RESOLVE:
-            reason = await self._resolve_blocker(incident, await self._open_orders(incident_id))
-            if reason:
-                raise rule("ILLEGAL_TRANSITION", reason)
-        update: dict[str, Any] = {"$set": {"status": target.value}, "$push": {"timeline": public_event(f"t{incident['version'] + 1}", self._event_title(event, user), "success" if target in CLOSED_STATUSES else "accent", public=True)}}
+        update: dict[str, Any] = {"$set": {"status": target.value}, "$push": {"timeline": public_event(f"t{incident['version'] + 1}", self._event_title(event), "success" if target in CLOSED_STATUSES else "accent", public=True)}}
         if event is IncidentEvent.RESOLVE:
             update["$set"]["resolvedAt"] = utcnow()
         if not await try_guarded_update(self._db["incidents"], incident_id, incident["version"], current, update):
@@ -417,15 +435,47 @@ class IncidentService:
             await self._sla.reopen(incident_id)
         elif event is IncidentEvent.CLARIFY:
             await self._sla.resume(incident_id)
-        await self._audit.record_as(
-            user, action=f"incident.{event.value.lower()}", domain=AuditDomain.OPERATIONS, entity_type="INCIDENT", entity_id=incident_id,
+        await self._audit.record(
+            actor_id=actor_id, actor_role=actor_role, action=f"incident.{event.value.lower()}", domain=AuditDomain.OPERATIONS, entity_type="INCIDENT", entity_id=incident_id,
             before={"status": current.value}, after={"status": target.value},
         )
         await self._outbox.enqueue("incident.status", {"incidentId": incident_id, "status": target.value, "reporterIds": incident["reporterIds"]})
+        await self.refresh_impact(incident_id)
         return await self._db["incidents"].find_one({"_id": incident_id})  # type: ignore[return-value]
 
+    async def advance(self, incident_id: str, event: IncidentEvent, actor_id: str, actor_role: str) -> dict[str, Any] | None:
+        """A move made by the system on behalf of someone else, such as work starting. A move that does not fit is skipped."""
+        incident = await self._db["incidents"].find_one({"_id": incident_id})
+        if incident is None or not INCIDENT_MACHINE.can(IncidentStatus(incident["status"]), event):
+            return None
+        return await self._apply(incident, event, actor_id, actor_role)
+
+    async def note_assignment(self, incident_id: str, user_id: str | None, name: str | None, actor_id: str, actor_role: str) -> None:
+        """Records who is on the job, so that person can see the incident, and moves it to ASSIGNED when it is ready."""
+        await self._db["incidents"].update_one(
+            {"_id": incident_id}, {"$set": {"assignedTo": name, "assignedUserIds": [user_id] if user_id else [], "updatedAt": utcnow()}, "$inc": {"version": 1}}
+        )
+        await self._sla.assign(incident_id, user_id)
+        if user_id:
+            await self.advance(incident_id, IncidentEvent.ASSIGN, actor_id, actor_role)
+
+    async def note(self, incident_id: str, title: str, tone: str = "neutral", detail: str | None = None, *, public: bool = True) -> None:
+        """Adds a line to the incident timeline. Public lines are what the people who reported it read."""
+        await self._db["incidents"].update_one(
+            {"_id": incident_id}, {"$push": {"timeline": public_event(f"n{secrets.token_hex(4)}", title, tone, detail, public=public)}, "$set": {"updatedAt": utcnow()}}
+        )
+
+    async def refresh_impact(self, incident_id: str) -> None:
+        """Impact follows the incident's state. A failure here must never undo the change that triggered it."""
+        if self.cascade is None:
+            return
+        try:
+            await self.cascade.refresh(incident_id)
+        except Exception:  # noqa: BLE001 - the impact view is derived data and can be recomputed on demand
+            log.exception("Impact refresh failed for %s", incident_id)
+
     @staticmethod
-    def _event_title(event: IncidentEvent, user: AuthUser) -> str:
+    def _event_title(event: IncidentEvent) -> str:
         return {
             IncidentEvent.RESOLVE: "Marked resolved",
             IncidentEvent.CLOSE: "Closed",

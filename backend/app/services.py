@@ -9,6 +9,7 @@ from app.collision.service import CollisionService
 from app.config import Settings
 from app.core.outbox import OutboxService
 from app.core.security import JwtService, LoginRateLimiter, PasswordService
+from app.files.service import FileStore
 from app.incidents.inbox import InboxService
 from app.incidents.service import IncidentService
 from app.ml.service import MlService
@@ -16,6 +17,7 @@ from app.sla.service import SlaService
 from app.users.directory import UserDirectory
 from app.users.roles import RoleService
 from app.users.service import AuthService, IdentityService
+from app.workorders.service import WorkOrderService
 
 
 @dataclass
@@ -38,6 +40,8 @@ class Services:
     inbox: InboxService
     collisions: CollisionService
     bookings: BookingService
+    files: FileStore
+    workorders: WorkOrderService
 
 
 def build_services(settings: Settings, db: Any) -> Services:
@@ -49,8 +53,10 @@ def build_services(settings: Settings, db: Any) -> Services:
     outbox = OutboxService(db, settings.outbox_max_attempts)
     ml = MlService(db, settings)
     sla = SlaService(db)
-    incidents = IncidentService(db, ml, sla, audit, outbox, settings.campus_id)
     collisions = CollisionService(db, audit, settings.campus_id)
+    incidents = IncidentService(db, ml, sla, audit, outbox, settings.campus_id, collisions)
+    files = FileStore(db)
+    workorders = WorkOrderService(db, collisions, incidents, sla, audit, outbox, files, settings.campus_id)
     return Services(
         settings=settings,
         db=db,
@@ -68,6 +74,8 @@ def build_services(settings: Settings, db: Any) -> Services:
         inbox=InboxService(db, ml, incidents, audit, sla),
         collisions=collisions,
         bookings=BookingService(db, collisions, audit, outbox, settings.campus_id),
+        files=files,
+        workorders=workorders,
     )
 
 

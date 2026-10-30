@@ -40,27 +40,6 @@ def _not_built(phase: int) -> ApiException:
 reserved = GuardedRouter(prefix="/api/v1", tags=["reserved"])
 
 
-@reserved.get(
-    "/work-orders",
-    dependencies=[Depends(require(P.WORKORDER_READ_ASSIGNED, P.WORKORDER_READ_DEPARTMENT, P.WORKORDER_READ_CAMPUS))],
-)
-async def list_work_orders() -> Any:
-    raise _not_built(7)
-
-
-@reserved.post(
-    "/work-orders/{work_order_id}/assign",
-    dependencies=[Depends(require(P.WORKORDER_ASSIGN_DEPARTMENT, P.WORKORDER_ASSIGN_CAMPUS))],
-)
-async def assign_work_order(work_order_id: str) -> Any:
-    raise _not_built(7)
-
-
-@reserved.post("/work-orders/{work_order_id}/complete", dependencies=[Depends(require(P.WORKORDER_EXECUTE))])
-async def complete_work_order(work_order_id: str) -> Any:
-    raise _not_built(7)
-
-
 @reserved.post("/simulations", dependencies=[Depends(require(P.SIMULATION_RUN))])
 async def run_simulation() -> Any:
     raise _not_built(9)

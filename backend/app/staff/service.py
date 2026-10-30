@@ -57,6 +57,7 @@ async def technician_cards(db: Any, ids: list[str] | None = None) -> list[dict[s
                 "maxTasks": maximum,
                 "workloadPercent": min(100, round(len(mine) / maximum * 100)),
                 "currentTask": current,
+                "needsReplacement": flagged is not None,
             }
         )
     return cards

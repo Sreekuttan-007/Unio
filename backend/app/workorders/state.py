@@ -1,0 +1,65 @@
+from enum import StrEnum
+
+from app.core.state import StateMachine
+
+
+class WorkOrderStatus(StrEnum):
+    PENDING_ASSIGNMENT = "PENDING_ASSIGNMENT"
+    ASSIGNED = "ASSIGNED"
+    ACCEPTED = "ACCEPTED"
+    IN_PROGRESS = "IN_PROGRESS"
+    BLOCKED = "BLOCKED"
+    COMPLETED = "COMPLETED"
+    VERIFIED = "VERIFIED"
+    CLOSED = "CLOSED"
+    CANCELLED = "CANCELLED"
+
+
+class WorkOrderEvent(StrEnum):
+    ASSIGN = "ASSIGN"
+    REASSIGN = "REASSIGN"
+    ACCEPT = "ACCEPT"
+    DECLINE = "DECLINE"
+    START = "START"
+    BLOCK = "BLOCK"
+    RESUME = "RESUME"
+    COMPLETE = "COMPLETE"
+    REJECT_COMPLETION = "REJECT_COMPLETION"
+    VERIFY = "VERIFY"
+    CLOSE = "CLOSE"
+    CANCEL = "CANCEL"
+
+
+S, E = WorkOrderStatus, WorkOrderEvent
+
+# A technician may only walk ASSIGNED -> ACCEPTED -> IN_PROGRESS -> BLOCKED or COMPLETED. Everything
+# else is done by the people who manage the work, and the machine is what enforces that, not a flag.
+WORK_MACHINE: StateMachine[WorkOrderStatus, WorkOrderEvent] = StateMachine.build(
+    [
+        (S.PENDING_ASSIGNMENT, E.ASSIGN, S.ASSIGNED),
+        (S.ASSIGNED, E.REASSIGN, S.ASSIGNED),
+        (S.ACCEPTED, E.REASSIGN, S.ASSIGNED),
+        (S.IN_PROGRESS, E.REASSIGN, S.ASSIGNED),
+        (S.BLOCKED, E.REASSIGN, S.BLOCKED),
+        (S.ASSIGNED, E.ACCEPT, S.ACCEPTED),
+        (S.ASSIGNED, E.DECLINE, S.PENDING_ASSIGNMENT),
+        (S.ACCEPTED, E.DECLINE, S.PENDING_ASSIGNMENT),
+        (S.ACCEPTED, E.START, S.IN_PROGRESS),
+        (S.ASSIGNED, E.BLOCK, S.BLOCKED),
+        (S.ACCEPTED, E.BLOCK, S.BLOCKED),
+        (S.IN_PROGRESS, E.BLOCK, S.BLOCKED),
+        (S.BLOCKED, E.RESUME, S.IN_PROGRESS),
+        (S.IN_PROGRESS, E.COMPLETE, S.COMPLETED),
+        (S.COMPLETED, E.REJECT_COMPLETION, S.IN_PROGRESS),
+        (S.COMPLETED, E.VERIFY, S.VERIFIED),
+        (S.VERIFIED, E.CLOSE, S.CLOSED),
+        (S.PENDING_ASSIGNMENT, E.CANCEL, S.CANCELLED),
+        (S.ASSIGNED, E.CANCEL, S.CANCELLED),
+        (S.ACCEPTED, E.CANCEL, S.CANCELLED),
+        (S.BLOCKED, E.CANCEL, S.CANCELLED),
+    ]
+)
+
+DONE = (S.COMPLETED.value, S.VERIFIED.value, S.CLOSED.value, S.CANCELLED.value)
+OPEN = (S.PENDING_ASSIGNMENT.value, S.ASSIGNED.value, S.ACCEPTED.value, S.IN_PROGRESS.value, S.BLOCKED.value)
+HELD_BY_TECHNICIAN = (S.ASSIGNED.value, S.ACCEPTED.value, S.IN_PROGRESS.value, S.BLOCKED.value)

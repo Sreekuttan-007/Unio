@@ -4,7 +4,7 @@ from typing import Any
 from fastapi import Depends, Query
 from pydantic import Field
 
-from app.collision.service import merge_acknowledgement
+from app.collision.acknowledge import Acknowledging
 from app.core.access import GuardedRouter, authenticated, require
 from app.core.authuser import AuthUser
 from app.core.errors import rule
@@ -17,18 +17,6 @@ router = GuardedRouter(prefix="/api/v1", tags=["bookings"])
 
 READERS = (P.BOOKING_READ_OWN, P.BOOKING_READ_DEPARTMENT, P.BOOKING_READ_CAMPUS)
 KINDS = "^(LECTURE|PRACTICAL|EXAM|EVENT)$"
-
-
-class Acknowledging(ApiModel):
-    """What a person sends to go ahead despite a warning, or with an approved override."""
-
-    expected_state_token: str | None = Field(default=None, max_length=64)
-    acknowledged_codes: list[str] = Field(default_factory=list, max_length=20)
-    override_reason: str | None = Field(default=None, max_length=500)
-    override_approval_id: str | None = Field(default=None, max_length=40)
-
-    def acknowledgement(self) -> Any:
-        return merge_acknowledgement(self.override_reason, self.acknowledged_codes, self.override_approval_id)
 
 
 class BookingCheck(ApiModel):

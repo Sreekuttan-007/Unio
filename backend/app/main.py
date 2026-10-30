@@ -22,11 +22,13 @@ from app.core.headers import SecurityHeadersMiddleware
 from app.core.idempotency import IdempotencyMiddleware
 from app.core.outbox import run_outbox_loop
 from app.db import ensure_indexes
+from app.files.router import router as files_router
 from app.incidents.router import router as incidents_router
 from app.services import build_services
 from app.system.router import reserved, router as system_router
 from app.users.router import admin_router, auth_router, demo_router, me_router
 from app.users.seed import seed_reference_data
+from app.workorders.router import router as workorders_router
 
 
 class _CorrelationFilter(logging.Filter):
@@ -115,6 +117,8 @@ def create_app(settings: Settings | None = None, db: Any = None) -> FastAPI:
     app.include_router(incidents_router)
     app.include_router(collisions_router)
     app.include_router(bookings_router)
+    app.include_router(workorders_router)
+    app.include_router(files_router)
     app.include_router(reserved)
     assert_all_routes_guarded(app)
     return app

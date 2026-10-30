@@ -502,6 +502,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/files/{file_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download File
+         * @description Row-level access is decided by the file store: an owner, or someone who may read the thing it belongs to.
+         */
+        get: operations["download_file_api_v1_files__file_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/goods-receipts/{receipt_id}/validate": {
         parameters: {
             query?: never;
@@ -723,6 +743,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/maintenance-history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Maintenance History */
+        get: operations["maintenance_history_api_v1_maintenance_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/badges": {
         parameters: {
             query?: never;
@@ -848,6 +885,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/technicians/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Technician Profile */
+        get: operations["my_technician_profile_api_v1_technicians_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/technicians/me/availability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Set My Availability */
+        patch: operations["set_my_availability_api_v1_technicians_me_availability_patch"];
+        trace?: never;
+    };
+    "/api/v1/technicians/{technician_id}/availability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Set Availability */
+        patch: operations["set_availability_api_v1_technicians__technician_id__availability_patch"];
+        trace?: never;
+    };
     "/api/v1/timetable/affected": {
         parameters: {
             query?: never;
@@ -916,6 +1004,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/work-orders/review-late": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Review Late Work
+         * @description Flags work that was not picked up or is running late, each with a proposed replacement.
+         */
+        post: operations["review_late_work_api_v1_work_orders_review_late_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/work-orders/{work_order_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Work Order */
+        get: operations["get_work_order_api_v1_work_orders__work_order_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/work-orders/{work_order_id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Accept Work Order */
+        post: operations["accept_work_order_api_v1_work_orders__work_order_id__accept_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/work-orders/{work_order_id}/assign": {
         parameters: {
             query?: never;
@@ -927,6 +1069,57 @@ export interface paths {
         put?: never;
         /** Assign Work Order */
         post: operations["assign_work_order_api_v1_work_orders__work_order_id__assign_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/work-orders/{work_order_id}/block": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Block Work Order */
+        post: operations["block_work_order_api_v1_work_orders__work_order_id__block_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/work-orders/{work_order_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel Work Order */
+        post: operations["cancel_work_order_api_v1_work_orders__work_order_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/work-orders/{work_order_id}/candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Work Order Candidates */
+        get: operations["work_order_candidates_api_v1_work_orders__work_order_id__candidates_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -950,6 +1143,125 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/work-orders/{work_order_id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Decline Work Order */
+        post: operations["decline_work_order_api_v1_work_orders__work_order_id__decline_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/work-orders/{work_order_id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Work Order History */
+        get: operations["work_order_history_api_v1_work_orders__work_order_id__history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/work-orders/{work_order_id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject Work Order */
+        post: operations["reject_work_order_api_v1_work_orders__work_order_id__reject_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/work-orders/{work_order_id}/request-reassign": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Request Reassign */
+        post: operations["request_reassign_api_v1_work_orders__work_order_id__request_reassign_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/work-orders/{work_order_id}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resume Work Order */
+        post: operations["resume_work_order_api_v1_work_orders__work_order_id__resume_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/work-orders/{work_order_id}/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start Work Order */
+        post: operations["start_work_order_api_v1_work_orders__work_order_id__start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/work-orders/{work_order_id}/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify Work Order */
+        post: operations["verify_work_order_api_v1_work_orders__work_order_id__verify_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -964,6 +1276,21 @@ export interface components {
          * @enum {string}
          */
         ActionType: "BOOK_ROOM" | "MOVE_SESSION" | "ASSIGN_TECHNICIAN" | "RESERVE_PARTS" | "DECIDE_APPROVAL" | "VALIDATE_RECEIPT" | "RESOLVE_INCIDENT";
+        /** AssignBody */
+        AssignBody: {
+            /** Acknowledgedcodes */
+            acknowledgedCodes?: string[];
+            /** Expectedstatetoken */
+            expectedStateToken?: string | null;
+            /** Overrideapprovalid */
+            overrideApprovalId?: string | null;
+            /** Overridereason */
+            overrideReason?: string | null;
+            /** Startat */
+            startAt?: string | null;
+            /** Technicianid */
+            technicianId: string;
+        };
         /** AuditEntry */
         AuditEntry: {
             /** Action */
@@ -998,12 +1325,28 @@ export interface components {
             /** Reason */
             reason: string | null;
         };
+        /** AvailabilityBody */
+        AvailabilityBody: {
+            /** Availability */
+            availability: string;
+            /** Reason */
+            reason?: string | null;
+        };
         /** AvailableAction */
         AvailableAction: {
             /** Key */
             key: string;
             /** Label */
             label: string;
+        };
+        /** BlockBody */
+        BlockBody: {
+            /** Notes */
+            notes?: string | null;
+            /** Parts */
+            parts?: components["schemas"]["PartAsk"][];
+            /** Reason */
+            reason: string;
         };
         /** BookingCheck */
         BookingCheck: {
@@ -1109,6 +1452,16 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        /** CompleteBody */
+        CompleteBody: {
+            /** Evidence */
+            evidence?: components["schemas"]["EvidenceFile"][];
+            /**
+             * Notes
+             * @default
+             */
+            notes: string;
+        };
         /** CreateUser */
         CreateUser: {
             /** Departmentid */
@@ -1147,6 +1500,15 @@ export interface components {
             /** Name */
             name: string;
         };
+        /** EvidenceFile */
+        EvidenceFile: {
+            /** Contentbase64 */
+            contentBase64: string;
+            /** Mime */
+            mime: string;
+            /** Name */
+            name: string;
+        };
         /** ExtractRequest */
         ExtractRequest: {
             /** Text */
@@ -1168,6 +1530,13 @@ export interface components {
             email: string;
             /** Password */
             password: string;
+        };
+        /** ManagedAvailabilityBody */
+        ManagedAvailabilityBody: {
+            /** Availability */
+            availability: string;
+            /** Reason */
+            reason?: string | null;
         };
         /** MoveSession */
         MoveSession: {
@@ -1225,6 +1594,13 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** PartAsk */
+        PartAsk: {
+            /** Itemid */
+            itemId: string;
+            /** Qty */
+            qty: number;
+        };
         /** Ping */
         Ping: {
             /** Database */
@@ -1241,6 +1617,11 @@ export interface components {
         ProfileUpdate: {
             /** Name */
             name: string;
+        };
+        /** ReasonBody */
+        ReasonBody: {
+            /** Reason */
+            reason?: string | null;
         };
         /** Reschedule */
         Reschedule: {
@@ -1428,6 +1809,11 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /** VerifyBody */
+        VerifyBody: {
+            /** Notes */
+            notes?: string | null;
         };
     };
     responses: never;
@@ -2331,6 +2717,37 @@ export interface operations {
             };
         };
     };
+    download_file_api_v1_files__file_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                file_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     validate_receipt_api_v1_goods_receipts__receipt_id__validate_post: {
         parameters: {
             query?: never;
@@ -2720,6 +3137,26 @@ export interface operations {
             };
         };
     };
+    maintenance_history_api_v1_maintenance_history_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     badges_api_v1_me_badges_get: {
         parameters: {
             query?: never;
@@ -2875,6 +3312,94 @@ export interface operations {
             };
         };
     };
+    my_technician_profile_api_v1_technicians_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    set_my_availability_api_v1_technicians_me_availability_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AvailabilityBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_availability_api_v1_technicians__technician_id__availability_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                technician_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ManagedAvailabilityBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     timetable_affected_api_v1_timetable_affected_get: {
         parameters: {
             query: {
@@ -2976,6 +3501,39 @@ export interface operations {
     };
     list_work_orders_api_v1_work_orders_get: {
         parameters: {
+            query?: {
+                status?: string | null;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    review_late_work_api_v1_work_orders_review_late_post: {
+        parameters: {
             query?: never;
             header?: never;
             path?: never;
@@ -2994,7 +3552,174 @@ export interface operations {
             };
         };
     };
+    get_work_order_api_v1_work_orders__work_order_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                work_order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    accept_work_order_api_v1_work_orders__work_order_id__accept_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                work_order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     assign_work_order_api_v1_work_orders__work_order_id__assign_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                work_order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssignBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    block_work_order_api_v1_work_orders__work_order_id__block_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                work_order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BlockBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_work_order_api_v1_work_orders__work_order_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                work_order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ReasonBody"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    work_order_candidates_api_v1_work_orders__work_order_id__candidates_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -3034,7 +3759,244 @@ export interface operations {
             };
             cookie?: never;
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompleteBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    decline_work_order_api_v1_work_orders__work_order_id__decline_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                work_order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ReasonBody"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    work_order_history_api_v1_work_orders__work_order_id__history_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                work_order_id: string;
+            };
+            cookie?: never;
+        };
         requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reject_work_order_api_v1_work_orders__work_order_id__reject_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                work_order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["VerifyBody"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    request_reassign_api_v1_work_orders__work_order_id__request_reassign_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                work_order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ReasonBody"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resume_work_order_api_v1_work_orders__work_order_id__resume_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                work_order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    start_work_order_api_v1_work_orders__work_order_id__start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                work_order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    verify_work_order_api_v1_work_orders__work_order_id__verify_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                work_order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["VerifyBody"] | null;
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {

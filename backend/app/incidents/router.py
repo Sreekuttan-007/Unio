@@ -108,6 +108,7 @@ async def incident_action(
         return {"message": await services.incidents.link_duplicate(user, incident_id, body.target_id if body else None)}
     if key == "incident.close" and user.has(P.INCIDENT_TRANSITION):
         await services.incidents.transition(user, incident_id, "CLOSE")
+        await services.workorders.close_for_incident(incident_id, user.id, user.role_key)
         return {"message": "The incident was closed and the reporters were told."}
     if key == "incident.resolve" and user.has(P.INCIDENT_TRANSITION):
         await services.incidents.transition(user, incident_id, "RESOLVE")

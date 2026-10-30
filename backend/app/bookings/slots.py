@@ -41,15 +41,18 @@ def slot_id(room_id: str, slot_start: datetime) -> str:
 
 
 class SlotClaims:
-    def __init__(self, db: Any) -> None:
-        self._slots = db["room_slots"]
+    """Claims 15-minute slots on one kind of resource. Rooms by default, and technicians with their own collection."""
+
+    def __init__(self, db: Any, collection: str = "room_slots", key_field: str = "roomId") -> None:
+        self._slots = db[collection]
+        self._key = key_field
 
     async def claim(self, owner_kind: str, owner_id: str, room_id: str, start: datetime, end: datetime) -> int:
         """Claims every slot or none. Slots this owner already holds are kept as they are."""
         taken: list[str] = []
         try:
             for slot in slot_starts(start, end):
-                document = {"_id": slot_id(room_id, slot), "roomId": room_id, "slotStart": slot, "ownerKind": owner_kind, "ownerId": owner_id}
+                document = {"_id": slot_id(room_id, slot), self._key: room_id, "slotStart": slot, "ownerKind": owner_kind, "ownerId": owner_id}
                 try:
                     await self._slots.insert_one(document)
                     taken.append(document["_id"])

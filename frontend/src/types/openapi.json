@@ -32,6 +32,77 @@
         "title": "ActionType",
         "type": "string"
       },
+      "AssignBody": {
+        "properties": {
+          "acknowledgedCodes": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Acknowledgedcodes",
+            "type": "array"
+          },
+          "expectedStateToken": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expectedstatetoken"
+          },
+          "overrideApprovalId": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overrideapprovalid"
+          },
+          "overrideReason": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overridereason"
+          },
+          "startAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startat"
+          },
+          "technicianId": {
+            "maxLength": 20,
+            "minLength": 2,
+            "title": "Technicianid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "technicianId"
+        ],
+        "title": "AssignBody",
+        "type": "object"
+      },
       "AuditEntry": {
         "properties": {
           "action": {
@@ -117,6 +188,32 @@
         "title": "AuditEntry",
         "type": "object"
       },
+      "AvailabilityBody": {
+        "properties": {
+          "availability": {
+            "pattern": "^(AVAILABLE|SICK|ON_LEAVE)$",
+            "title": "Availability",
+            "type": "string"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "required": [
+          "availability"
+        ],
+        "title": "AvailabilityBody",
+        "type": "object"
+      },
       "AvailableAction": {
         "properties": {
           "key": {
@@ -133,6 +230,41 @@
           "label"
         ],
         "title": "AvailableAction",
+        "type": "object"
+      },
+      "BlockBody": {
+        "properties": {
+          "notes": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "parts": {
+            "items": {
+              "$ref": "#/components/schemas/PartAsk"
+            },
+            "maxItems": 10,
+            "title": "Parts",
+            "type": "array"
+          },
+          "reason": {
+            "maxLength": 30,
+            "minLength": 3,
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason"
+        ],
+        "title": "BlockBody",
         "type": "object"
       },
       "BookingCheck": {
@@ -404,6 +536,26 @@
         "title": "CheckRequest",
         "type": "object"
       },
+      "CompleteBody": {
+        "properties": {
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceFile"
+            },
+            "maxItems": 4,
+            "title": "Evidence",
+            "type": "array"
+          },
+          "notes": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Notes",
+            "type": "string"
+          }
+        },
+        "title": "CompleteBody",
+        "type": "object"
+      },
       "CreateUser": {
         "properties": {
           "departmentId": {
@@ -518,6 +670,35 @@
         "title": "DepartmentSummary",
         "type": "object"
       },
+      "EvidenceFile": {
+        "properties": {
+          "contentBase64": {
+            "maxLength": 9000000,
+            "minLength": 4,
+            "title": "Contentbase64",
+            "type": "string"
+          },
+          "mime": {
+            "maxLength": 60,
+            "minLength": 3,
+            "title": "Mime",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "mime",
+          "contentBase64"
+        ],
+        "title": "EvidenceFile",
+        "type": "object"
+      },
       "ExtractRequest": {
         "properties": {
           "text": {
@@ -580,6 +761,32 @@
           "password"
         ],
         "title": "LoginRequest",
+        "type": "object"
+      },
+      "ManagedAvailabilityBody": {
+        "properties": {
+          "availability": {
+            "pattern": "^(AVAILABLE|SICK|ON_LEAVE|OFF_SHIFT)$",
+            "title": "Availability",
+            "type": "string"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "required": [
+          "availability"
+        ],
+        "title": "ManagedAvailabilityBody",
         "type": "object"
       },
       "MoveSession": {
@@ -782,6 +989,28 @@
         "title": "PageResponse[UserDto]",
         "type": "object"
       },
+      "PartAsk": {
+        "properties": {
+          "itemId": {
+            "maxLength": 60,
+            "minLength": 2,
+            "title": "Itemid",
+            "type": "string"
+          },
+          "qty": {
+            "maximum": 1000.0,
+            "minimum": 1.0,
+            "title": "Qty",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "itemId",
+          "qty"
+        ],
+        "title": "PartAsk",
+        "type": "object"
+      },
       "Ping": {
         "properties": {
           "database": {
@@ -819,6 +1048,24 @@
           "name"
         ],
         "title": "ProfileUpdate",
+        "type": "object"
+      },
+      "ReasonBody": {
+        "properties": {
+          "reason": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "title": "ReasonBody",
         "type": "object"
       },
       "Reschedule": {
@@ -1393,6 +1640,24 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "VerifyBody": {
+        "properties": {
+          "notes": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "title": "VerifyBody",
         "type": "object"
       }
     },
@@ -2769,6 +3034,52 @@
         ]
       }
     },
+    "/api/v1/files/{file_id}": {
+      "get": {
+        "description": "Row-level access is decided by the file store: an owner, or someone who may read the thing it belongs to.",
+        "operationId": "download_file_api_v1_files__file_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "file_id",
+            "required": true,
+            "schema": {
+              "title": "File Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Download File",
+        "tags": [
+          "files"
+        ]
+      }
+    },
     "/api/v1/goods-receipts/{receipt_id}/validate": {
       "post": {
         "operationId": "validate_receipt_api_v1_goods_receipts__receipt_id__validate_post",
@@ -3384,6 +3695,32 @@
         ]
       }
     },
+    "/api/v1/maintenance-history": {
+      "get": {
+        "operationId": "maintenance_history_api_v1_maintenance_history_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Maintenance History Api V1 Maintenance History Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Maintenance History",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
     "/api/v1/me/badges": {
       "get": {
         "description": "Live counts for navigation badges. Sources are added as their features are built.",
@@ -3587,6 +3924,135 @@
         ]
       }
     },
+    "/api/v1/technicians/me": {
+      "get": {
+        "operationId": "my_technician_profile_api_v1_technicians_me_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response My Technician Profile Api V1 Technicians Me Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "My Technician Profile",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/technicians/me/availability": {
+      "patch": {
+        "operationId": "set_my_availability_api_v1_technicians_me_availability_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AvailabilityBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Set My Availability Api V1 Technicians Me Availability Patch"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Set My Availability",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/technicians/{technician_id}/availability": {
+      "patch": {
+        "operationId": "set_availability_api_v1_technicians__technician_id__availability_patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "technician_id",
+            "required": true,
+            "schema": {
+              "title": "Technician Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManagedAvailabilityBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Set Availability Api V1 Technicians  Technician Id  Availability Patch"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Set Availability",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
     "/api/v1/timetable/affected": {
       "get": {
         "operationId": "timetable_affected_api_v1_timetable_affected_get",
@@ -3771,12 +4237,91 @@
     "/api/v1/work-orders": {
       "get": {
         "operationId": "list_work_orders_api_v1_work_orders_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 30,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Size",
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
                   "title": "Response List Work Orders Api V1 Work Orders Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Work Orders",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/review-late": {
+      "post": {
+        "description": "Flags work that was not picked up or is running late, each with a proposed replacement.",
+        "operationId": "review_late_work_api_v1_work_orders_review_late_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Review Late Work Api V1 Work Orders Review Late Post"
                 }
               }
             },
@@ -3788,9 +4333,103 @@
             "HTTPBearer": []
           }
         ],
-        "summary": "List Work Orders",
+        "summary": "Review Late Work",
         "tags": [
-          "reserved"
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/{work_order_id}": {
+      "get": {
+        "operationId": "get_work_order_api_v1_work_orders__work_order_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "work_order_id",
+            "required": true,
+            "schema": {
+              "title": "Work Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Work Order Api V1 Work Orders  Work Order Id  Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Work Order",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/{work_order_id}/accept": {
+      "post": {
+        "operationId": "accept_work_order_api_v1_work_orders__work_order_id__accept_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "work_order_id",
+            "required": true,
+            "schema": {
+              "title": "Work Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Accept Work Order Api V1 Work Orders  Work Order Id  Accept Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Accept Work Order",
+        "tags": [
+          "work-orders"
         ]
       }
     },
@@ -3808,6 +4447,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignBody"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
@@ -3837,7 +4486,175 @@
         ],
         "summary": "Assign Work Order",
         "tags": [
-          "reserved"
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/{work_order_id}/block": {
+      "post": {
+        "operationId": "block_work_order_api_v1_work_orders__work_order_id__block_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "work_order_id",
+            "required": true,
+            "schema": {
+              "title": "Work Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlockBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Block Work Order Api V1 Work Orders  Work Order Id  Block Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Block Work Order",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/{work_order_id}/cancel": {
+      "post": {
+        "operationId": "cancel_work_order_api_v1_work_orders__work_order_id__cancel_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "work_order_id",
+            "required": true,
+            "schema": {
+              "title": "Work Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/ReasonBody"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Cancel Work Order Api V1 Work Orders  Work Order Id  Cancel Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Cancel Work Order",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/{work_order_id}/candidates": {
+      "get": {
+        "operationId": "work_order_candidates_api_v1_work_orders__work_order_id__candidates_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "work_order_id",
+            "required": true,
+            "schema": {
+              "title": "Work Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Work Order Candidates Api V1 Work Orders  Work Order Id  Candidates Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Work Order Candidates",
+        "tags": [
+          "work-orders"
         ]
       }
     },
@@ -3855,6 +4672,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteBody"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
@@ -3884,7 +4711,404 @@
         ],
         "summary": "Complete Work Order",
         "tags": [
-          "reserved"
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/{work_order_id}/decline": {
+      "post": {
+        "operationId": "decline_work_order_api_v1_work_orders__work_order_id__decline_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "work_order_id",
+            "required": true,
+            "schema": {
+              "title": "Work Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/ReasonBody"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Decline Work Order Api V1 Work Orders  Work Order Id  Decline Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Decline Work Order",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/{work_order_id}/history": {
+      "get": {
+        "operationId": "work_order_history_api_v1_work_orders__work_order_id__history_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "work_order_id",
+            "required": true,
+            "schema": {
+              "title": "Work Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Work Order History Api V1 Work Orders  Work Order Id  History Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Work Order History",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/{work_order_id}/reject": {
+      "post": {
+        "operationId": "reject_work_order_api_v1_work_orders__work_order_id__reject_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "work_order_id",
+            "required": true,
+            "schema": {
+              "title": "Work Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/VerifyBody"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Reject Work Order Api V1 Work Orders  Work Order Id  Reject Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Reject Work Order",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/{work_order_id}/request-reassign": {
+      "post": {
+        "operationId": "request_reassign_api_v1_work_orders__work_order_id__request_reassign_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "work_order_id",
+            "required": true,
+            "schema": {
+              "title": "Work Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/ReasonBody"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Request Reassign Api V1 Work Orders  Work Order Id  Request Reassign Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Request Reassign",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/{work_order_id}/resume": {
+      "post": {
+        "operationId": "resume_work_order_api_v1_work_orders__work_order_id__resume_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "work_order_id",
+            "required": true,
+            "schema": {
+              "title": "Work Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Resume Work Order Api V1 Work Orders  Work Order Id  Resume Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Resume Work Order",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/{work_order_id}/start": {
+      "post": {
+        "operationId": "start_work_order_api_v1_work_orders__work_order_id__start_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "work_order_id",
+            "required": true,
+            "schema": {
+              "title": "Work Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Start Work Order Api V1 Work Orders  Work Order Id  Start Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Start Work Order",
+        "tags": [
+          "work-orders"
+        ]
+      }
+    },
+    "/api/v1/work-orders/{work_order_id}/verify": {
+      "post": {
+        "operationId": "verify_work_order_api_v1_work_orders__work_order_id__verify_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "work_order_id",
+            "required": true,
+            "schema": {
+              "title": "Work Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/VerifyBody"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Verify Work Order Api V1 Work Orders  Work Order Id  Verify Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Verify Work Order",
+        "tags": [
+          "work-orders"
         ]
       }
     }
