@@ -142,6 +142,31 @@ async def test_free_parts_are_reserved_straight_away_and_released_on_cancel(worl
     assert (await world.db["inventory_balances"].find_one({"itemId": FUSE, "locationId": "LOC-MAIN"}))["reserved"] == 0
 
 
+async def test_reserving_below_the_threshold_notifies_once(world):
+    await world.db["inventory_balances"].update_many({"itemId": FUSE}, {"$set": {"onHand": 0, "reserved": 0}})
+    await world.db["inventory_balances"].update_one({"itemId": FUSE, "locationId": "LOC-MAIN"}, {"$set": {"onHand": 10}})
+    # FUSE's reorder threshold is 6, so starting stock of 10 is comfortably above it.
+    assert await world.services.inventory.reserve("WO-LOW-1", FUSE, 3) is not None  # free 7: still above the line
+    assert await world.db["outbox_events"].count_documents({"eventType": "inventory.low"}) == 0
+
+    assert await world.services.inventory.reserve("WO-LOW-1", FUSE, 1) is not None  # free 6: at the line
+    assert await world.db["outbox_events"].count_documents({"eventType": "inventory.low"}) == 1
+
+    assert await world.services.inventory.reserve("WO-LOW-1", FUSE, 1) is not None  # free 5: still low, no repeat
+    assert await world.db["outbox_events"].count_documents({"eventType": "inventory.low"}) == 1
+
+    await world.services.outbox.dispatch_due()
+    told = {row["userId"] async for row in world.db["notifications"].find({"eventType": "inventory.low"})}
+    approvers = {row["_id"] async for row in world.db["users"].find({"roleKey": "PROCUREMENT_APPROVER"})}
+    assert told == approvers and told
+
+    # Releasing stock back above the line clears the flag, so a later drop notifies again.
+    assert await world.services.inventory.release_for_work_order("WO-LOW-1", "U-TEST", "SYSTEM") == 3
+    assert (await world.db["inventory_items"].find_one({"_id": FUSE}))["lowStockAlertSent"] is False
+    assert await world.services.inventory.reserve("WO-LOW-2", FUSE, 4) is not None  # free back down to 6
+    assert await world.db["outbox_events"].count_documents({"eventType": "inventory.low"}) == 2
+
+
 async def test_asking_for_the_same_part_twice_is_refused(world):
     incident = (await report(world, "FACULTY", "Power socket sparking in ARB-204, smells of burning")).json()["incidentId"]
     await world.call("FACILITIES_ADMIN", "POST", f"/api/v1/incidents/{incident}/actions/incident.createWorkOrder")

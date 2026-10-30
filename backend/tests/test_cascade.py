@@ -131,6 +131,28 @@ async def test_creating_a_work_order_adds_it_to_the_chain(world):
 # ---- who sees what -------------------------------------------------------------------------------------------------
 
 
+async def test_a_transformer_fault_notifies_the_exams_students_and_lecturer_once(world):
+    incident_id = await socket_incident(world)
+    await world.call("FACILITIES_ADMIN", "POST", f"/api/v1/cascading/impact/{incident_id}/recompute", json={"rootAssetIds": ["AST-TR-ARB"]})
+    the_exam = await exam(world)
+    snapshot = await world.services.cascade.refresh(incident_id, now=ensure_utc(the_exam["startAt"]) - timedelta(hours=1))
+    recipients = set(snapshot["recipientUserIds"])
+    assert "U-STUDENT" in recipients  # a member of CSE-3A, whose exam this is
+
+    event = await world.db["outbox_events"].find_one({"eventType": "impact.changed"})
+    assert event is not None and set(event["payload"]["recipientIds"]) == recipients
+    await world.services.outbox.dispatch_due()
+    told = {row["userId"] async for row in world.db["notifications"].find({"eventType": "impact.changed"})}
+    assert told == recipients
+    assert "U-FACILITIES" not in told and "U-SYSADMIN" not in told  # nobody outside the affected classes
+
+    # A second refresh with the same chain adds nobody new, so nothing more is enqueued or sent.
+    await world.services.cascade.refresh(incident_id, now=ensure_utc(the_exam["startAt"]) - timedelta(hours=1))
+    assert await world.db["outbox_events"].count_documents({"eventType": "impact.changed"}) == 1
+    await world.services.outbox.dispatch_due()
+    assert await world.db["notifications"].count_documents({"eventType": "impact.changed"}) == len(recipients)
+
+
 async def test_academic_impact_is_limited_to_the_callers_classes(world):
     incident_id = await socket_incident(world)
     await world.call("FACILITIES_ADMIN", "POST", f"/api/v1/cascading/impact/{incident_id}/recompute", json={"rootAssetIds": ["AST-TR-ARB"]})

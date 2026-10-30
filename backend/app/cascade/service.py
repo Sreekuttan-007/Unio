@@ -15,6 +15,7 @@ from app.cascade.graph import Reached, walk
 from app.core.authuser import AuthUser
 from app.core.clock import ensure_utc, local_time, utcnow
 from app.core.errors import not_found, rule
+from app.core.outbox import OutboxService
 from app.core.permission import Permission as P
 from app.incidents.service import IncidentService
 
@@ -36,11 +37,12 @@ def rank_sessions(sessions: list[dict[str, Any]], room_depth: dict[str, int]) ->
 
 
 class CascadeService:
-    def __init__(self, db: Any, incidents: IncidentService, bookings: BookingService, audit: AuditService, campus_id: str) -> None:
+    def __init__(self, db: Any, incidents: IncidentService, bookings: BookingService, audit: AuditService, outbox: OutboxService, campus_id: str) -> None:
         self._db = db
         self._incidents = incidents
         self._bookings = bookings
         self._audit = audit
+        self._outbox = outbox
         self._campus_id = campus_id
 
     # ---- computing --------------------------------------------------------------------------------------------
@@ -163,6 +165,8 @@ class CascadeService:
         incident = await self._db["incidents"].find_one({"_id": incident_id})
         if incident is None:
             raise not_found("Incident")
+        previous = await self._db["impact_snapshots"].find_one({"_id": incident_id})
+        told_already = set(previous["recipientUserIds"]) if previous else set()
         snapshot = await self.compute(incident, now)
         await self._db["impact_snapshots"].replace_one({"_id": incident_id}, {"_id": incident_id, **snapshot}, upsert=True)
         totals = snapshot["totals"]
@@ -171,6 +175,11 @@ class CascadeService:
             {"_id": incident_id},
             {"$set": {"impact": {key: totals[key] for key in ("rooms", "sessions", "exams", "people")}, "impactRoomIds": snapshot["roomIds"]}},
         )
+        newly_affected = sorted(set(snapshot["recipientUserIds"]) - told_already)
+        if newly_affected:
+            # Only the people this refresh just added to the chain get told. NotificationService's
+            # dedupeKey is per (event, user), so a later refresh that adds no one sends nothing.
+            await self._outbox.enqueue("impact.changed", {"incidentId": incident_id, "recipientIds": newly_affected})
         return snapshot
 
     async def impact(self, user: AuthUser, incident_id: str) -> dict[str, Any]:

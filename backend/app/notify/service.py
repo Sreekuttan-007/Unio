@@ -42,6 +42,8 @@ WORDS = {
     "session.moved": ("Your class has moved", "{course} is now in {toRoom}."),
     "sla.escalated": ("Deadline at risk", "{label} reached escalation level {level}."),
     "incident.status": ("Your report was updated", "{incidentId} is now {status}."),
+    "impact.changed": ("Your class is affected", "An incident ({incidentId}) now affects something on your timetable."),
+    "inventory.low": ("Low stock", "{itemName} is down to {available}, at or below its reorder point of {threshold}."),
 }
 
 

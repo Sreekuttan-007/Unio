@@ -76,7 +76,7 @@ def build_services(settings: Settings, db: Any) -> Services:
     files = FileStore(db)
     workorders = WorkOrderService(db, collisions, incidents, sla, audit, outbox, files, settings.campus_id)
     bookings = BookingService(db, collisions, audit, outbox, settings.campus_id)
-    cascade = CascadeService(db, incidents, bookings, audit, settings.campus_id)
+    cascade = CascadeService(db, incidents, bookings, audit, outbox, settings.campus_id)
     incidents.cascade = cascade
     inventory = InventoryService(db, collisions, audit, outbox, StockLedger(db, settings.campus_id))
     approvals = ApprovalService(db, collisions, audit, outbox, settings.campus_id)
