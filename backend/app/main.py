@@ -25,6 +25,8 @@ from app.core.outbox import run_outbox_loop
 from app.db import ensure_indexes
 from app.files.router import router as files_router
 from app.incidents.router import router as incidents_router
+from app.approvals.policy import ensure_procurement_policy
+from app.procurement.router import router as procurement_router
 from app.services import build_services
 from app.simulation.router import router as simulation_router
 from app.system.router import reserved, router as system_router
@@ -71,6 +73,8 @@ def create_app(settings: Settings | None = None, db: Any = None) -> FastAPI:
         await services.sla.ensure_policies()
         await services.collisions.ensure_rules()
         await services.bookings.claim_sessions()
+        await ensure_procurement_policy(database, settings.campus_id)
+        await services.inventory.ledger.reconcile()  # finish any stock posting a crash interrupted
         outbox_task = None
         if settings.outbox_enabled:
             outbox_task = asyncio.create_task(run_outbox_loop(services.outbox, settings.outbox_poll_seconds))
@@ -122,6 +126,7 @@ def create_app(settings: Settings | None = None, db: Any = None) -> FastAPI:
     app.include_router(workorders_router)
     app.include_router(cascade_router)
     app.include_router(simulation_router)
+    app.include_router(procurement_router)
     app.include_router(files_router)
     app.include_router(reserved)
     assert_all_routes_guarded(app)

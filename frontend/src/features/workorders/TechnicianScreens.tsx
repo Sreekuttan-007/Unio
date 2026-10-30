@@ -4,6 +4,7 @@ import { Badge, Banner, Button, Card, CardBody, CardHeader, Dropzone, ListRow, P
 import type { TechnicianCard, WorkOrder } from '@/types/domain'
 import { PriorityBadge, SlaSummary, WorkOrderStatusBadge } from '../shared/badges'
 import { describeError } from '../shared/errors'
+import { readAsUpload } from '../shared/files'
 import { dateTime, titleCase } from '../shared/format'
 import { QueryBoundary } from '../shared/QueryBoundary'
 import { useAction, useApi } from '../shared/useApi'
@@ -12,15 +13,6 @@ import { SessionCard } from '../shell/SessionCard'
 const PART_TONE = { RESERVED: 'success', SHORT: 'danger', ISSUED: 'neutral' } as const
 const BLOCKED_TEXT = { ACCESS: 'You reported that you cannot get access.', SKILL_MISMATCH: 'You reported that this needs a different skill. Facilities is choosing someone.' } as const
 
-/** A photo as the base64 data URL the completion endpoint accepts. */
-function asEvidence(file: File): Promise<{ name: string; mime: string; contentBase64: string }> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve({ name: file.name.slice(0, 120), mime: file.type, contentBase64: String(reader.result) })
-    reader.onerror = () => reject(reader.error ?? new Error('That photo could not be read.'))
-    reader.readAsDataURL(file)
-  })
-}
 
 type Pending = { order: WorkOrder; action: 'block' | 'complete' } | null
 
@@ -76,6 +68,9 @@ export function MyTasksScreen() {
   const [notes, setNotes] = useState('')
   const [reason, setReason] = useState('WAITING_FOR_PARTS')
   const [photos, setPhotos] = useState<File[]>([])
+  const [part, setPart] = useState('')
+  const [qty, setQty] = useState(1)
+  const catalog = useApi<{ id: string; name: string; unit: string; available: number }[]>('/inventory/catalog', { enabled: pending?.action === 'block' })
   const [error, setError] = useState<string | null>(null)
 
   const run = async (id: string, action: string, body?: Record<string, unknown>) => {
@@ -114,7 +109,7 @@ export function MyTasksScreen() {
           <Dropzone label="Add a completion photo" hint={photos.length ? photos.map((file) => file.name).join(', ') : 'Use the camera'} accept="image/jpeg,image/png,image/webp" capture onFiles={setPhotos} />
           <Button className="w-full" loading={act.isPending} disabled={!notes.trim()} onClick={() => pending && void (async () => {
             try {
-              await run(pending.order.id, 'complete', { notes, evidence: await Promise.all(photos.slice(0, 4).map(asEvidence)) })
+              await run(pending.order.id, 'complete', { notes, evidence: await Promise.all(photos.slice(0, 4).map(readAsUpload)) })
             } catch (failure) {
               setError(describeError(failure))
             }
@@ -125,8 +120,14 @@ export function MyTasksScreen() {
       <Sheet open={pending?.action === 'block'} title={`Report a blocker on ${pending?.order.id ?? ''}`} onClose={() => setPending(null)}>
         <div className="space-y-4">
           <SelectField label="What is stopping you" value={reason} onChange={(event) => setReason(event.target.value)} options={[{ value: 'WAITING_FOR_PARTS', label: 'A part is missing' }, { value: 'ACCESS', label: 'I cannot get access' }, { value: 'SKILL_MISMATCH', label: 'This needs a different skill' }]} />
+          {reason === 'WAITING_FOR_PARTS' ? (
+            <>
+              <SelectField label="Which part" value={part} onChange={(event) => setPart(event.target.value)} options={[{ value: '', label: 'Choose a part' }, ...(catalog.data ?? []).map((item) => ({ value: item.id, label: `${item.name} (${item.available} free)` }))]} />
+              <SelectField label="How many" value={String(qty)} onChange={(event) => setQty(Number(event.target.value))} options={[1, 2, 3, 4, 5, 6, 8, 10].map((n) => ({ value: String(n), label: String(n) }))} />
+            </>
+          ) : null}
           <TextArea label="Details" value={notes} onChange={(event) => setNotes(event.target.value)} />
-          <Button className="w-full" variant="danger" loading={act.isPending} onClick={() => pending && void run(pending.order.id, 'block', { reason, notes })}>Block this task</Button>
+          <Button className="w-full" variant="danger" loading={act.isPending} disabled={reason === 'WAITING_FOR_PARTS' && !part} onClick={() => pending && void run(pending.order.id, 'block', { reason, notes, parts: reason === 'WAITING_FOR_PARTS' && part ? [{ itemId: part, qty }] : [] })}>Block this task</Button>
         </div>
       </Sheet>
       <SessionCard />

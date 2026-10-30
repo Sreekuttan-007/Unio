@@ -3,6 +3,7 @@ from typing import Any
 
 from fastapi import Request
 
+from app.approvals.service import ApprovalService
 from app.audit.service import AuditService
 from app.bookings.service import BookingService
 from app.cascade.service import CascadeService
@@ -13,7 +14,10 @@ from app.core.security import JwtService, LoginRateLimiter, PasswordService
 from app.files.service import FileStore
 from app.incidents.inbox import InboxService
 from app.incidents.service import IncidentService
+from app.inventory.ledger import StockLedger
+from app.inventory.service import InventoryService
 from app.ml.service import MlService
+from app.procurement.service import ProcurementService
 from app.simulation.service import SimulationService
 from app.sla.service import SlaService
 from app.users.directory import UserDirectory
@@ -46,6 +50,9 @@ class Services:
     workorders: WorkOrderService
     cascade: CascadeService
     simulations: SimulationService
+    inventory: InventoryService
+    approvals: ApprovalService
+    procurement: ProcurementService
 
 
 def build_services(settings: Settings, db: Any) -> Services:
@@ -64,6 +71,13 @@ def build_services(settings: Settings, db: Any) -> Services:
     bookings = BookingService(db, collisions, audit, outbox, settings.campus_id)
     cascade = CascadeService(db, incidents, bookings, audit, settings.campus_id)
     incidents.cascade = cascade
+    inventory = InventoryService(db, collisions, audit, outbox, StockLedger(db, settings.campus_id))
+    approvals = ApprovalService(db, collisions, audit, outbox, settings.campus_id)
+    procurement = ProcurementService(db, collisions, inventory, files, audit, outbox, settings.campus_id)
+    approvals.procurement = procurement
+    inventory.approvals = approvals
+    inventory.workorders = workorders
+    workorders.inventory = inventory
     return Services(
         settings=settings,
         db=db,
@@ -85,6 +99,9 @@ def build_services(settings: Settings, db: Any) -> Services:
         workorders=workorders,
         cascade=cascade,
         simulations=SimulationService(db, incidents, bookings, workorders, audit),
+        inventory=inventory,
+        approvals=approvals,
+        procurement=procurement,
     )
 
 

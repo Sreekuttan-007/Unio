@@ -437,6 +437,7 @@ class WorkOrderService:
         if reason not in BLOCK_REASONS:
             raise rule("UNKNOWN_BLOCK_REASON", "Say what is stopping the work: a missing part, access, or a different skill.")
         order = await self._mine(user, work_order_id)
+        next_status(WorkOrderStatus(order["status"]), WorkOrderEvent.BLOCK)  # refuse before any stock is reserved
         if reason == "WAITING_FOR_PARTS" and parts and self.inventory is not None:
             await self.inventory.request_parts(user, order, parts)
             order = await self._db["work_orders"].find_one({"_id": order["_id"]})  # type: ignore[assignment]

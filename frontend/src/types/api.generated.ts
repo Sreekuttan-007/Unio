@@ -212,6 +212,41 @@ export interface paths {
         patch: operations["set_user_status_api_v1_admin_users__user_id__status_patch"];
         trace?: never;
     };
+    "/api/v1/approvals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Approvals */
+        get: operations["list_approvals_api_v1_approvals_get"];
+        put?: never;
+        /** Create Approval */
+        post: operations["create_approval_api_v1_approvals_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/approvals/{approval_id}/answer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Answer Clarification */
+        post: operations["answer_clarification_api_v1_approvals__approval_id__answer_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/approvals/{approval_id}/decide": {
         parameters: {
             query?: never;
@@ -576,6 +611,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/goods-receipts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Receipts */
+        get: operations["list_receipts_api_v1_goods_receipts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/goods-receipts/{receipt_id}/validate": {
         parameters: {
             query?: never;
@@ -585,7 +637,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Validate Receipt */
+        /**
+         * Validate Receipt
+         * @description Posts the received stock to the ledger exactly once, then puts it to work on blocked repairs.
+         */
         post: operations["validate_receipt_api_v1_goods_receipts__receipt_id__validate_post"];
         delete?: never;
         options?: never;
@@ -712,7 +767,82 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/inventory/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Part Catalog
+         * @description What can be asked for, and how many are free. For the technician's part picker.
+         */
+        get: operations["part_catalog_api_v1_inventory_catalog_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/inventory/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Stock Levels */
+        get: operations["stock_levels_api_v1_inventory_items_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/inventory/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Parts */
+        get: operations["my_parts_api_v1_inventory_mine_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/invoices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Invoices */
+        get: operations["list_invoices_api_v1_invoices_get"];
+        put?: never;
+        /**
+         * Upload Invoice
+         * @description Reads the invoice and checks it against its order. It never changes stock.
+         */
+        post: operations["upload_invoice_api_v1_invoices_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/invoices/{invoice_id}/resolve": {
         parameters: {
             query?: never;
             header?: never;
@@ -721,8 +851,25 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Upload Invoice */
-        post: operations["upload_invoice_api_v1_invoices_post"];
+        /** Resolve Discrepancy */
+        post: operations["resolve_discrepancy_api_v1_invoices__invoice_id__resolve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/invoices/{invoice_id}/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validate Invoice */
+        post: operations["validate_invoice_api_v1_invoices__invoice_id__validate_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -877,6 +1024,23 @@ export interface paths {
         };
         /** List Notices */
         get: operations["list_notices_api_v1_notices_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/purchase-orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Purchase Orders */
+        get: operations["purchase_orders_api_v1_purchase_orders_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1367,6 +1531,24 @@ export interface components {
          * @enum {string}
          */
         ActionType: "BOOK_ROOM" | "MOVE_SESSION" | "ASSIGN_TECHNICIAN" | "RESERVE_PARTS" | "DECIDE_APPROVAL" | "VALIDATE_RECEIPT" | "RESOLVE_INCIDENT";
+        /** AnswerBody */
+        AnswerBody: {
+            /** Text */
+            text: string;
+        };
+        /** ApprovalBody */
+        ApprovalBody: {
+            /** Amountpaise */
+            amountPaise: number;
+            /** Justification */
+            justification: string;
+            /** Linkedworkorderid */
+            linkedWorkOrderId?: string | null;
+            /** Title */
+            title: string;
+            /** Type */
+            type: string;
+        };
         /** AssignBody */
         AssignBody: {
             /** Acknowledgedcodes */
@@ -1566,6 +1748,13 @@ export interface components {
             /** Rolekey */
             roleKey: string;
         };
+        /** DecisionBody */
+        DecisionBody: {
+            /** Decision */
+            decision: string;
+            /** Reason */
+            reason?: string | null;
+        };
         /** DemoAccount */
         DemoAccount: {
             /** Accent */
@@ -1614,6 +1803,17 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** InvoiceBody */
+        InvoiceBody: {
+            /** Contentbase64 */
+            contentBase64: string;
+            /** Filename */
+            fileName: string;
+            /** Mime */
+            mime: string;
+            /** Purchaseorderid */
+            purchaseOrderId?: string | null;
         };
         /** LoginRequest */
         LoginRequest: {
@@ -1743,6 +1943,13 @@ export interface components {
              * Format: date-time
              */
             start: string;
+        };
+        /** ResolveBody */
+        ResolveBody: {
+            /** Code */
+            code: string;
+            /** Note */
+            note?: string | null;
         };
         /** RoleChange */
         RoleChange: {
@@ -2300,6 +2507,94 @@ export interface operations {
             };
         };
     };
+    list_approvals_api_v1_approvals_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    create_approval_api_v1_approvals_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApprovalBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    answer_clarification_api_v1_approvals__approval_id__answer_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                approval_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnswerBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     decide_approval_api_v1_approvals__approval_id__decide_post: {
         parameters: {
             query?: never;
@@ -2309,7 +2604,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionBody"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {
@@ -2935,6 +3234,26 @@ export interface operations {
             };
         };
     };
+    list_receipts_api_v1_goods_receipts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     validate_receipt_api_v1_goods_receipts__receipt_id__validate_post: {
         parameters: {
             query?: never;
@@ -3185,7 +3504,7 @@ export interface operations {
             };
         };
     };
-    upload_invoice_api_v1_invoices_post: {
+    part_catalog_api_v1_inventory_catalog_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -3201,6 +3520,165 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+        };
+    };
+    stock_levels_api_v1_inventory_items_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    my_parts_api_v1_inventory_mine_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    list_invoices_api_v1_invoices_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    upload_invoice_api_v1_invoices_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InvoiceBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resolve_discrepancy_api_v1_invoices__invoice_id__resolve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invoice_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResolveBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    validate_invoice_api_v1_invoices__invoice_id__validate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                invoice_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -3420,6 +3898,26 @@ export interface operations {
         };
     };
     list_notices_api_v1_notices_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    purchase_orders_api_v1_purchase_orders_get: {
         parameters: {
             query?: never;
             header?: never;

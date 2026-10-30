@@ -32,6 +32,68 @@
         "title": "ActionType",
         "type": "string"
       },
+      "AnswerBody": {
+        "properties": {
+          "text": {
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "AnswerBody",
+        "type": "object"
+      },
+      "ApprovalBody": {
+        "properties": {
+          "amountPaise": {
+            "maximum": 100000000000.0,
+            "minimum": 0.0,
+            "title": "Amountpaise",
+            "type": "integer"
+          },
+          "justification": {
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Justification",
+            "type": "string"
+          },
+          "linkedWorkOrderId": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linkedworkorderid"
+          },
+          "title": {
+            "maxLength": 200,
+            "minLength": 3,
+            "title": "Title",
+            "type": "string"
+          },
+          "type": {
+            "pattern": "^(PURCHASE|COSTLY_REPAIR|OVERRIDE)$",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "justification",
+          "amountPaise"
+        ],
+        "title": "ApprovalBody",
+        "type": "object"
+      },
       "AssignBody": {
         "properties": {
           "acknowledgedCodes": {
@@ -603,6 +665,32 @@
         "title": "CreateUser",
         "type": "object"
       },
+      "DecisionBody": {
+        "properties": {
+          "decision": {
+            "pattern": "^(APPROVE|REJECT|CLARIFY)$",
+            "title": "Decision",
+            "type": "string"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "required": [
+          "decision"
+        ],
+        "title": "DecisionBody",
+        "type": "object"
+      },
       "DemoAccount": {
         "properties": {
           "accent": {
@@ -738,6 +826,47 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "InvoiceBody": {
+        "properties": {
+          "contentBase64": {
+            "maxLength": 9000000,
+            "minLength": 4,
+            "title": "Contentbase64",
+            "type": "string"
+          },
+          "fileName": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Filename",
+            "type": "string"
+          },
+          "mime": {
+            "maxLength": 60,
+            "minLength": 3,
+            "title": "Mime",
+            "type": "string"
+          },
+          "purchaseOrderId": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purchaseorderid"
+          }
+        },
+        "required": [
+          "fileName",
+          "mime",
+          "contentBase64"
+        ],
+        "title": "InvoiceBody",
         "type": "object"
       },
       "LoginRequest": {
@@ -1177,6 +1306,33 @@
           "end"
         ],
         "title": "Reschedule",
+        "type": "object"
+      },
+      "ResolveBody": {
+        "properties": {
+          "code": {
+            "maxLength": 40,
+            "minLength": 3,
+            "title": "Code",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "title": "ResolveBody",
         "type": "object"
       },
       "RoleChange": {
@@ -2298,6 +2454,139 @@
         ]
       }
     },
+    "/api/v1/approvals": {
+      "get": {
+        "operationId": "list_approvals_api_v1_approvals_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response List Approvals Api V1 Approvals Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Approvals",
+        "tags": [
+          "inventory",
+          "approvals",
+          "procurement"
+        ]
+      },
+      "post": {
+        "operationId": "create_approval_api_v1_approvals_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApprovalBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Create Approval Api V1 Approvals Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Approval",
+        "tags": [
+          "inventory",
+          "approvals",
+          "procurement"
+        ]
+      }
+    },
+    "/api/v1/approvals/{approval_id}/answer": {
+      "post": {
+        "operationId": "answer_clarification_api_v1_approvals__approval_id__answer_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "approval_id",
+            "required": true,
+            "schema": {
+              "title": "Approval Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnswerBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Answer Clarification Api V1 Approvals  Approval Id  Answer Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Answer Clarification",
+        "tags": [
+          "inventory",
+          "approvals",
+          "procurement"
+        ]
+      }
+    },
     "/api/v1/approvals/{approval_id}/decide": {
       "post": {
         "operationId": "decide_approval_api_v1_approvals__approval_id__decide_post",
@@ -2312,6 +2601,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecisionBody"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
@@ -2341,7 +2640,9 @@
         ],
         "summary": "Decide Approval",
         "tags": [
-          "reserved"
+          "inventory",
+          "approvals",
+          "procurement"
         ]
       }
     },
@@ -3254,8 +3555,37 @@
         ]
       }
     },
+    "/api/v1/goods-receipts": {
+      "get": {
+        "operationId": "list_receipts_api_v1_goods_receipts_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response List Receipts Api V1 Goods Receipts Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Receipts",
+        "tags": [
+          "inventory",
+          "approvals",
+          "procurement"
+        ]
+      }
+    },
     "/api/v1/goods-receipts/{receipt_id}/validate": {
       "post": {
+        "description": "Posts the received stock to the ledger exactly once, then puts it to work on blocked repairs.",
         "operationId": "validate_receipt_api_v1_goods_receipts__receipt_id__validate_post",
         "parameters": [
           {
@@ -3297,7 +3627,9 @@
         ],
         "summary": "Validate Receipt",
         "tags": [
-          "reserved"
+          "inventory",
+          "approvals",
+          "procurement"
         ]
       }
     },
@@ -3675,15 +4007,16 @@
         ]
       }
     },
-    "/api/v1/invoices": {
-      "post": {
-        "operationId": "upload_invoice_api_v1_invoices_post",
+    "/api/v1/inventory/catalog": {
+      "get": {
+        "description": "What can be asked for, and how many are free. For the technician's part picker.",
+        "operationId": "part_catalog_api_v1_inventory_catalog_get",
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Upload Invoice Api V1 Invoices Post"
+                  "title": "Response Part Catalog Api V1 Inventory Catalog Get"
                 }
               }
             },
@@ -3695,9 +4028,250 @@
             "HTTPBearer": []
           }
         ],
+        "summary": "Part Catalog",
+        "tags": [
+          "inventory",
+          "approvals",
+          "procurement"
+        ]
+      }
+    },
+    "/api/v1/inventory/items": {
+      "get": {
+        "operationId": "stock_levels_api_v1_inventory_items_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Stock Levels Api V1 Inventory Items Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Stock Levels",
+        "tags": [
+          "inventory",
+          "approvals",
+          "procurement"
+        ]
+      }
+    },
+    "/api/v1/inventory/mine": {
+      "get": {
+        "operationId": "my_parts_api_v1_inventory_mine_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response My Parts Api V1 Inventory Mine Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "My Parts",
+        "tags": [
+          "inventory",
+          "approvals",
+          "procurement"
+        ]
+      }
+    },
+    "/api/v1/invoices": {
+      "get": {
+        "operationId": "list_invoices_api_v1_invoices_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response List Invoices Api V1 Invoices Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Invoices",
+        "tags": [
+          "inventory",
+          "approvals",
+          "procurement"
+        ]
+      },
+      "post": {
+        "description": "Reads the invoice and checks it against its order. It never changes stock.",
+        "operationId": "upload_invoice_api_v1_invoices_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Upload Invoice Api V1 Invoices Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "summary": "Upload Invoice",
         "tags": [
-          "reserved"
+          "inventory",
+          "approvals",
+          "procurement"
+        ]
+      }
+    },
+    "/api/v1/invoices/{invoice_id}/resolve": {
+      "post": {
+        "operationId": "resolve_discrepancy_api_v1_invoices__invoice_id__resolve_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoice_id",
+            "required": true,
+            "schema": {
+              "title": "Invoice Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Resolve Discrepancy Api V1 Invoices  Invoice Id  Resolve Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Resolve Discrepancy",
+        "tags": [
+          "inventory",
+          "approvals",
+          "procurement"
+        ]
+      }
+    },
+    "/api/v1/invoices/{invoice_id}/validate": {
+      "post": {
+        "operationId": "validate_invoice_api_v1_invoices__invoice_id__validate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoice_id",
+            "required": true,
+            "schema": {
+              "title": "Invoice Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Validate Invoice Api V1 Invoices  Invoice Id  Validate Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Validate Invoice",
+        "tags": [
+          "inventory",
+          "approvals",
+          "procurement"
         ]
       }
     },
@@ -4021,6 +4595,34 @@
         "summary": "List Notices",
         "tags": [
           "incidents"
+        ]
+      }
+    },
+    "/api/v1/purchase-orders": {
+      "get": {
+        "operationId": "purchase_orders_api_v1_purchase_orders_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Purchase Orders Api V1 Purchase Orders Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Purchase Orders",
+        "tags": [
+          "inventory",
+          "approvals",
+          "procurement"
         ]
       }
     },

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Badge, Banner, Button, Card, CardBody, CardHeader, DataTable, Dropzone, ListRow, PageHeader, ProgressBar, StatTile, type Column, type Tone } from '@/ui'
 import type { GoodsReceipt, Invoice, InvoiceLine, PurchaseOrder } from '@/types/domain'
 import { describeError } from '../shared/errors'
+import { readAsUpload } from '../shared/files'
 import { ago, money, titleCase } from '../shared/format'
 import { QueryBoundary } from '../shared/QueryBoundary'
 import { useAction, useApi } from '../shared/useApi'
@@ -100,13 +101,25 @@ function InvoiceReview({ invoice }: { invoice: Invoice }) {
 export function InvoicesScreen({ focus }: { focus: 'all' | 'discrepancies' }) {
   const invoices = useApi<Invoice[]>('/invoices')
   const [openId, setOpenId] = useState<string | null>(focus === 'discrepancies' ? 'INV-431' : null)
-  const upload = useAction<{ fileName: string }, Invoice>('POST', '/invoices', ['/invoices'], { idempotent: true })
+  const upload = useAction<{ fileName: string; mime: string; contentBase64: string }, Invoice>('POST', '/invoices', ['/invoices'], { idempotent: true })
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const send = async (file: File) => {
+    setUploadError(null)
+    try {
+      const picked = await readAsUpload(file)
+      const invoice = await upload.mutateAsync({ fileName: picked.name, mime: picked.mime, contentBase64: picked.contentBase64 })
+      setOpenId(invoice.id)
+    } catch (failure) {
+      setUploadError(describeError(failure))
+    }
+  }
   const title = focus === 'all' ? 'Invoices' : 'Discrepancies'
 
   return (
     <div className="space-y-5">
       <PageHeader title={title} description={focus === 'all' ? 'Upload an invoice and review what was read from it. Uploading never changes stock.' : 'Where an invoice disagrees with its purchase order.'} />
-      {focus === 'all' ? <Dropzone label="Upload an invoice" hint="PDF or a photo. It is read, then checked against the purchase order." accept="application/pdf,image/*" onFiles={(files) => files[0] && upload.mutate({ fileName: files[0].name }, { onSuccess: (invoice) => setOpenId(invoice.id) })} /> : null}
+      {focus === 'all' ? <Dropzone label="Upload an invoice" hint="PDF or a photo. It is read, then checked against the purchase order." accept="application/pdf,text/plain,image/*" onFiles={(files) => files[0] && void send(files[0])} /> : null}
+      {uploadError ? <Banner tone="danger" title="The invoice was not read" role="alert">{uploadError}</Banner> : null}
       {upload.isPending ? <Banner tone="info" title="Reading the invoice" role="status">Extracting the supplier, number and lines, then matching them to the order.</Banner> : null}
       <QueryBoundary query={invoices} isEmpty={(items) => items.length === 0} emptyTitle="No invoices">
         {(items) => {

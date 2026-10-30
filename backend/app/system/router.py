@@ -1,12 +1,9 @@
 from datetime import datetime
-from typing import Any
-
 from fastapi import Depends
 
-from app.core.access import GuardedRouter, public, require
+from app.core.access import GuardedRouter, public
 from app.core.clock import utcnow
 from app.core.errors import ApiException
-from app.core.permission import Permission as P
 from app.core.schema import ApiModel
 from app.services import Services, get_services
 
@@ -38,23 +35,3 @@ def _not_built(phase: int) -> ApiException:
 # matrix cover the real role model now: callers who may use one get 501, everyone else 403.
 # Delete each one when its phase adds the real endpoint.
 reserved = GuardedRouter(prefix="/api/v1", tags=["reserved"])
-
-
-@reserved.post(
-    "/approvals/{approval_id}/decide",
-    dependencies=[
-        Depends(require(P.APPROVAL_DECIDE_PURCHASE, P.APPROVAL_DECIDE_REPAIR, P.APPROVAL_DECIDE_OVERRIDE))
-    ],
-)
-async def decide_approval(approval_id: str) -> Any:
-    raise _not_built(10)
-
-
-@reserved.post("/invoices", dependencies=[Depends(require(P.INVOICE_UPLOAD))])
-async def upload_invoice() -> Any:
-    raise _not_built(10)
-
-
-@reserved.post("/goods-receipts/{receipt_id}/validate", dependencies=[Depends(require(P.RECEIPT_VALIDATE))])
-async def validate_receipt(receipt_id: str) -> Any:
-    raise _not_built(10)

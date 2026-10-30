@@ -624,6 +624,9 @@ export function createDomainHandlers() {
 
     // ---- inventory, approvals, procurement ---------------------------------------------------
     http.get(`${BASE}/inventory/items`, ({ request }) => (roleOf(request) ? HttpResponse.json(stock) : unauthenticated())),
+    http.get(`${BASE}/inventory/catalog`, ({ request }) =>
+      roleOf(request) ? HttpResponse.json(stock.map((row) => ({ id: row.id, sku: row.sku, name: row.name, unit: row.unit, category: row.category, available: Math.max(0, row.available) }))) : unauthenticated(),
+    ),
     http.get(`${BASE}/approvals`, async ({ request }) => {
       const role = roleOf(request)
       if (!role) return unauthenticated()

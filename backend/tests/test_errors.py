@@ -45,12 +45,12 @@ async def test_unknown_routes_and_methods_use_the_shape(env):
 
 
 async def test_unbuilt_endpoints_say_which_phase_delivers_them(env):
-    response = await env.call("PROCUREMENT_APPROVER", "POST", "/api/v1/invoices", json={})
-    assert response.status_code == 501
-    assert response.json()["code"] == "NOT_BUILT_YET"
-    assert "Phase 10" in response.json()["message"]
-    built = await env.call("FACILITIES_ADMIN", "POST", "/api/v1/simulations", json={})
-    assert built.status_code == 400  # Phase 9 landed: a real endpoint now validates its body
+    from app.system.router import _not_built
+
+    error = _not_built(11)  # every placeholder up to Phase 10 is now a real endpoint
+    assert error.status == 501 and error.code == "NOT_BUILT_YET" and "Phase 11" in error.message
+    for role, path in (("FACILITIES_ADMIN", "/api/v1/simulations"), ("PROCUREMENT_APPROVER", "/api/v1/invoices")):
+        assert (await env.call(role, "POST", path, json={})).status_code == 400  # real endpoints validate their body
 
 
 async def test_a_valid_correlation_id_is_echoed_and_a_bad_one_replaced(env):
