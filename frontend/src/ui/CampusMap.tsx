@@ -4,6 +4,8 @@ import { cn } from './cn'
 
 export interface MapDecor {
   kind: 'road' | 'path' | 'green' | 'water' | 'gate'
+  /** An exact outline (real building/road footprints aren't always rectangles). When present, this draws instead of the x/y/w/h rect. */
+  d?: string
   x: number
   y: number
   w: number
@@ -11,10 +13,12 @@ export interface MapDecor {
   r?: number
 }
 
+export type MapShape = { type: 'rect'; x: number; y: number; w: number; h: number; r?: number } | { type: 'path'; d: string; x: number; y: number; w: number; h: number }
+
 export interface MapRegion {
   regionId: string
   label: string
-  shape: { type: 'rect'; x: number; y: number; w: number; h: number; r?: number }
+  shape: MapShape
 }
 
 export type RegionState = 'OPEN' | 'AFFECTED' | 'CLOSED' | 'MAINTENANCE'
@@ -219,15 +223,21 @@ export function CampusMap({ viewBox, decor, regions, overlays, selectedId, onSel
           </pattern>
         </defs>
         <g transform={`translate(${view.x} ${view.y}) scale(${view.k})`}>
-          {decor.map((item, index) => (
-            <rect key={index} x={item.x} y={item.y} width={item.w} height={item.h} rx={item.r ?? 0} className={DECOR_CLASS[item.kind]} />
-          ))}
+          {decor.map((item, index) =>
+            item.d ? (
+              <path key={index} d={item.d} className={DECOR_CLASS[item.kind]} />
+            ) : (
+              <rect key={index} x={item.x} y={item.y} width={item.w} height={item.h} rx={item.r ?? 0} className={DECOR_CLASS[item.kind]} />
+            ),
+          )}
 
           {regions.map((region) => {
             const overlay = overlays[region.regionId] ?? { state: 'OPEN' as RegionState }
-            const { x, y, w, h, r } = region.shape
+            const { x, y, w, h } = region.shape
+            const r = region.shape.type === 'rect' ? region.shape.r : undefined
             const selected = region.regionId === selectedId
             const caption = overlay.caption ? `, ${overlay.caption}` : ''
+            const regionClass = cn(REGION_CLASS[overlay.state], selected && 'stroke-accent')
             return (
               <g
                 key={region.regionId}
@@ -237,12 +247,22 @@ export function CampusMap({ viewBox, decor, regions, overlays, selectedId, onSel
                 aria-label={`${region.label}, ${STATE_TEXT[overlay.state]}${caption}`}
                 data-testid={`region-${region.regionId}`}
                 data-state={overlay.state}
-                className="cursor-pointer outline-none focus-visible:[&>rect:first-child]:stroke-accent"
+                className="cursor-pointer outline-none focus-visible:[&>rect:first-child]:stroke-accent focus-visible:[&>path:first-child]:stroke-accent"
                 onClick={() => choose(region.regionId)}
                 onKeyDown={(event) => onRegionKey(event, region.regionId)}
               >
-                <rect x={x} y={y} width={w} height={h} rx={r ?? 10} strokeWidth={selected ? 5 : 2} className={cn(REGION_CLASS[overlay.state], selected && 'stroke-accent')} />
-                {overlay.state === 'CLOSED' ? <rect x={x} y={y} width={w} height={h} rx={r ?? 10} fill={`url(#${hatchId})`} pointerEvents="none" /> : null}
+                {region.shape.type === 'path' ? (
+                  <path d={region.shape.d} strokeWidth={selected ? 5 : 2} className={regionClass} />
+                ) : (
+                  <rect x={x} y={y} width={w} height={h} rx={r ?? 10} strokeWidth={selected ? 5 : 2} className={regionClass} />
+                )}
+                {overlay.state === 'CLOSED' ? (
+                  region.shape.type === 'path' ? (
+                    <path d={region.shape.d} fill={`url(#${hatchId})`} pointerEvents="none" />
+                  ) : (
+                    <rect x={x} y={y} width={w} height={h} rx={r ?? 10} fill={`url(#${hatchId})`} pointerEvents="none" />
+                  )
+                ) : null}
                 {wrapLabel(region.label, w).map((line, index) => (
                   <text key={index} x={x + 18} y={y + 38 + index * (LABEL_SIZE + 4)} fontSize={LABEL_SIZE} fontWeight={650} className="fill-ink" pointerEvents="none">
                     {line}

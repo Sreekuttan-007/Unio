@@ -17,7 +17,7 @@ ROOM_CODE = re.compile(r"\b([a-z]{3})\s?-?\s?(\d{3})\b", re.IGNORECASE)
 EXTRA_ALIASES = {
     "library": "B-LIB", "lib": "B-LIB", "cafeteria": "B-CAF", "canteen": "B-CAF", "pavilion": "B-CAF", "mess": "B-CAF",
     "hostel": "B-KLH", "kalam": "B-KLH", "admin": "B-ADM", "administration": "B-ADM", "auditorium": "B-ADM", "seminar": "B-ADM",
-    "raman": "B-RLB", "research": "B-RLB",
+    "raman": "B-RLB", "research": "B-RLB", "eec": "B-ARB", "easwari": "B-ARB",
 }
 
 ASSETS: tuple[tuple[tuple[str, ...], str], ...] = (

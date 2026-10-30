@@ -3,8 +3,25 @@ from typing import Any
 from app.core.clock import utcnow
 
 DEPARTMENT_NAMES = {
-    "D-CSE": "Computer Science",
-    "D-ECE": "Electronics and Communication",
+    "D-CSE": "Computer Science and Engineering",
+    "D-ECE": "Electronics and Communication Engineering",
+    "D-AUTO": "Automobile Engineering",
+    "D-CIVIL": "Civil Engineering",
+    "D-EEE": "Electrical and Electronics Engineering",
+    "D-EIE": "Electronics and Instrumentation Engineering",
+    "D-IT": "Information Technology",
+    "D-MECH": "Mechanical Engineering",
+    "D-AIDS": "Artificial Intelligence and Data Science",
+    "D-BME": "Biomedical Engineering",
+    "D-RAE": "Robotics and Automation Engineering",
+    "D-CYBER": "CSE - Cyber Security",
+    "D-AIML": "CSE - Artificial Intelligence and Machine Learning",
+    "D-MBA": "Master of Business Administration",
+    "D-MCA": "Master of Computer Applications",
+    "D-CHEM": "Chemistry",
+    "D-ENG": "English",
+    "D-MATH": "Mathematics",
+    "D-PHY": "Physics",
     "D-ELEC": "Electrical Maintenance",
     "D-NET": "Network Operations",
 }

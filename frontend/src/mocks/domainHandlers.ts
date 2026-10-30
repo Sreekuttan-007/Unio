@@ -194,10 +194,10 @@ export function createDomainHandlers() {
   const mapOverlays = (operational: boolean): Record<string, RegionOverlay> => {
     const open = (building: string) => incidents.filter((i) => i.buildingId === building && !['RESOLVED', 'CLOSED'].includes(i.status)).length
     return {
-      'bld-arb': { state: 'AFFECTED', badge: operational ? open('B-ARB') : undefined, caption: operational ? 'Power and Wi-Fi' : 'Some rooms closed' },
-      'bld-klh': { state: 'MAINTENANCE', badge: operational ? open('B-KLH') : undefined, caption: operational ? 'Plumbing repair' : 'Repair work' },
-      'bld-caf': { state: 'CLOSED', caption: 'Deep cleaning' },
-      'bld-rlb': { state: 'OPEN', badge: operational ? open('B-RLB') : undefined },
+      'EEC-MAIN': { state: 'AFFECTED', badge: operational ? open('B-ARB') : undefined, caption: operational ? 'Power and Wi-Fi' : 'Some rooms closed' },
+      'BOYS-8': { state: 'MAINTENANCE', badge: operational ? open('B-KLH') : undefined, caption: operational ? 'Plumbing repair' : 'Repair work' },
+      'WORKSHOP': { state: 'CLOSED', caption: 'Deep cleaning' },
+      'ELEC-1': { state: 'OPEN', badge: operational ? open('B-RLB') : undefined },
     }
   }
 
@@ -322,7 +322,7 @@ export function createDomainHandlers() {
     http.get(`${BASE}/admin/campus/summary`, () =>
       HttpResponse.json({
         totals: { buildings: campus.buildings.length, rooms: campus.rooms.length, assets: campus.buildings.reduce((sum, b) => sum + b.assetCount, 0) },
-        buildings: campus.buildings.map((building) => ({ id: building.id, code: building.code, name: building.name, kind: building.kind, floors: building.floors, rooms: campus.rooms.filter((room) => room.buildingId === building.id).length, assets: building.assetCount, regionBound: true, status: building.mapRegionId === 'bld-caf' ? 'CLOSED' : building.mapRegionId === 'bld-klh' ? 'MAINTENANCE' : 'OPEN' })),
+        buildings: campus.buildings.map((building) => ({ id: building.id, code: building.code, name: building.name, kind: building.kind, floors: building.floors, rooms: campus.rooms.filter((room) => room.buildingId === building.id).length, assets: building.assetCount, regionBound: true, status: building.mapRegionId === 'WORKSHOP' ? 'CLOSED' : building.mapRegionId === 'BOYS-8' ? 'MAINTENANCE' : 'OPEN' })),
       }),
     ),
 

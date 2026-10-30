@@ -116,7 +116,7 @@ async def test_a_closed_room_is_blocked(world, state):
 async def test_a_room_in_a_closed_building_is_blocked(world):
     await world.db["buildings"].update_one({"_id": "B-ARB"}, {"$set": {"status": "CLOSED"}})
     result = await preview(world, "FACULTY", "BOOK_ROOM", book("ARB-204"))
-    assert result["findings"][0]["code"] == "ROOM_CLOSED" and "Aryabhata Block" in result["findings"][0]["message"]
+    assert result["findings"][0]["code"] == "ROOM_CLOSED" and "EEC Main Block" in result["findings"][0]["message"]
 
 
 async def test_headcount_above_capacity_is_blocked(world):
