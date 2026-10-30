@@ -1,0 +1,28 @@
+# Render blueprint for the backend. The frontend deploys from Vercel (frontend/vercel.json).
+# Untested: written without being able to run Docker or reach Render. Check it in Phase 1.
+services:
+  - type: web
+    name: unio-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /api/v1/system/ping
+    envVars:
+      - key: APP_ENV
+        value: prod
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      # Tap-to-sign-in demo accounts. Turn OFF for anything real.
+      - key: DEMO_MODE_ENABLED
+        value: "true"
+      - key: DEMO_USER_PASSWORD
+        sync: false
+      - key: API_DOCS_ENABLED
+        value: "false"
+      - key: GEMINI_API_KEY
+        sync: false

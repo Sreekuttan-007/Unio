@@ -1,0 +1,27 @@
+# secrets and local config
+.env
+.env.*
+!.env.example
+
+# Python environments and caches (installed libraries live here, never commit them)
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Node
+node_modules/
+dist/
+.vite/
+coverage/
+
+# generated or local data
+ml/data/
+*.log
+.DS_Store
+
+# editor
+.idea/

@@ -1,0 +1,144 @@
+/*
+  Every colour, radius, shadow, size and font in the app lives here and nowhere else.
+  Restyling the whole product means editing this file. Components only use var(--...) or the
+  Tailwind names mapped to these in index.css. A raw hex or arbitrary pixel value elsewhere
+  is a defect (npm run lint checks it).
+*/
+
+:root {
+  color-scheme: light;
+
+  /* surfaces */
+  --bg: oklch(0.985 0.004 250);
+  --surface: oklch(1 0 0);
+  --surface-2: oklch(0.968 0.006 250);
+  --surface-3: oklch(0.94 0.008 250);
+  --border: oklch(0.9 0.008 250);
+  --border-strong: oklch(0.8 0.012 250);
+
+  /* text */
+  --text: oklch(0.22 0.02 255);
+  --text-muted: oklch(0.46 0.02 255);
+  --text-faint: oklch(0.58 0.015 255);
+
+  /* status */
+  --success: oklch(0.55 0.14 155);
+  --success-soft: oklch(0.95 0.05 155);
+  --success-ink: oklch(0.38 0.1 155);
+  --warning: oklch(0.7 0.15 75);
+  --warning-soft: oklch(0.96 0.06 85);
+  --warning-ink: oklch(0.44 0.1 70);
+  --danger: oklch(0.56 0.21 25);
+  --danger-soft: oklch(0.95 0.04 25);
+  --danger-ink: oklch(0.43 0.17 25);
+  --info: oklch(0.58 0.14 240);
+  --info-soft: oklch(0.95 0.035 240);
+  --info-ink: oklch(0.42 0.12 240);
+
+  /* role accent: set per workspace by data-accent, derived from hue, chroma and lightness */
+  --accent-h: 235;
+  --accent-c: 0.16;
+  --accent-l: 0.56;
+  --accent: oklch(var(--accent-l) var(--accent-c) var(--accent-h));
+  --accent-hover: oklch(calc(var(--accent-l) - 0.06) var(--accent-c) var(--accent-h));
+  --accent-soft: oklch(0.95 calc(var(--accent-c) * 0.28) var(--accent-h));
+  --accent-ink: oklch(0.4 var(--accent-c) var(--accent-h));
+  --accent-contrast: oklch(0.99 0 0);
+
+  /* shape and depth */
+  --radius-sm: 0.5rem;
+  --radius: 0.75rem;
+  --radius-lg: 1.125rem;
+  --shadow-sm: 0 1px 2px oklch(0.2 0.02 255 / 0.06), 0 1px 1px oklch(0.2 0.02 255 / 0.04);
+  --shadow-md: 0 8px 24px oklch(0.2 0.02 255 / 0.1), 0 2px 6px oklch(0.2 0.02 255 / 0.06);
+
+  /* layout */
+  --touch: 2.75rem;
+  --nav-width: 16.5rem;
+  --topbar-height: 3.5rem;
+  --bottomnav-height: 4.25rem;
+  --content-max: 76rem;
+
+  /* type */
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* stacking */
+  --z-nav: 30;
+  --z-top: 40;
+  --z-overlay: 50;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: oklch(0.17 0.014 255);
+  --surface: oklch(0.21 0.016 255);
+  --surface-2: oklch(0.25 0.018 255);
+  --surface-3: oklch(0.3 0.02 255);
+  --border: oklch(0.32 0.018 255);
+  --border-strong: oklch(0.42 0.02 255);
+  --text: oklch(0.95 0.008 250);
+  --text-muted: oklch(0.76 0.015 250);
+  --text-faint: oklch(0.64 0.015 250);
+  --success: oklch(0.72 0.15 155);
+  --success-soft: oklch(0.3 0.06 155);
+  --success-ink: oklch(0.84 0.1 155);
+  --warning: oklch(0.8 0.14 80);
+  --warning-soft: oklch(0.32 0.06 80);
+  --warning-ink: oklch(0.88 0.1 85);
+  --danger: oklch(0.7 0.18 25);
+  --danger-soft: oklch(0.3 0.07 25);
+  --danger-ink: oklch(0.85 0.1 25);
+  --info: oklch(0.74 0.12 240);
+  --info-soft: oklch(0.3 0.05 240);
+  --info-ink: oklch(0.86 0.08 240);
+  --accent: oklch(calc(var(--accent-l) + 0.16) var(--accent-c) var(--accent-h));
+  --accent-hover: oklch(calc(var(--accent-l) + 0.1) var(--accent-c) var(--accent-h));
+  --accent-soft: oklch(0.3 calc(var(--accent-c) * 0.45) var(--accent-h));
+  --accent-ink: oklch(0.86 calc(var(--accent-c) * 0.7) var(--accent-h));
+  --accent-contrast: oklch(0.18 0.02 255);
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.4);
+  --shadow-md: 0 8px 24px oklch(0 0 0 / 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: oklch(0.17 0.014 255);
+    --surface: oklch(0.21 0.016 255);
+    --surface-2: oklch(0.25 0.018 255);
+    --surface-3: oklch(0.3 0.02 255);
+    --border: oklch(0.32 0.018 255);
+    --border-strong: oklch(0.42 0.02 255);
+    --text: oklch(0.95 0.008 250);
+    --text-muted: oklch(0.76 0.015 250);
+    --text-faint: oklch(0.64 0.015 250);
+    --success: oklch(0.72 0.15 155);
+    --success-soft: oklch(0.3 0.06 155);
+    --success-ink: oklch(0.84 0.1 155);
+    --warning: oklch(0.8 0.14 80);
+    --warning-soft: oklch(0.32 0.06 80);
+    --warning-ink: oklch(0.88 0.1 85);
+    --danger: oklch(0.7 0.18 25);
+    --danger-soft: oklch(0.3 0.07 25);
+    --danger-ink: oklch(0.85 0.1 25);
+    --info: oklch(0.74 0.12 240);
+    --info-soft: oklch(0.3 0.05 240);
+    --info-ink: oklch(0.86 0.08 240);
+    --accent: oklch(calc(var(--accent-l) + 0.16) var(--accent-c) var(--accent-h));
+    --accent-hover: oklch(calc(var(--accent-l) + 0.1) var(--accent-c) var(--accent-h));
+    --accent-soft: oklch(0.3 calc(var(--accent-c) * 0.45) var(--accent-h));
+    --accent-ink: oklch(0.86 calc(var(--accent-c) * 0.7) var(--accent-h));
+    --accent-contrast: oklch(0.18 0.02 255);
+    --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.4);
+    --shadow-md: 0 8px 24px oklch(0 0 0 / 0.45);
+  }
+}
+
+/* One accent per role, so each workspace reads as its own product. Names come from the backend. */
+[data-accent='sky'] { --accent-h: 235; }
+[data-accent='indigo'] { --accent-h: 277; }
+[data-accent='teal'] { --accent-h: 190; --accent-l: 0.52; }
+[data-accent='rose'] { --accent-h: 10; }
+[data-accent='violet'] { --accent-h: 305; }
+[data-accent='amber'] { --accent-h: 75; --accent-l: 0.78; --accent-contrast: oklch(0.2 0.03 70); }
+[data-accent='slate'] { --accent-h: 255; --accent-c: 0.035; --accent-l: 0.42; }

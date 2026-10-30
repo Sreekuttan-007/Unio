@@ -1,0 +1,6993 @@
+{
+  "bootstrap": {
+    "STUDENT": {
+      "user": {
+        "id": "U-STUDENT",
+        "name": "Asha Nair",
+        "email": "student@unio.demo",
+        "avatarInitials": "AN"
+      },
+      "role": {
+        "key": "STUDENT",
+        "label": "Student",
+        "workspace": "student"
+      },
+      "department": {
+        "id": "D-CSE",
+        "name": "Computer Science"
+      },
+      "permissions": [
+        "incident.summary.read",
+        "issue.create",
+        "issue.read.own",
+        "map.read.public",
+        "sla.read.own"
+      ],
+      "scopes": {
+        "INCIDENT": "OWN",
+        "SLA": "OWN"
+      },
+      "navigation": [
+        {
+          "key": "student.home",
+          "label": "Home",
+          "path": "/w/student/home",
+          "icon": "house",
+          "badge": null
+        },
+        {
+          "key": "student.report",
+          "label": "Report Issue",
+          "path": "/w/student/report",
+          "icon": "circle-plus",
+          "badge": null
+        },
+        {
+          "key": "student.myReports",
+          "label": "My Reports",
+          "path": "/w/student/reports",
+          "icon": "clipboard-list",
+          "badge": null
+        },
+        {
+          "key": "student.notices",
+          "label": "Campus Notices",
+          "path": "/w/student/notices",
+          "icon": "megaphone",
+          "badge": null
+        },
+        {
+          "key": "student.map",
+          "label": "Campus Map",
+          "path": "/w/student/map",
+          "icon": "map",
+          "badge": null
+        }
+      ],
+      "landingPath": "/w/student/home",
+      "featureFlags": {
+        "mlTriage": false,
+        "mlDuplicate": false,
+        "mlSummary": false,
+        "ocr": false,
+        "slaRisk": false
+      },
+      "theme": {
+        "accent": "sky"
+      },
+      "serverTime": "2026-01-01T00:00:00Z"
+    },
+    "FACULTY": {
+      "user": {
+        "id": "U-FACULTY",
+        "name": "Dr. Kiran Rao",
+        "email": "faculty@unio.demo",
+        "avatarInitials": "DK"
+      },
+      "role": {
+        "key": "FACULTY",
+        "label": "Faculty",
+        "workspace": "faculty"
+      },
+      "department": {
+        "id": "D-CSE",
+        "name": "Computer Science"
+      },
+      "permissions": [
+        "booking.read.own",
+        "booking.request",
+        "cascade.read",
+        "collision.check",
+        "incident.summary.read",
+        "issue.create",
+        "issue.read.own",
+        "map.read.public",
+        "sla.read.own"
+      ],
+      "scopes": {
+        "INCIDENT": "OWN",
+        "BOOKING": "OWN",
+        "SLA": "OWN",
+        "APPROVAL": "OWN"
+      },
+      "navigation": [
+        {
+          "key": "faculty.home",
+          "label": "Home",
+          "path": "/w/faculty/home",
+          "icon": "house",
+          "badge": null
+        },
+        {
+          "key": "faculty.report",
+          "label": "Report Issue",
+          "path": "/w/faculty/report",
+          "icon": "circle-plus",
+          "badge": null
+        },
+        {
+          "key": "faculty.booking",
+          "label": "Book a Room",
+          "path": "/w/faculty/book",
+          "icon": "calendar-plus",
+          "badge": null
+        },
+        {
+          "key": "faculty.myBookings",
+          "label": "My Bookings",
+          "path": "/w/faculty/bookings",
+          "icon": "calendar-days",
+          "badge": null
+        },
+        {
+          "key": "faculty.impact",
+          "label": "Academic Impact",
+          "path": "/w/faculty/impact",
+          "icon": "graduation-cap",
+          "badge": null
+        },
+        {
+          "key": "faculty.map",
+          "label": "Campus Map",
+          "path": "/w/faculty/map",
+          "icon": "map",
+          "badge": null
+        }
+      ],
+      "landingPath": "/w/faculty/home",
+      "featureFlags": {
+        "mlTriage": false,
+        "mlDuplicate": false,
+        "mlSummary": false,
+        "ocr": false,
+        "slaRisk": false
+      },
+      "theme": {
+        "accent": "indigo"
+      },
+      "serverTime": "2026-01-01T00:00:00Z"
+    },
+    "DEPARTMENT_MANAGER": {
+      "user": {
+        "id": "U-DEPT",
+        "name": "Meera Iyer",
+        "email": "dept@unio.demo",
+        "avatarInitials": "MI"
+      },
+      "role": {
+        "key": "DEPARTMENT_MANAGER",
+        "label": "Department Manager",
+        "workspace": "department"
+      },
+      "department": {
+        "id": "D-CSE",
+        "name": "Computer Science"
+      },
+      "permissions": [
+        "analytics.read.department",
+        "approval.decide.override",
+        "approval.decide.repair",
+        "approval.read.department",
+        "approval.request.create",
+        "booking.read.department",
+        "booking.request",
+        "cascade.read",
+        "collision.check",
+        "collision.review",
+        "incident.link.duplicate",
+        "incident.summary.read",
+        "incident.transition",
+        "incident.triage",
+        "inventory.read.department",
+        "inventory.reserve",
+        "issue.create",
+        "issue.read.department",
+        "map.read.operational",
+        "sla.read.department",
+        "technician.availability.manage",
+        "workorder.assign.department",
+        "workorder.read.department",
+        "workorder.verify"
+      ],
+      "scopes": {
+        "INCIDENT": "DEPARTMENT",
+        "BOOKING": "DEPARTMENT",
+        "WORK_ORDER": "DEPARTMENT",
+        "INVENTORY": "DEPARTMENT",
+        "APPROVAL": "DEPARTMENT",
+        "SLA": "DEPARTMENT"
+      },
+      "navigation": [
+        {
+          "key": "dept.overview",
+          "label": "Overview",
+          "path": "/w/department/overview",
+          "icon": "layout-dashboard",
+          "badge": null
+        },
+        {
+          "key": "dept.incidents",
+          "label": "Department Incidents",
+          "path": "/w/department/incidents",
+          "icon": "siren",
+          "badge": null
+        },
+        {
+          "key": "dept.workRequests",
+          "label": "Work Requests",
+          "path": "/w/department/work-requests",
+          "icon": "wrench",
+          "badge": null
+        },
+        {
+          "key": "dept.resources",
+          "label": "Resources",
+          "path": "/w/department/resources",
+          "icon": "building-2",
+          "badge": null
+        },
+        {
+          "key": "dept.bookings",
+          "label": "Room Bookings",
+          "path": "/w/department/bookings",
+          "icon": "calendar-days",
+          "badge": null
+        },
+        {
+          "key": "dept.inventory",
+          "label": "Inventory",
+          "path": "/w/department/inventory",
+          "icon": "package",
+          "badge": null
+        },
+        {
+          "key": "dept.approvals",
+          "label": "Approvals",
+          "path": "/w/department/approvals",
+          "icon": "badge-check",
+          "badge": null
+        },
+        {
+          "key": "dept.sla",
+          "label": "SLA & Escalations",
+          "path": "/w/department/sla",
+          "icon": "timer",
+          "badge": null
+        },
+        {
+          "key": "dept.analytics",
+          "label": "Analytics",
+          "path": "/w/department/analytics",
+          "icon": "chart-column",
+          "badge": null
+        }
+      ],
+      "landingPath": "/w/department/overview",
+      "featureFlags": {
+        "mlTriage": false,
+        "mlDuplicate": false,
+        "mlSummary": false,
+        "ocr": false,
+        "slaRisk": false
+      },
+      "theme": {
+        "accent": "teal"
+      },
+      "serverTime": "2026-01-01T00:00:00Z"
+    },
+    "FACILITIES_ADMIN": {
+      "user": {
+        "id": "U-FACILITIES",
+        "name": "Arjun Menon",
+        "email": "facilities@unio.demo",
+        "avatarInitials": "AM"
+      },
+      "role": {
+        "key": "FACILITIES_ADMIN",
+        "label": "Facilities Administrator",
+        "workspace": "facilities"
+      },
+      "department": {
+        "id": "D-ELEC",
+        "name": "Electrical Maintenance"
+      },
+      "permissions": [
+        "analytics.read.campus",
+        "approval.decide.override",
+        "approval.decide.purchase",
+        "approval.decide.repair",
+        "approval.read.all",
+        "approval.request.create",
+        "audit.read.campus",
+        "booking.cancel.any",
+        "booking.coordinate",
+        "booking.read.campus",
+        "booking.request",
+        "cascade.read",
+        "collision.check",
+        "collision.review",
+        "inbox.read",
+        "inbox.triage",
+        "incident.link.duplicate",
+        "incident.summary.read",
+        "incident.transition",
+        "incident.triage",
+        "inventory.read.campus",
+        "inventory.reserve",
+        "invoice.read",
+        "issue.create",
+        "issue.read.campus",
+        "map.read.operational",
+        "simulation.execute",
+        "simulation.run",
+        "sla.read.campus",
+        "technician.availability.manage",
+        "workorder.assign.campus",
+        "workorder.read.campus",
+        "workorder.verify"
+      ],
+      "scopes": {
+        "INCIDENT": "CAMPUS",
+        "BOOKING": "CAMPUS",
+        "WORK_ORDER": "CAMPUS",
+        "INVENTORY": "CAMPUS",
+        "APPROVAL": "CAMPUS",
+        "SLA": "CAMPUS",
+        "AUDIT": "CAMPUS"
+      },
+      "navigation": [
+        {
+          "key": "fac.command",
+          "label": "Command Centre",
+          "path": "/w/facilities/command",
+          "icon": "radar",
+          "badge": null
+        },
+        {
+          "key": "fac.map",
+          "label": "Live Campus Map",
+          "path": "/w/facilities/map",
+          "icon": "map",
+          "badge": null
+        },
+        {
+          "key": "fac.inbox",
+          "label": "Intake Inbox",
+          "path": "/w/facilities/inbox",
+          "icon": "inbox",
+          "badge": null
+        },
+        {
+          "key": "fac.triage",
+          "label": "Incident Triage",
+          "path": "/w/facilities/triage",
+          "icon": "siren",
+          "badge": {
+            "source": "incident.triage"
+          }
+        },
+        {
+          "key": "fac.workOrders",
+          "label": "Work Orders",
+          "path": "/w/facilities/work-orders",
+          "icon": "wrench",
+          "badge": null
+        },
+        {
+          "key": "fac.technicians",
+          "label": "Technicians",
+          "path": "/w/facilities/technicians",
+          "icon": "hard-hat",
+          "badge": null
+        },
+        {
+          "key": "fac.collision",
+          "label": "Collision Review",
+          "path": "/w/facilities/collisions",
+          "icon": "shield-alert",
+          "badge": null
+        },
+        {
+          "key": "fac.simulator",
+          "label": "What-If Simulator",
+          "path": "/w/facilities/simulator",
+          "icon": "flask-conical",
+          "badge": null
+        },
+        {
+          "key": "fac.inventory",
+          "label": "Inventory",
+          "path": "/w/facilities/inventory",
+          "icon": "package",
+          "badge": null
+        },
+        {
+          "key": "fac.approvals",
+          "label": "Approvals",
+          "path": "/w/facilities/approvals",
+          "icon": "badge-check",
+          "badge": null
+        },
+        {
+          "key": "fac.sla",
+          "label": "SLA Monitor",
+          "path": "/w/facilities/sla",
+          "icon": "timer",
+          "badge": null
+        },
+        {
+          "key": "fac.analytics",
+          "label": "Analytics",
+          "path": "/w/facilities/analytics",
+          "icon": "chart-column",
+          "badge": null
+        },
+        {
+          "key": "fac.audit",
+          "label": "Audit Trail",
+          "path": "/w/facilities/audit",
+          "icon": "scroll-text",
+          "badge": null
+        }
+      ],
+      "landingPath": "/w/facilities/command",
+      "featureFlags": {
+        "mlTriage": false,
+        "mlDuplicate": false,
+        "mlSummary": false,
+        "ocr": false,
+        "slaRisk": false
+      },
+      "theme": {
+        "accent": "rose"
+      },
+      "serverTime": "2026-01-01T00:00:00Z"
+    },
+    "PROCUREMENT_APPROVER": {
+      "user": {
+        "id": "U-PROCURE",
+        "name": "Divya Pillai",
+        "email": "procure@unio.demo",
+        "avatarInitials": "DP"
+      },
+      "role": {
+        "key": "PROCUREMENT_APPROVER",
+        "label": "Procurement Approver",
+        "workspace": "procurement"
+      },
+      "department": null,
+      "permissions": [
+        "analytics.read.procurement",
+        "approval.decide.purchase",
+        "approval.decide.repair",
+        "approval.read.all",
+        "audit.read.procurement",
+        "collision.check",
+        "inventory.read.campus",
+        "inventory.transact",
+        "invoice.read",
+        "invoice.upload",
+        "invoice.validate",
+        "issue.create",
+        "purchase.order.manage",
+        "receipt.validate",
+        "sla.read.procurement"
+      ],
+      "scopes": {
+        "INVENTORY": "CAMPUS",
+        "APPROVAL": "CAMPUS",
+        "SLA": "PROCUREMENT",
+        "AUDIT": "PROCUREMENT"
+      },
+      "navigation": [
+        {
+          "key": "proc.overview",
+          "label": "Overview",
+          "path": "/w/procurement/overview",
+          "icon": "layout-dashboard",
+          "badge": null
+        },
+        {
+          "key": "proc.queue",
+          "label": "Approval Queue",
+          "path": "/w/procurement/queue",
+          "icon": "badge-check",
+          "badge": {
+            "source": "approval.pending"
+          }
+        },
+        {
+          "key": "proc.requests",
+          "label": "Requests",
+          "path": "/w/procurement/requests",
+          "icon": "clipboard-list",
+          "badge": null
+        },
+        {
+          "key": "proc.orders",
+          "label": "Purchase Orders",
+          "path": "/w/procurement/orders",
+          "icon": "shopping-cart",
+          "badge": null
+        },
+        {
+          "key": "proc.invoices",
+          "label": "Invoices",
+          "path": "/w/procurement/invoices",
+          "icon": "receipt-text",
+          "badge": null
+        },
+        {
+          "key": "proc.discrepancies",
+          "label": "Discrepancies",
+          "path": "/w/procurement/discrepancies",
+          "icon": "triangle-alert",
+          "badge": null
+        },
+        {
+          "key": "proc.receipts",
+          "label": "Goods Receipts",
+          "path": "/w/procurement/receipts",
+          "icon": "package-check",
+          "badge": null
+        },
+        {
+          "key": "proc.history",
+          "label": "History",
+          "path": "/w/procurement/history",
+          "icon": "history",
+          "badge": null
+        }
+      ],
+      "landingPath": "/w/procurement/overview",
+      "featureFlags": {
+        "mlTriage": false,
+        "mlDuplicate": false,
+        "mlSummary": false,
+        "ocr": false,
+        "slaRisk": false
+      },
+      "theme": {
+        "accent": "violet"
+      },
+      "serverTime": "2026-01-01T00:00:00Z"
+    },
+    "TECHNICIAN": {
+      "user": {
+        "id": "U-TECH",
+        "name": "Ravi Kumar",
+        "email": "tech@unio.demo",
+        "avatarInitials": "RK"
+      },
+      "role": {
+        "key": "TECHNICIAN",
+        "label": "Technician",
+        "workspace": "technician"
+      },
+      "department": {
+        "id": "D-ELEC",
+        "name": "Electrical Maintenance"
+      },
+      "permissions": [
+        "incident.summary.read",
+        "inventory.read.reserved",
+        "issue.create",
+        "issue.read.assigned",
+        "map.read.public",
+        "sla.read.own",
+        "technician.availability.self",
+        "workorder.execute",
+        "workorder.read.assigned"
+      ],
+      "scopes": {
+        "INCIDENT": "ASSIGNED",
+        "WORK_ORDER": "ASSIGNED",
+        "INVENTORY": "RESERVED",
+        "SLA": "ASSIGNED"
+      },
+      "navigation": [
+        {
+          "key": "tech.tasks",
+          "label": "My Tasks",
+          "path": "/w/technician/tasks",
+          "icon": "clipboard-check",
+          "badge": {
+            "source": "workorder.open"
+          }
+        },
+        {
+          "key": "tech.parts",
+          "label": "Parts",
+          "path": "/w/technician/parts",
+          "icon": "package",
+          "badge": null
+        },
+        {
+          "key": "tech.availability",
+          "label": "Availability",
+          "path": "/w/technician/availability",
+          "icon": "calendar-clock",
+          "badge": null
+        },
+        {
+          "key": "tech.history",
+          "label": "History",
+          "path": "/w/technician/history",
+          "icon": "history",
+          "badge": null
+        },
+        {
+          "key": "tech.map",
+          "label": "Site Map",
+          "path": "/w/technician/map",
+          "icon": "map-pin",
+          "badge": null
+        }
+      ],
+      "landingPath": "/w/technician/tasks",
+      "featureFlags": {
+        "mlTriage": false,
+        "mlDuplicate": false,
+        "mlSummary": false,
+        "ocr": false,
+        "slaRisk": false
+      },
+      "theme": {
+        "accent": "amber"
+      },
+      "serverTime": "2026-01-01T00:00:00Z"
+    },
+    "SYSTEM_ADMIN": {
+      "user": {
+        "id": "U-SYSADMIN",
+        "name": "Sam Thomas",
+        "email": "sysadmin@unio.demo",
+        "avatarInitials": "ST"
+      },
+      "role": {
+        "key": "SYSTEM_ADMIN",
+        "label": "System Administrator",
+        "workspace": "system"
+      },
+      "department": null,
+      "permissions": [
+        "admin.campus",
+        "admin.integrations",
+        "admin.roles",
+        "admin.rules",
+        "admin.seed",
+        "admin.sla.policy",
+        "admin.staff",
+        "admin.users",
+        "analytics.read.system",
+        "audit.read.system",
+        "inbox.read",
+        "inventory.master.manage",
+        "issue.create",
+        "sla.read.system"
+      ],
+      "scopes": {
+        "SLA": "SYSTEM",
+        "AUDIT": "SYSTEM"
+      },
+      "navigation": [
+        {
+          "key": "sys.overview",
+          "label": "System Overview",
+          "path": "/w/system/overview",
+          "icon": "activity",
+          "badge": null
+        },
+        {
+          "key": "sys.users",
+          "label": "Users",
+          "path": "/w/system/users",
+          "icon": "users",
+          "badge": null
+        },
+        {
+          "key": "sys.roles",
+          "label": "Roles & Permissions",
+          "path": "/w/system/roles",
+          "icon": "key-round",
+          "badge": null
+        },
+        {
+          "key": "sys.campus",
+          "label": "Campus Master Data",
+          "path": "/w/system/campus",
+          "icon": "building-2",
+          "badge": null
+        },
+        {
+          "key": "sys.staff",
+          "label": "Staff & Skills",
+          "path": "/w/system/staff",
+          "icon": "hard-hat",
+          "badge": null
+        },
+        {
+          "key": "sys.inventoryMaster",
+          "label": "Inventory Master",
+          "path": "/w/system/inventory",
+          "icon": "package",
+          "badge": null
+        },
+        {
+          "key": "sys.rules",
+          "label": "Operational Rules",
+          "path": "/w/system/rules",
+          "icon": "sliders-horizontal",
+          "badge": null
+        },
+        {
+          "key": "sys.slaPolicy",
+          "label": "SLA Policies",
+          "path": "/w/system/sla-policies",
+          "icon": "timer",
+          "badge": null
+        },
+        {
+          "key": "sys.integrations",
+          "label": "AI & Integrations",
+          "path": "/w/system/integrations",
+          "icon": "plug",
+          "badge": null
+        },
+        {
+          "key": "sys.audit",
+          "label": "Audit Logs",
+          "path": "/w/system/audit",
+          "icon": "scroll-text",
+          "badge": null
+        },
+        {
+          "key": "sys.seed",
+          "label": "Seed & Demo Data",
+          "path": "/w/system/seed",
+          "icon": "database",
+          "badge": null
+        }
+      ],
+      "landingPath": "/w/system/overview",
+      "featureFlags": {
+        "mlTriage": false,
+        "mlDuplicate": false,
+        "mlSummary": false,
+        "ocr": false,
+        "slaRisk": false
+      },
+      "theme": {
+        "accent": "slate"
+      },
+      "serverTime": "2026-01-01T00:00:00Z"
+    }
+  },
+  "campus": {
+    "map": {
+      "version": 1,
+      "viewBox": {
+        "w": 1200,
+        "h": 760
+      },
+      "decor": [
+        {
+          "kind": "green",
+          "x": 40,
+          "y": 40,
+          "w": 1120,
+          "h": 680,
+          "r": 28
+        },
+        {
+          "kind": "road",
+          "x": 40,
+          "y": 292,
+          "w": 1120,
+          "h": 24
+        },
+        {
+          "kind": "road",
+          "x": 40,
+          "y": 492,
+          "w": 1120,
+          "h": 24
+        },
+        {
+          "kind": "road",
+          "x": 396,
+          "y": 40,
+          "w": 24,
+          "h": 680
+        },
+        {
+          "kind": "road",
+          "x": 706,
+          "y": 40,
+          "w": 24,
+          "h": 680
+        },
+        {
+          "kind": "road",
+          "x": 960,
+          "y": 40,
+          "w": 24,
+          "h": 480
+        },
+        {
+          "kind": "water",
+          "x": 110,
+          "y": 540,
+          "w": 250,
+          "h": 120,
+          "r": 60
+        },
+        {
+          "kind": "green",
+          "x": 750,
+          "y": 540,
+          "w": 200,
+          "h": 120,
+          "r": 20
+        },
+        {
+          "kind": "gate",
+          "x": 540,
+          "y": 690,
+          "w": 50,
+          "h": 22,
+          "r": 6
+        }
+      ],
+      "regions": [
+        {
+          "regionId": "bld-arb",
+          "entityType": "BUILDING",
+          "entityId": "B-ARB",
+          "label": "Aryabhata Block",
+          "shape": {
+            "type": "rect",
+            "x": 110,
+            "y": 120,
+            "w": 270,
+            "h": 150,
+            "r": 14
+          }
+        },
+        {
+          "regionId": "bld-bhb",
+          "entityType": "BUILDING",
+          "entityId": "B-BHB",
+          "label": "Bhaskara Block",
+          "shape": {
+            "type": "rect",
+            "x": 110,
+            "y": 330,
+            "w": 270,
+            "h": 130,
+            "r": 14
+          }
+        },
+        {
+          "regionId": "bld-rmb",
+          "entityType": "BUILDING",
+          "entityId": "B-RMB",
+          "label": "Ramanujan Block",
+          "shape": {
+            "type": "rect",
+            "x": 440,
+            "y": 120,
+            "w": 250,
+            "h": 150,
+            "r": 14
+          }
+        },
+        {
+          "regionId": "bld-rlb",
+          "entityType": "BUILDING",
+          "entityId": "B-RLB",
+          "label": "Raman Research Labs",
+          "shape": {
+            "type": "rect",
+            "x": 440,
+            "y": 330,
+            "w": 250,
+            "h": 130,
+            "r": 14
+          }
+        },
+        {
+          "regionId": "bld-lib",
+          "entityType": "BUILDING",
+          "entityId": "B-LIB",
+          "label": "Central Library",
+          "shape": {
+            "type": "rect",
+            "x": 750,
+            "y": 120,
+            "w": 190,
+            "h": 150,
+            "r": 14
+          }
+        },
+        {
+          "regionId": "bld-caf",
+          "entityType": "BUILDING",
+          "entityId": "B-CAF",
+          "label": "Cafeteria and Sports Pavilion",
+          "shape": {
+            "type": "rect",
+            "x": 750,
+            "y": 330,
+            "w": 190,
+            "h": 130,
+            "r": 14
+          }
+        },
+        {
+          "regionId": "bld-klh",
+          "entityType": "BUILDING",
+          "entityId": "B-KLH",
+          "label": "Kalam Hostel",
+          "shape": {
+            "type": "rect",
+            "x": 1000,
+            "y": 120,
+            "w": 150,
+            "h": 340,
+            "r": 14
+          }
+        },
+        {
+          "regionId": "bld-adm",
+          "entityType": "BUILDING",
+          "entityId": "B-ADM",
+          "label": "Administration and Seminar Hall",
+          "shape": {
+            "type": "rect",
+            "x": 440,
+            "y": 540,
+            "w": 250,
+            "h": 120,
+            "r": 14
+          }
+        }
+      ]
+    },
+    "buildings": [
+      {
+        "id": "B-ARB",
+        "code": "ARB",
+        "name": "Aryabhata Block",
+        "kind": "ACADEMIC",
+        "departmentId": "D-CSE",
+        "floors": 4,
+        "mapRegionId": "bld-arb",
+        "status": "OPEN",
+        "openingHours": "07:00-21:00",
+        "assetCount": 44
+      },
+      {
+        "id": "B-BHB",
+        "code": "BHB",
+        "name": "Bhaskara Block",
+        "kind": "ACADEMIC",
+        "departmentId": "D-ECE",
+        "floors": 3,
+        "mapRegionId": "bld-bhb",
+        "status": "OPEN",
+        "openingHours": "07:00-21:00",
+        "assetCount": 32
+      },
+      {
+        "id": "B-RMB",
+        "code": "RMB",
+        "name": "Ramanujan Block",
+        "kind": "ACADEMIC",
+        "departmentId": null,
+        "floors": 3,
+        "mapRegionId": "bld-rmb",
+        "status": "OPEN",
+        "openingHours": "07:00-21:00",
+        "assetCount": 32
+      },
+      {
+        "id": "B-RLB",
+        "code": "RLB",
+        "name": "Raman Research Labs",
+        "kind": "LAB",
+        "departmentId": "D-ECE",
+        "floors": 2,
+        "mapRegionId": "bld-rlb",
+        "status": "OPEN",
+        "openingHours": "07:00-21:00",
+        "assetCount": 22
+      },
+      {
+        "id": "B-LIB",
+        "code": "LIB",
+        "name": "Central Library",
+        "kind": "LIBRARY",
+        "departmentId": null,
+        "floors": 2,
+        "mapRegionId": "bld-lib",
+        "status": "OPEN",
+        "openingHours": "07:00-21:00",
+        "assetCount": 12
+      },
+      {
+        "id": "B-ADM",
+        "code": "ADM",
+        "name": "Administration and Seminar Hall",
+        "kind": "ADMIN",
+        "departmentId": null,
+        "floors": 2,
+        "mapRegionId": "bld-adm",
+        "status": "OPEN",
+        "openingHours": "07:00-21:00",
+        "assetCount": 13
+      },
+      {
+        "id": "B-CAF",
+        "code": "CAF",
+        "name": "Cafeteria and Sports Pavilion",
+        "kind": "COMMON",
+        "departmentId": null,
+        "floors": 1,
+        "mapRegionId": "bld-caf",
+        "status": "OPEN",
+        "openingHours": "07:00-21:00",
+        "assetCount": 6
+      },
+      {
+        "id": "B-KLH",
+        "code": "KLH",
+        "name": "Kalam Hostel",
+        "kind": "HOSTEL",
+        "departmentId": null,
+        "floors": 3,
+        "mapRegionId": "bld-klh",
+        "status": "OPEN",
+        "openingHours": "24 hours",
+        "assetCount": 17
+      }
+    ],
+    "rooms": [
+      {
+        "id": "ARB-101",
+        "code": "ARB-101",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-102",
+        "code": "ARB-102",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-103",
+        "code": "ARB-103",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-104",
+        "code": "ARB-104",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-105",
+        "code": "ARB-105",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-106",
+        "code": "ARB-106",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-1",
+        "type": "OFFICE",
+        "capacity": 12,
+        "features": [
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "ARB-201",
+        "code": "ARB-201",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-202",
+        "code": "ARB-202",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-203",
+        "code": "ARB-203",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-204",
+        "code": "ARB-204",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-205",
+        "code": "ARB-205",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-206",
+        "code": "ARB-206",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-2",
+        "type": "OFFICE",
+        "capacity": 12,
+        "features": [
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "ARB-301",
+        "code": "ARB-301",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-302",
+        "code": "ARB-302",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-303",
+        "code": "ARB-303",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-304",
+        "code": "ARB-304",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-305",
+        "code": "ARB-305",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-306",
+        "code": "ARB-306",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-3",
+        "type": "OFFICE",
+        "capacity": 12,
+        "features": [
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "ARB-401",
+        "code": "ARB-401",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-4",
+        "type": "SEMINAR",
+        "capacity": 100,
+        "features": [
+          "PROJECTOR",
+          "SOUND",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-402",
+        "code": "ARB-402",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-4",
+        "type": "SEMINAR",
+        "capacity": 100,
+        "features": [
+          "PROJECTOR",
+          "SOUND",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-403",
+        "code": "ARB-403",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-4",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-404",
+        "code": "ARB-404",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-4",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-405",
+        "code": "ARB-405",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-4",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ARB-406",
+        "code": "ARB-406",
+        "buildingId": "B-ARB",
+        "floorId": "F-ARB-4",
+        "type": "OFFICE",
+        "capacity": 12,
+        "features": [
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-CSE",
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "BHB-101",
+        "code": "BHB-101",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-102",
+        "code": "BHB-102",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-103",
+        "code": "BHB-103",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-104",
+        "code": "BHB-104",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-105",
+        "code": "BHB-105",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-106",
+        "code": "BHB-106",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-1",
+        "type": "OFFICE",
+        "capacity": 12,
+        "features": [
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "BHB-201",
+        "code": "BHB-201",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-202",
+        "code": "BHB-202",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-203",
+        "code": "BHB-203",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-204",
+        "code": "BHB-204",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-205",
+        "code": "BHB-205",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-206",
+        "code": "BHB-206",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-2",
+        "type": "OFFICE",
+        "capacity": 12,
+        "features": [
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "BHB-301",
+        "code": "BHB-301",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-302",
+        "code": "BHB-302",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-303",
+        "code": "BHB-303",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-304",
+        "code": "BHB-304",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-305",
+        "code": "BHB-305",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "BHB-306",
+        "code": "BHB-306",
+        "buildingId": "B-BHB",
+        "floorId": "F-BHB-3",
+        "type": "OFFICE",
+        "capacity": 12,
+        "features": [
+          "WHITEBOARD"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "RMB-101",
+        "code": "RMB-101",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-102",
+        "code": "RMB-102",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-103",
+        "code": "RMB-103",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-104",
+        "code": "RMB-104",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-105",
+        "code": "RMB-105",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-1",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-106",
+        "code": "RMB-106",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-1",
+        "type": "OFFICE",
+        "capacity": 12,
+        "features": [
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "RMB-201",
+        "code": "RMB-201",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-202",
+        "code": "RMB-202",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-203",
+        "code": "RMB-203",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-204",
+        "code": "RMB-204",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-205",
+        "code": "RMB-205",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-2",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-206",
+        "code": "RMB-206",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-2",
+        "type": "OFFICE",
+        "capacity": 12,
+        "features": [
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "RMB-301",
+        "code": "RMB-301",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-302",
+        "code": "RMB-302",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-303",
+        "code": "RMB-303",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-304",
+        "code": "RMB-304",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-305",
+        "code": "RMB-305",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-3",
+        "type": "CLASSROOM",
+        "capacity": 60,
+        "features": [
+          "PROJECTOR",
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RMB-306",
+        "code": "RMB-306",
+        "buildingId": "B-RMB",
+        "floorId": "F-RMB-3",
+        "type": "OFFICE",
+        "capacity": 12,
+        "features": [
+          "WHITEBOARD"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "RLB-101",
+        "code": "RLB-101",
+        "buildingId": "B-RLB",
+        "floorId": "F-RLB-1",
+        "type": "LAB",
+        "capacity": 30,
+        "features": [
+          "WORKSTATIONS",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RLB-102",
+        "code": "RLB-102",
+        "buildingId": "B-RLB",
+        "floorId": "F-RLB-1",
+        "type": "LAB",
+        "capacity": 30,
+        "features": [
+          "WORKSTATIONS",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RLB-103",
+        "code": "RLB-103",
+        "buildingId": "B-RLB",
+        "floorId": "F-RLB-1",
+        "type": "LAB",
+        "capacity": 30,
+        "features": [
+          "WORKSTATIONS",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RLB-104",
+        "code": "RLB-104",
+        "buildingId": "B-RLB",
+        "floorId": "F-RLB-1",
+        "type": "LAB",
+        "capacity": 30,
+        "features": [
+          "WORKSTATIONS",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RLB-105",
+        "code": "RLB-105",
+        "buildingId": "B-RLB",
+        "floorId": "F-RLB-1",
+        "type": "LAB",
+        "capacity": 30,
+        "features": [
+          "WORKSTATIONS",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RLB-201",
+        "code": "RLB-201",
+        "buildingId": "B-RLB",
+        "floorId": "F-RLB-2",
+        "type": "LAB",
+        "capacity": 30,
+        "features": [
+          "WORKSTATIONS",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RLB-202",
+        "code": "RLB-202",
+        "buildingId": "B-RLB",
+        "floorId": "F-RLB-2",
+        "type": "LAB",
+        "capacity": 30,
+        "features": [
+          "WORKSTATIONS",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RLB-203",
+        "code": "RLB-203",
+        "buildingId": "B-RLB",
+        "floorId": "F-RLB-2",
+        "type": "LAB",
+        "capacity": 30,
+        "features": [
+          "WORKSTATIONS",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RLB-204",
+        "code": "RLB-204",
+        "buildingId": "B-RLB",
+        "floorId": "F-RLB-2",
+        "type": "LAB",
+        "capacity": 30,
+        "features": [
+          "WORKSTATIONS",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "RLB-205",
+        "code": "RLB-205",
+        "buildingId": "B-RLB",
+        "floorId": "F-RLB-2",
+        "type": "LAB",
+        "capacity": 30,
+        "features": [
+          "WORKSTATIONS",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": "D-ECE",
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "LIB-101",
+        "code": "LIB-101",
+        "buildingId": "B-LIB",
+        "floorId": "F-LIB-1",
+        "type": "HALL",
+        "capacity": 150,
+        "features": [
+          "WIFI",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "LIB-102",
+        "code": "LIB-102",
+        "buildingId": "B-LIB",
+        "floorId": "F-LIB-1",
+        "type": "COMMON",
+        "capacity": 40,
+        "features": [
+          "WIFI"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "LIB-103",
+        "code": "LIB-103",
+        "buildingId": "B-LIB",
+        "floorId": "F-LIB-1",
+        "type": "COMMON",
+        "capacity": 40,
+        "features": [
+          "WIFI"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "LIB-201",
+        "code": "LIB-201",
+        "buildingId": "B-LIB",
+        "floorId": "F-LIB-2",
+        "type": "HALL",
+        "capacity": 150,
+        "features": [
+          "WIFI",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "LIB-202",
+        "code": "LIB-202",
+        "buildingId": "B-LIB",
+        "floorId": "F-LIB-2",
+        "type": "COMMON",
+        "capacity": 40,
+        "features": [
+          "WIFI"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "LIB-203",
+        "code": "LIB-203",
+        "buildingId": "B-LIB",
+        "floorId": "F-LIB-2",
+        "type": "COMMON",
+        "capacity": 40,
+        "features": [
+          "WIFI"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "ADM-101",
+        "code": "ADM-101",
+        "buildingId": "B-ADM",
+        "floorId": "F-ADM-1",
+        "type": "SEMINAR",
+        "capacity": 200,
+        "features": [
+          "PROJECTOR",
+          "SOUND",
+          "AIR_CONDITIONING"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": true
+      },
+      {
+        "id": "ADM-102",
+        "code": "ADM-102",
+        "buildingId": "B-ADM",
+        "floorId": "F-ADM-1",
+        "type": "OFFICE",
+        "capacity": 10,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "ADM-103",
+        "code": "ADM-103",
+        "buildingId": "B-ADM",
+        "floorId": "F-ADM-1",
+        "type": "OFFICE",
+        "capacity": 10,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "ADM-104",
+        "code": "ADM-104",
+        "buildingId": "B-ADM",
+        "floorId": "F-ADM-1",
+        "type": "OFFICE",
+        "capacity": 10,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "ADM-201",
+        "code": "ADM-201",
+        "buildingId": "B-ADM",
+        "floorId": "F-ADM-2",
+        "type": "OFFICE",
+        "capacity": 10,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "ADM-202",
+        "code": "ADM-202",
+        "buildingId": "B-ADM",
+        "floorId": "F-ADM-2",
+        "type": "OFFICE",
+        "capacity": 10,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "ADM-203",
+        "code": "ADM-203",
+        "buildingId": "B-ADM",
+        "floorId": "F-ADM-2",
+        "type": "OFFICE",
+        "capacity": 10,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "ADM-204",
+        "code": "ADM-204",
+        "buildingId": "B-ADM",
+        "floorId": "F-ADM-2",
+        "type": "OFFICE",
+        "capacity": 10,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "CAF-101",
+        "code": "CAF-101",
+        "buildingId": "B-CAF",
+        "floorId": "F-CAF-1",
+        "type": "COMMON",
+        "capacity": 120,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "CAF-102",
+        "code": "CAF-102",
+        "buildingId": "B-CAF",
+        "floorId": "F-CAF-1",
+        "type": "COMMON",
+        "capacity": 120,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "CAF-103",
+        "code": "CAF-103",
+        "buildingId": "B-CAF",
+        "floorId": "F-CAF-1",
+        "type": "COMMON",
+        "capacity": 120,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-101",
+        "code": "KLH-101",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-1",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-102",
+        "code": "KLH-102",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-1",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-103",
+        "code": "KLH-103",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-1",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-104",
+        "code": "KLH-104",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-1",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-105",
+        "code": "KLH-105",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-1",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-106",
+        "code": "KLH-106",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-1",
+        "type": "COMMON",
+        "capacity": 30,
+        "features": [
+          "WIFI"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-201",
+        "code": "KLH-201",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-2",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-202",
+        "code": "KLH-202",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-2",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-203",
+        "code": "KLH-203",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-2",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-204",
+        "code": "KLH-204",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-2",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-205",
+        "code": "KLH-205",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-2",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-206",
+        "code": "KLH-206",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-2",
+        "type": "COMMON",
+        "capacity": 30,
+        "features": [
+          "WIFI"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-301",
+        "code": "KLH-301",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-3",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-302",
+        "code": "KLH-302",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-3",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-303",
+        "code": "KLH-303",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-3",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-304",
+        "code": "KLH-304",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-3",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-305",
+        "code": "KLH-305",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-3",
+        "type": "HOSTEL",
+        "capacity": 4,
+        "features": [],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      },
+      {
+        "id": "KLH-306",
+        "code": "KLH-306",
+        "buildingId": "B-KLH",
+        "floorId": "F-KLH-3",
+        "type": "COMMON",
+        "capacity": 30,
+        "features": [
+          "WIFI"
+        ],
+        "departmentId": null,
+        "status": "OPEN",
+        "bookable": false
+      }
+    ],
+    "keyAssets": [
+      {
+        "id": "AST-TR-ARB",
+        "assetCode": "AST-TR-ARB",
+        "name": "Aryabhata Block transformer",
+        "category": "ELECTRICAL",
+        "buildingId": "B-ARB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 5,
+        "installedAt": "2022-05-30T00:00:00+00:00",
+        "lastServicedAt": "2025-09-05T00:00:00+00:00"
+      },
+      {
+        "id": "AST-SW-ARB",
+        "assetCode": "AST-SW-ARB",
+        "name": "Aryabhata Block network switch",
+        "category": "NETWORK",
+        "buildingId": "B-ARB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2022-04-29T00:00:00+00:00",
+        "lastServicedAt": "2025-07-09T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-ARB-F1",
+        "assetCode": "AST-DB-ARB-F1",
+        "name": "Aryabhata Block floor 1 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-ARB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2023-02-27T00:00:00+00:00",
+        "lastServicedAt": "2025-12-07T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-ARB-F2",
+        "assetCode": "AST-DB-ARB-F2",
+        "name": "Aryabhata Block floor 2 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-ARB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2021-04-23T00:00:00+00:00",
+        "lastServicedAt": "2025-05-15T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-ARB-F3",
+        "assetCode": "AST-DB-ARB-F3",
+        "name": "Aryabhata Block floor 3 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-ARB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2025-06-09T00:00:00+00:00",
+        "lastServicedAt": "2025-05-06T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-ARB-F4",
+        "assetCode": "AST-DB-ARB-F4",
+        "name": "Aryabhata Block floor 4 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-ARB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2024-08-11T00:00:00+00:00",
+        "lastServicedAt": "2025-08-28T00:00:00+00:00"
+      },
+      {
+        "id": "AST-TR-BHB",
+        "assetCode": "AST-TR-BHB",
+        "name": "Bhaskara Block transformer",
+        "category": "ELECTRICAL",
+        "buildingId": "B-BHB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 5,
+        "installedAt": "2023-12-24T00:00:00+00:00",
+        "lastServicedAt": "2025-06-29T00:00:00+00:00"
+      },
+      {
+        "id": "AST-SW-BHB",
+        "assetCode": "AST-SW-BHB",
+        "name": "Bhaskara Block network switch",
+        "category": "NETWORK",
+        "buildingId": "B-BHB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2021-10-01T00:00:00+00:00",
+        "lastServicedAt": "2025-10-14T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-BHB-F1",
+        "assetCode": "AST-DB-BHB-F1",
+        "name": "Bhaskara Block floor 1 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-BHB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2021-11-05T00:00:00+00:00",
+        "lastServicedAt": "2025-11-15T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-BHB-F2",
+        "assetCode": "AST-DB-BHB-F2",
+        "name": "Bhaskara Block floor 2 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-BHB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2024-09-21T00:00:00+00:00",
+        "lastServicedAt": "2025-09-19T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-BHB-F3",
+        "assetCode": "AST-DB-BHB-F3",
+        "name": "Bhaskara Block floor 3 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-BHB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2023-12-24T00:00:00+00:00",
+        "lastServicedAt": "2025-10-27T00:00:00+00:00"
+      },
+      {
+        "id": "AST-TR-RMB",
+        "assetCode": "AST-TR-RMB",
+        "name": "Ramanujan Block transformer",
+        "category": "ELECTRICAL",
+        "buildingId": "B-RMB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 5,
+        "installedAt": "2025-04-07T00:00:00+00:00",
+        "lastServicedAt": "2025-12-03T00:00:00+00:00"
+      },
+      {
+        "id": "AST-SW-RMB",
+        "assetCode": "AST-SW-RMB",
+        "name": "Ramanujan Block network switch",
+        "category": "NETWORK",
+        "buildingId": "B-RMB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2022-06-06T00:00:00+00:00",
+        "lastServicedAt": "2025-06-19T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-RMB-F1",
+        "assetCode": "AST-DB-RMB-F1",
+        "name": "Ramanujan Block floor 1 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-RMB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2023-10-24T00:00:00+00:00",
+        "lastServicedAt": "2025-08-21T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-RMB-F2",
+        "assetCode": "AST-DB-RMB-F2",
+        "name": "Ramanujan Block floor 2 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-RMB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2021-04-30T00:00:00+00:00",
+        "lastServicedAt": "2025-04-08T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-RMB-F3",
+        "assetCode": "AST-DB-RMB-F3",
+        "name": "Ramanujan Block floor 3 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-RMB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2025-03-20T00:00:00+00:00",
+        "lastServicedAt": "2025-04-23T00:00:00+00:00"
+      },
+      {
+        "id": "AST-TR-RLB",
+        "assetCode": "AST-TR-RLB",
+        "name": "Raman Research Labs transformer",
+        "category": "ELECTRICAL",
+        "buildingId": "B-RLB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 5,
+        "installedAt": "2025-01-27T00:00:00+00:00",
+        "lastServicedAt": "2025-10-19T00:00:00+00:00"
+      },
+      {
+        "id": "AST-SW-RLB",
+        "assetCode": "AST-SW-RLB",
+        "name": "Raman Research Labs network switch",
+        "category": "NETWORK",
+        "buildingId": "B-RLB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2025-06-01T00:00:00+00:00",
+        "lastServicedAt": "2025-09-16T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-RLB-F1",
+        "assetCode": "AST-DB-RLB-F1",
+        "name": "Raman Research Labs floor 1 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-RLB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2025-02-17T00:00:00+00:00",
+        "lastServicedAt": "2025-08-10T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-RLB-F2",
+        "assetCode": "AST-DB-RLB-F2",
+        "name": "Raman Research Labs floor 2 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-RLB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2023-04-11T00:00:00+00:00",
+        "lastServicedAt": "2025-04-25T00:00:00+00:00"
+      },
+      {
+        "id": "AST-TR-LIB",
+        "assetCode": "AST-TR-LIB",
+        "name": "Central Library transformer",
+        "category": "ELECTRICAL",
+        "buildingId": "B-LIB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 5,
+        "installedAt": "2024-07-28T00:00:00+00:00",
+        "lastServicedAt": "2025-03-19T00:00:00+00:00"
+      },
+      {
+        "id": "AST-SW-LIB",
+        "assetCode": "AST-SW-LIB",
+        "name": "Central Library network switch",
+        "category": "NETWORK",
+        "buildingId": "B-LIB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2022-12-13T00:00:00+00:00",
+        "lastServicedAt": "2025-05-23T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-LIB-F1",
+        "assetCode": "AST-DB-LIB-F1",
+        "name": "Central Library floor 1 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-LIB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2021-07-26T00:00:00+00:00",
+        "lastServicedAt": "2025-05-15T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-LIB-F2",
+        "assetCode": "AST-DB-LIB-F2",
+        "name": "Central Library floor 2 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-LIB",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2024-01-18T00:00:00+00:00",
+        "lastServicedAt": "2025-06-22T00:00:00+00:00"
+      },
+      {
+        "id": "AST-TR-ADM",
+        "assetCode": "AST-TR-ADM",
+        "name": "Administration and Seminar Hall transformer",
+        "category": "ELECTRICAL",
+        "buildingId": "B-ADM",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 5,
+        "installedAt": "2022-12-27T00:00:00+00:00",
+        "lastServicedAt": "2025-11-07T00:00:00+00:00"
+      },
+      {
+        "id": "AST-SW-ADM",
+        "assetCode": "AST-SW-ADM",
+        "name": "Administration and Seminar Hall network switch",
+        "category": "NETWORK",
+        "buildingId": "B-ADM",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2021-02-16T00:00:00+00:00",
+        "lastServicedAt": "2025-08-01T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-ADM-F1",
+        "assetCode": "AST-DB-ADM-F1",
+        "name": "Administration and Seminar Hall floor 1 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-ADM",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2021-08-26T00:00:00+00:00",
+        "lastServicedAt": "2025-06-06T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-ADM-F2",
+        "assetCode": "AST-DB-ADM-F2",
+        "name": "Administration and Seminar Hall floor 2 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-ADM",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2021-02-13T00:00:00+00:00",
+        "lastServicedAt": "2025-10-18T00:00:00+00:00"
+      },
+      {
+        "id": "AST-TR-CAF",
+        "assetCode": "AST-TR-CAF",
+        "name": "Cafeteria and Sports Pavilion transformer",
+        "category": "ELECTRICAL",
+        "buildingId": "B-CAF",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 5,
+        "installedAt": "2023-08-27T00:00:00+00:00",
+        "lastServicedAt": "2025-05-08T00:00:00+00:00"
+      },
+      {
+        "id": "AST-SW-CAF",
+        "assetCode": "AST-SW-CAF",
+        "name": "Cafeteria and Sports Pavilion network switch",
+        "category": "NETWORK",
+        "buildingId": "B-CAF",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2022-09-11T00:00:00+00:00",
+        "lastServicedAt": "2025-06-11T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-CAF-F1",
+        "assetCode": "AST-DB-CAF-F1",
+        "name": "Cafeteria and Sports Pavilion floor 1 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-CAF",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2025-01-31T00:00:00+00:00",
+        "lastServicedAt": "2025-09-23T00:00:00+00:00"
+      },
+      {
+        "id": "AST-TR-KLH",
+        "assetCode": "AST-TR-KLH",
+        "name": "Kalam Hostel transformer",
+        "category": "ELECTRICAL",
+        "buildingId": "B-KLH",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 5,
+        "installedAt": "2023-07-28T00:00:00+00:00",
+        "lastServicedAt": "2025-06-29T00:00:00+00:00"
+      },
+      {
+        "id": "AST-SW-KLH",
+        "assetCode": "AST-SW-KLH",
+        "name": "Kalam Hostel network switch",
+        "category": "NETWORK",
+        "buildingId": "B-KLH",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2025-06-14T00:00:00+00:00",
+        "lastServicedAt": "2025-08-04T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-KLH-F1",
+        "assetCode": "AST-DB-KLH-F1",
+        "name": "Kalam Hostel floor 1 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-KLH",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2023-08-10T00:00:00+00:00",
+        "lastServicedAt": "2025-05-02T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-KLH-F2",
+        "assetCode": "AST-DB-KLH-F2",
+        "name": "Kalam Hostel floor 2 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-KLH",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2023-03-03T00:00:00+00:00",
+        "lastServicedAt": "2025-11-30T00:00:00+00:00"
+      },
+      {
+        "id": "AST-DB-KLH-F3",
+        "assetCode": "AST-DB-KLH-F3",
+        "name": "Kalam Hostel floor 3 power panel",
+        "category": "ELECTRICAL",
+        "buildingId": "B-KLH",
+        "roomId": null,
+        "status": "OK",
+        "criticality": 4,
+        "installedAt": "2024-04-21T00:00:00+00:00",
+        "lastServicedAt": "2025-11-20T00:00:00+00:00"
+      },
+      {
+        "id": "AST-SW-CORE",
+        "assetCode": "AST-SW-CORE",
+        "name": "Campus core switch",
+        "category": "NETWORK",
+        "buildingId": "B-ADM",
+        "roomId": "ADM-103",
+        "status": "OK",
+        "criticality": 5,
+        "installedAt": "2022-10-01T00:00:00+00:00",
+        "lastServicedAt": "2025-12-10T00:00:00+00:00"
+      }
+    ],
+    "technicians": [
+      {
+        "id": "T-01",
+        "userId": "U-TECH",
+        "name": "Ravi Kumar",
+        "departmentId": "D-ELEC",
+        "skills": [
+          {
+            "code": "ELECTRICAL",
+            "level": 3
+          }
+        ],
+        "availability": "AVAILABLE",
+        "maxConcurrentTasks": 3,
+        "version": 0
+      },
+      {
+        "id": "T-02",
+        "userId": "U-TECH2",
+        "name": "Meena Das",
+        "departmentId": "D-ELEC",
+        "skills": [
+          {
+            "code": "ELECTRICAL",
+            "level": 2
+          },
+          {
+            "code": "HVAC",
+            "level": 2
+          }
+        ],
+        "availability": "AVAILABLE",
+        "maxConcurrentTasks": 3,
+        "version": 0
+      },
+      {
+        "id": "T-03",
+        "userId": "U-TECH3",
+        "name": "Joseph Paul",
+        "departmentId": "D-NET",
+        "skills": [
+          {
+            "code": "NETWORK",
+            "level": 3
+          }
+        ],
+        "availability": "AVAILABLE",
+        "maxConcurrentTasks": 3,
+        "version": 0
+      },
+      {
+        "id": "T-04",
+        "userId": "U-TECH4",
+        "name": "Lakshmi Bose",
+        "departmentId": "D-NET",
+        "skills": [
+          {
+            "code": "NETWORK",
+            "level": 2
+          },
+          {
+            "code": "GENERAL",
+            "level": 2
+          }
+        ],
+        "availability": "AVAILABLE",
+        "maxConcurrentTasks": 3,
+        "version": 0
+      },
+      {
+        "id": "T-05",
+        "userId": "U-TECH5",
+        "name": "Hari Menon",
+        "departmentId": "D-ELEC",
+        "skills": [
+          {
+            "code": "PLUMBING",
+            "level": 3
+          },
+          {
+            "code": "CARPENTRY",
+            "level": 2
+          }
+        ],
+        "availability": "AVAILABLE",
+        "maxConcurrentTasks": 3,
+        "version": 0
+      },
+      {
+        "id": "T-06",
+        "userId": "U-TECH6",
+        "name": "Sneha Joshi",
+        "departmentId": "D-ELEC",
+        "skills": [
+          {
+            "code": "HVAC",
+            "level": 3
+          },
+          {
+            "code": "GENERAL",
+            "level": 2
+          }
+        ],
+        "availability": "AVAILABLE",
+        "maxConcurrentTasks": 3,
+        "version": 0
+      }
+    ],
+    "faculty": [
+      {
+        "id": "FAC-01",
+        "name": "Dr. Kiran Rao",
+        "departmentId": "D-CSE",
+        "kind": "FACULTY",
+        "userId": "U-FACULTY"
+      },
+      {
+        "id": "FAC-02",
+        "name": "Prof. Anita Desai",
+        "departmentId": "D-CSE",
+        "kind": "FACULTY",
+        "userId": null
+      },
+      {
+        "id": "FAC-03",
+        "name": "Dr. Suresh Pillai",
+        "departmentId": "D-CSE",
+        "kind": "FACULTY",
+        "userId": null
+      },
+      {
+        "id": "FAC-04",
+        "name": "Prof. Meghna Rao",
+        "departmentId": "D-CSE",
+        "kind": "FACULTY",
+        "userId": null
+      },
+      {
+        "id": "FAC-05",
+        "name": "Dr. Farhan Ali",
+        "departmentId": "D-CSE",
+        "kind": "FACULTY",
+        "userId": null
+      },
+      {
+        "id": "FAC-06",
+        "name": "Prof. Lata Krishnan",
+        "departmentId": "D-CSE",
+        "kind": "FACULTY",
+        "userId": null
+      },
+      {
+        "id": "FAC-07",
+        "name": "Dr. Vivek Menon",
+        "departmentId": "D-ECE",
+        "kind": "FACULTY",
+        "userId": null
+      },
+      {
+        "id": "FAC-08",
+        "name": "Prof. Radha Iyer",
+        "departmentId": "D-ECE",
+        "kind": "FACULTY",
+        "userId": null
+      },
+      {
+        "id": "FAC-09",
+        "name": "Dr. Tarun Bhat",
+        "departmentId": "D-ECE",
+        "kind": "FACULTY",
+        "userId": null
+      },
+      {
+        "id": "FAC-10",
+        "name": "Prof. Sunita Nair",
+        "departmentId": "D-ECE",
+        "kind": "FACULTY",
+        "userId": null
+      },
+      {
+        "id": "FAC-11",
+        "name": "Dr. Arvind Shah",
+        "departmentId": "D-ECE",
+        "kind": "FACULTY",
+        "userId": null
+      },
+      {
+        "id": "FAC-12",
+        "name": "Prof. Pooja Verma",
+        "departmentId": "D-ECE",
+        "kind": "FACULTY",
+        "userId": null
+      },
+      {
+        "id": "FAC-13",
+        "name": "Lab Instructor Dev",
+        "departmentId": "D-CSE",
+        "kind": "LAB_INSTRUCTOR",
+        "userId": null
+      },
+      {
+        "id": "FAC-14",
+        "name": "Lab Instructor Isha",
+        "departmentId": "D-ECE",
+        "kind": "LAB_INSTRUCTOR",
+        "userId": null
+      },
+      {
+        "id": "FAC-15",
+        "name": "Lab Instructor Jay",
+        "departmentId": "D-CSE",
+        "kind": "LAB_INSTRUCTOR",
+        "userId": null
+      },
+      {
+        "id": "FAC-16",
+        "name": "Lab Instructor Kavya",
+        "departmentId": "D-ECE",
+        "kind": "LAB_INSTRUCTOR",
+        "userId": null
+      },
+      {
+        "id": "FAC-17",
+        "name": "Lab Instructor Lalit",
+        "departmentId": "D-CSE",
+        "kind": "LAB_INSTRUCTOR",
+        "userId": null
+      },
+      {
+        "id": "FAC-18",
+        "name": "Lab Instructor Maya",
+        "departmentId": "D-ECE",
+        "kind": "LAB_INSTRUCTOR",
+        "userId": null
+      },
+      {
+        "id": "FAC-19",
+        "name": "Lab Instructor Nikhil",
+        "departmentId": "D-CSE",
+        "kind": "LAB_INSTRUCTOR",
+        "userId": null
+      },
+      {
+        "id": "FAC-20",
+        "name": "Lab Instructor Om",
+        "departmentId": "D-ECE",
+        "kind": "LAB_INSTRUCTOR",
+        "userId": null
+      }
+    ],
+    "groups": [
+      {
+        "id": "CSE-3A",
+        "departmentId": "D-CSE",
+        "size": 58,
+        "homeRoomId": "ARB-204",
+        "memberUserIds": [
+          "U-STUDENT"
+        ]
+      },
+      {
+        "id": "CSE-3B",
+        "departmentId": "D-CSE",
+        "size": 56,
+        "homeRoomId": "ARB-205",
+        "memberUserIds": []
+      },
+      {
+        "id": "CSE-2A",
+        "departmentId": "D-CSE",
+        "size": 57,
+        "homeRoomId": "ARB-104",
+        "memberUserIds": []
+      },
+      {
+        "id": "CSE-4A",
+        "departmentId": "D-CSE",
+        "size": 52,
+        "homeRoomId": "ARB-304",
+        "memberUserIds": []
+      },
+      {
+        "id": "ECE-3A",
+        "departmentId": "D-ECE",
+        "size": 55,
+        "homeRoomId": "BHB-201",
+        "memberUserIds": []
+      },
+      {
+        "id": "ECE-3B",
+        "departmentId": "D-ECE",
+        "size": 54,
+        "homeRoomId": "BHB-202",
+        "memberUserIds": []
+      },
+      {
+        "id": "ECE-2A",
+        "departmentId": "D-ECE",
+        "size": 58,
+        "homeRoomId": "BHB-101",
+        "memberUserIds": []
+      },
+      {
+        "id": "ECE-4A",
+        "departmentId": "D-ECE",
+        "size": 50,
+        "homeRoomId": "BHB-301",
+        "memberUserIds": []
+      }
+    ],
+    "sessions": [
+      {
+        "id": "SES-CSE-3A-20260107T0330",
+        "courseName": "Operating Systems end semester",
+        "kind": "EXAM",
+        "roomId": "ARB-204",
+        "facultyId": "FAC-02",
+        "studentGroup": "CSE-3A",
+        "headcount": 58,
+        "start": "09:00",
+        "end": "12:00"
+      },
+      {
+        "id": "SES-CSE-3A-20260107T0800",
+        "courseName": "Database Systems",
+        "kind": "LECTURE",
+        "roomId": "ARB-204",
+        "facultyId": "FAC-06",
+        "studentGroup": "CSE-3A",
+        "headcount": 58,
+        "start": "13:30",
+        "end": "14:30"
+      },
+      {
+        "id": "SES-CSE-3A-20260107T0900",
+        "courseName": "Control Systems",
+        "kind": "LECTURE",
+        "roomId": "ARB-204",
+        "facultyId": "FAC-07",
+        "studentGroup": "CSE-3A",
+        "headcount": 58,
+        "start": "14:30",
+        "end": "15:30"
+      },
+      {
+        "id": "SES-CSE-3B-20260107T0330",
+        "courseName": "Database Systems",
+        "kind": "LECTURE",
+        "roomId": "ARB-205",
+        "facultyId": "FAC-04",
+        "studentGroup": "CSE-3B",
+        "headcount": 56,
+        "start": "09:00",
+        "end": "10:00"
+      },
+      {
+        "id": "SES-CSE-3B-20260107T0430",
+        "courseName": "Control Systems",
+        "kind": "LECTURE",
+        "roomId": "ARB-205",
+        "facultyId": "FAC-05",
+        "studentGroup": "CSE-3B",
+        "headcount": 56,
+        "start": "10:00",
+        "end": "11:00"
+      },
+      {
+        "id": "SES-CSE-3B-20260107T0545",
+        "courseName": "Embedded Systems",
+        "kind": "LECTURE",
+        "roomId": "ARB-205",
+        "facultyId": "FAC-06",
+        "studentGroup": "CSE-3B",
+        "headcount": 56,
+        "start": "11:15",
+        "end": "12:15"
+      },
+      {
+        "id": "SES-CSE-3B-20260107T0800",
+        "courseName": "Discrete Mathematics",
+        "kind": "LECTURE",
+        "roomId": "ARB-205",
+        "facultyId": "FAC-07",
+        "studentGroup": "CSE-3B",
+        "headcount": 56,
+        "start": "13:30",
+        "end": "14:30"
+      },
+      {
+        "id": "SES-CSE-3B-20260107T0900",
+        "courseName": "Machine Learning",
+        "kind": "LECTURE",
+        "roomId": "ARB-205",
+        "facultyId": "FAC-08",
+        "studentGroup": "CSE-3B",
+        "headcount": 56,
+        "start": "14:30",
+        "end": "15:30"
+      },
+      {
+        "id": "SES-CSE-2A-20260107T0330",
+        "courseName": "Discrete Mathematics",
+        "kind": "LECTURE",
+        "roomId": "ARB-104",
+        "facultyId": "FAC-05",
+        "studentGroup": "CSE-2A",
+        "headcount": 57,
+        "start": "09:00",
+        "end": "10:00"
+      },
+      {
+        "id": "SES-CSE-2A-20260107T0430",
+        "courseName": "Machine Learning",
+        "kind": "LECTURE",
+        "roomId": "ARB-104",
+        "facultyId": "FAC-06",
+        "studentGroup": "CSE-2A",
+        "headcount": 57,
+        "start": "10:00",
+        "end": "11:00"
+      },
+      {
+        "id": "SES-CSE-2A-20260107T0545",
+        "courseName": "VLSI Design",
+        "kind": "LECTURE",
+        "roomId": "ARB-104",
+        "facultyId": "FAC-07",
+        "studentGroup": "CSE-2A",
+        "headcount": 57,
+        "start": "11:15",
+        "end": "12:15"
+      },
+      {
+        "id": "SES-CSE-2A-20260107T0800",
+        "courseName": "Computer Networks lab",
+        "kind": "PRACTICAL",
+        "roomId": "RLB-103",
+        "facultyId": "FAC-15",
+        "studentGroup": "CSE-2A",
+        "headcount": 57,
+        "start": "13:30",
+        "end": "15:30"
+      },
+      {
+        "id": "SES-CSE-4A-20260107T0330",
+        "courseName": "Software Engineering",
+        "kind": "LECTURE",
+        "roomId": "ARB-304",
+        "facultyId": "FAC-06",
+        "studentGroup": "CSE-4A",
+        "headcount": 52,
+        "start": "09:00",
+        "end": "10:00"
+      },
+      {
+        "id": "SES-CSE-4A-20260107T0430",
+        "courseName": "Data Structures",
+        "kind": "LECTURE",
+        "roomId": "ARB-304",
+        "facultyId": "FAC-07",
+        "studentGroup": "CSE-4A",
+        "headcount": 52,
+        "start": "10:00",
+        "end": "11:00"
+      },
+      {
+        "id": "SES-CSE-4A-20260107T0545",
+        "courseName": "Digital Electronics",
+        "kind": "LECTURE",
+        "roomId": "ARB-304",
+        "facultyId": "FAC-08",
+        "studentGroup": "CSE-4A",
+        "headcount": 52,
+        "start": "11:15",
+        "end": "12:15"
+      },
+      {
+        "id": "SES-CSE-4A-20260107T0800",
+        "courseName": "Operating Systems",
+        "kind": "LECTURE",
+        "roomId": "ARB-304",
+        "facultyId": "FAC-09",
+        "studentGroup": "CSE-4A",
+        "headcount": 52,
+        "start": "13:30",
+        "end": "14:30"
+      },
+      {
+        "id": "SES-CSE-4A-20260107T0900",
+        "courseName": "Signals and Systems",
+        "kind": "LECTURE",
+        "roomId": "ARB-304",
+        "facultyId": "FAC-10",
+        "studentGroup": "CSE-4A",
+        "headcount": 52,
+        "start": "14:30",
+        "end": "15:30"
+      },
+      {
+        "id": "SES-ECE-3A-20260107T0330",
+        "courseName": "Operating Systems",
+        "kind": "LECTURE",
+        "roomId": "BHB-201",
+        "facultyId": "FAC-07",
+        "studentGroup": "ECE-3A",
+        "headcount": 55,
+        "start": "09:00",
+        "end": "10:00"
+      },
+      {
+        "id": "SES-ECE-3A-20260107T0430",
+        "courseName": "Signals and Systems",
+        "kind": "LECTURE",
+        "roomId": "BHB-201",
+        "facultyId": "FAC-08",
+        "studentGroup": "ECE-3A",
+        "headcount": 55,
+        "start": "10:00",
+        "end": "11:00"
+      },
+      {
+        "id": "SES-ECE-3A-20260107T0545",
+        "courseName": "Computer Networks",
+        "kind": "LECTURE",
+        "roomId": "BHB-201",
+        "facultyId": "FAC-09",
+        "studentGroup": "ECE-3A",
+        "headcount": 55,
+        "start": "11:15",
+        "end": "12:15"
+      },
+      {
+        "id": "SES-ECE-3A-20260107T0800",
+        "courseName": "Database Systems",
+        "kind": "LECTURE",
+        "roomId": "BHB-201",
+        "facultyId": "FAC-10",
+        "studentGroup": "ECE-3A",
+        "headcount": 55,
+        "start": "13:30",
+        "end": "14:30"
+      },
+      {
+        "id": "SES-ECE-3A-20260107T0900",
+        "courseName": "Control Systems",
+        "kind": "LECTURE",
+        "roomId": "BHB-201",
+        "facultyId": "FAC-11",
+        "studentGroup": "ECE-3A",
+        "headcount": 55,
+        "start": "14:30",
+        "end": "15:30"
+      },
+      {
+        "id": "SES-ECE-3B-20260107T0330",
+        "courseName": "Database Systems",
+        "kind": "LECTURE",
+        "roomId": "BHB-202",
+        "facultyId": "FAC-08",
+        "studentGroup": "ECE-3B",
+        "headcount": 54,
+        "start": "09:00",
+        "end": "10:00"
+      },
+      {
+        "id": "SES-ECE-3B-20260107T0430",
+        "courseName": "Control Systems",
+        "kind": "LECTURE",
+        "roomId": "BHB-202",
+        "facultyId": "FAC-09",
+        "studentGroup": "ECE-3B",
+        "headcount": 54,
+        "start": "10:00",
+        "end": "11:00"
+      },
+      {
+        "id": "SES-ECE-3B-20260107T0545",
+        "courseName": "Embedded Systems",
+        "kind": "LECTURE",
+        "roomId": "BHB-202",
+        "facultyId": "FAC-10",
+        "studentGroup": "ECE-3B",
+        "headcount": 54,
+        "start": "11:15",
+        "end": "12:15"
+      },
+      {
+        "id": "SES-ECE-3B-20260107T0800",
+        "courseName": "Discrete Mathematics",
+        "kind": "LECTURE",
+        "roomId": "BHB-202",
+        "facultyId": "FAC-11",
+        "studentGroup": "ECE-3B",
+        "headcount": 54,
+        "start": "13:30",
+        "end": "14:30"
+      },
+      {
+        "id": "SES-ECE-3B-20260107T0900",
+        "courseName": "Machine Learning",
+        "kind": "LECTURE",
+        "roomId": "BHB-202",
+        "facultyId": "FAC-12",
+        "studentGroup": "ECE-3B",
+        "headcount": 54,
+        "start": "14:30",
+        "end": "15:30"
+      },
+      {
+        "id": "SES-ECE-2A-20260107T0330",
+        "courseName": "Discrete Mathematics",
+        "kind": "LECTURE",
+        "roomId": "BHB-101",
+        "facultyId": "FAC-09",
+        "studentGroup": "ECE-2A",
+        "headcount": 58,
+        "start": "09:00",
+        "end": "10:00"
+      },
+      {
+        "id": "SES-ECE-2A-20260107T0430",
+        "courseName": "Machine Learning",
+        "kind": "LECTURE",
+        "roomId": "BHB-101",
+        "facultyId": "FAC-10",
+        "studentGroup": "ECE-2A",
+        "headcount": 58,
+        "start": "10:00",
+        "end": "11:00"
+      },
+      {
+        "id": "SES-ECE-2A-20260107T0545",
+        "courseName": "VLSI Design",
+        "kind": "LECTURE",
+        "roomId": "BHB-101",
+        "facultyId": "FAC-11",
+        "studentGroup": "ECE-2A",
+        "headcount": 58,
+        "start": "11:15",
+        "end": "12:15"
+      },
+      {
+        "id": "SES-ECE-2A-20260107T0800",
+        "courseName": "Software Engineering",
+        "kind": "LECTURE",
+        "roomId": "BHB-101",
+        "facultyId": "FAC-12",
+        "studentGroup": "ECE-2A",
+        "headcount": 58,
+        "start": "13:30",
+        "end": "14:30"
+      },
+      {
+        "id": "SES-ECE-2A-20260107T0900",
+        "courseName": "Data Structures",
+        "kind": "LECTURE",
+        "roomId": "BHB-101",
+        "facultyId": "FAC-01",
+        "studentGroup": "ECE-2A",
+        "headcount": 58,
+        "start": "14:30",
+        "end": "15:30"
+      },
+      {
+        "id": "SES-ECE-4A-20260107T0330",
+        "courseName": "Software Engineering",
+        "kind": "LECTURE",
+        "roomId": "BHB-301",
+        "facultyId": "FAC-10",
+        "studentGroup": "ECE-4A",
+        "headcount": 50,
+        "start": "09:00",
+        "end": "10:00"
+      },
+      {
+        "id": "SES-ECE-4A-20260107T0430",
+        "courseName": "Data Structures",
+        "kind": "LECTURE",
+        "roomId": "BHB-301",
+        "facultyId": "FAC-11",
+        "studentGroup": "ECE-4A",
+        "headcount": 50,
+        "start": "10:00",
+        "end": "11:00"
+      },
+      {
+        "id": "SES-ECE-4A-20260107T0545",
+        "courseName": "Digital Electronics",
+        "kind": "LECTURE",
+        "roomId": "BHB-301",
+        "facultyId": "FAC-12",
+        "studentGroup": "ECE-4A",
+        "headcount": 50,
+        "start": "11:15",
+        "end": "12:15"
+      },
+      {
+        "id": "SES-ECE-4A-20260107T0800",
+        "courseName": "Machine Learning lab",
+        "kind": "PRACTICAL",
+        "roomId": "RLB-203",
+        "facultyId": "FAC-20",
+        "studentGroup": "ECE-4A",
+        "headcount": 50,
+        "start": "13:30",
+        "end": "15:30"
+      }
+    ],
+    "items": [
+      {
+        "id": "ITM-MCB-16A-1P",
+        "sku": "MCB-16A-1P",
+        "name": "MCB 16A single pole",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 6,
+        "critical": false,
+        "unitCostPaise": 18000,
+        "onHand": 24
+      },
+      {
+        "id": "ITM-MCB-32A-3P",
+        "sku": "MCB-32A-3P",
+        "name": "MCB 32A three pole",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 4,
+        "critical": true,
+        "unitCostPaise": 145000,
+        "onHand": 0
+      },
+      {
+        "id": "ITM-MCB-63A-4P",
+        "sku": "MCB-63A-4P",
+        "name": "MCB 63A four pole",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 2,
+        "critical": true,
+        "unitCostPaise": 320000,
+        "onHand": 10
+      },
+      {
+        "id": "ITM-CONTACTOR-25A",
+        "sku": "CONTACTOR-25A",
+        "name": "Contactor 25A",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 3,
+        "critical": false,
+        "unitCostPaise": 95000,
+        "onHand": 2
+      },
+      {
+        "id": "ITM-RELAY-24V",
+        "sku": "RELAY-24V",
+        "name": "Relay 24V",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 5,
+        "critical": false,
+        "unitCostPaise": 22000,
+        "onHand": 8
+      },
+      {
+        "id": "ITM-CABLE-2.5MM",
+        "sku": "CABLE-2.5MM",
+        "name": "Copper cable 2.5mm",
+        "category": "ELECTRICAL",
+        "unit": "M",
+        "reorderThreshold": 100,
+        "critical": false,
+        "unitCostPaise": 3800,
+        "onHand": 449
+      },
+      {
+        "id": "ITM-CABLE-6MM",
+        "sku": "CABLE-6MM",
+        "name": "Copper cable 6mm",
+        "category": "ELECTRICAL",
+        "unit": "M",
+        "reorderThreshold": 60,
+        "critical": false,
+        "unitCostPaise": 9200,
+        "onHand": 259
+      },
+      {
+        "id": "ITM-FUSE-10A",
+        "sku": "FUSE-10A",
+        "name": "Fuse 10A",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 20,
+        "critical": false,
+        "unitCostPaise": 2500,
+        "onHand": 106
+      },
+      {
+        "id": "ITM-LED-TUBE-18W",
+        "sku": "LED-TUBE-18W",
+        "name": "LED tube light 18W",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 15,
+        "critical": false,
+        "unitCostPaise": 26000,
+        "onHand": 112
+      },
+      {
+        "id": "ITM-LED-PANEL-36W",
+        "sku": "LED-PANEL-36W",
+        "name": "LED panel 36W",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 8,
+        "critical": false,
+        "unitCostPaise": 78000,
+        "onHand": 40
+      },
+      {
+        "id": "ITM-SWITCH-6A",
+        "sku": "SWITCH-6A",
+        "name": "Switch 6A",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 12,
+        "critical": false,
+        "unitCostPaise": 4500,
+        "onHand": 54
+      },
+      {
+        "id": "ITM-SOCKET-16A",
+        "sku": "SOCKET-16A",
+        "name": "Socket 16A",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 12,
+        "critical": false,
+        "unitCostPaise": 8500,
+        "onHand": 27
+      },
+      {
+        "id": "ITM-DB-8WAY",
+        "sku": "DB-8WAY",
+        "name": "Distribution board 8 way",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 2,
+        "critical": false,
+        "unitCostPaise": 240000,
+        "onHand": 13
+      },
+      {
+        "id": "ITM-ELCB-40A",
+        "sku": "ELCB-40A",
+        "name": "ELCB 40A",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 3,
+        "critical": true,
+        "unitCostPaise": 210000,
+        "onHand": 11
+      },
+      {
+        "id": "ITM-CAP-FAN-2.5",
+        "sku": "CAP-FAN-2.5",
+        "name": "Fan capacitor 2.5uF",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 10,
+        "critical": false,
+        "unitCostPaise": 6000,
+        "onHand": 60
+      },
+      {
+        "id": "ITM-CEILING-FAN",
+        "sku": "CEILING-FAN",
+        "name": "Ceiling fan 1200mm",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 3,
+        "critical": false,
+        "unitCostPaise": 230000,
+        "onHand": 16
+      },
+      {
+        "id": "ITM-TERMINAL-BLOCK",
+        "sku": "TERMINAL-BLOCK",
+        "name": "Terminal block",
+        "category": "ELECTRICAL",
+        "unit": "EA",
+        "reorderThreshold": 25,
+        "critical": false,
+        "unitCostPaise": 3000,
+        "onHand": 129
+      },
+      {
+        "id": "ITM-AP-WIFI6",
+        "sku": "AP-WIFI6",
+        "name": "Wi-Fi 6 access point",
+        "category": "NETWORK",
+        "unit": "EA",
+        "reorderThreshold": 3,
+        "critical": true,
+        "unitCostPaise": 980000,
+        "onHand": 8
+      },
+      {
+        "id": "ITM-SWITCH-24P",
+        "sku": "SWITCH-24P",
+        "name": "24 port managed switch",
+        "category": "NETWORK",
+        "unit": "EA",
+        "reorderThreshold": 1,
+        "critical": true,
+        "unitCostPaise": 2450000,
+        "onHand": 4
+      },
+      {
+        "id": "ITM-SWITCH-8P",
+        "sku": "SWITCH-8P",
+        "name": "8 port switch",
+        "category": "NETWORK",
+        "unit": "EA",
+        "reorderThreshold": 3,
+        "critical": false,
+        "unitCostPaise": 320000,
+        "onHand": 17
+      },
+      {
+        "id": "ITM-PATCH-1M",
+        "sku": "PATCH-1M",
+        "name": "Patch cord 1m",
+        "category": "NETWORK",
+        "unit": "EA",
+        "reorderThreshold": 30,
+        "critical": false,
+        "unitCostPaise": 9000,
+        "onHand": 150
+      },
+      {
+        "id": "ITM-PATCH-3M",
+        "sku": "PATCH-3M",
+        "name": "Patch cord 3m",
+        "category": "NETWORK",
+        "unit": "EA",
+        "reorderThreshold": 20,
+        "critical": false,
+        "unitCostPaise": 14000,
+        "onHand": 66
+      },
+      {
+        "id": "ITM-CAT6-BOX",
+        "sku": "CAT6-BOX",
+        "name": "Cat6 cable box 305m",
+        "category": "NETWORK",
+        "unit": "EA",
+        "reorderThreshold": 2,
+        "critical": false,
+        "unitCostPaise": 740000,
+        "onHand": 13
+      },
+      {
+        "id": "ITM-SFP-10G",
+        "sku": "SFP-10G",
+        "name": "SFP+ 10G module",
+        "category": "NETWORK",
+        "unit": "EA",
+        "reorderThreshold": 4,
+        "critical": true,
+        "unitCostPaise": 620000,
+        "onHand": 18
+      },
+      {
+        "id": "ITM-RJ45-CONN",
+        "sku": "RJ45-CONN",
+        "name": "RJ45 connector pack",
+        "category": "NETWORK",
+        "unit": "PK",
+        "reorderThreshold": 10,
+        "critical": false,
+        "unitCostPaise": 32000,
+        "onHand": 44
+      },
+      {
+        "id": "ITM-POE-INJECTOR",
+        "sku": "POE-INJECTOR",
+        "name": "PoE injector",
+        "category": "NETWORK",
+        "unit": "EA",
+        "reorderThreshold": 5,
+        "critical": false,
+        "unitCostPaise": 190000,
+        "onHand": 23
+      },
+      {
+        "id": "ITM-UPS-1KVA",
+        "sku": "UPS-1KVA",
+        "name": "UPS 1kVA",
+        "category": "NETWORK",
+        "unit": "EA",
+        "reorderThreshold": 1,
+        "critical": false,
+        "unitCostPaise": 890000,
+        "onHand": 0
+      },
+      {
+        "id": "ITM-TAP-15MM",
+        "sku": "TAP-15MM",
+        "name": "Tap 15mm",
+        "category": "PLUMBING",
+        "unit": "EA",
+        "reorderThreshold": 8,
+        "critical": false,
+        "unitCostPaise": 21000,
+        "onHand": 44
+      },
+      {
+        "id": "ITM-VALVE-GATE-25",
+        "sku": "VALVE-GATE-25",
+        "name": "Gate valve 25mm",
+        "category": "PLUMBING",
+        "unit": "EA",
+        "reorderThreshold": 5,
+        "critical": false,
+        "unitCostPaise": 48000,
+        "onHand": 22
+      },
+      {
+        "id": "ITM-PIPE-PVC-40",
+        "sku": "PIPE-PVC-40",
+        "name": "PVC pipe 40mm",
+        "category": "PLUMBING",
+        "unit": "M",
+        "reorderThreshold": 40,
+        "critical": false,
+        "unitCostPaise": 12000,
+        "onHand": 234
+      },
+      {
+        "id": "ITM-PIPE-CPVC-20",
+        "sku": "PIPE-CPVC-20",
+        "name": "CPVC pipe 20mm",
+        "category": "PLUMBING",
+        "unit": "M",
+        "reorderThreshold": 40,
+        "critical": false,
+        "unitCostPaise": 9500,
+        "onHand": 184
+      },
+      {
+        "id": "ITM-ELBOW-PVC-40",
+        "sku": "ELBOW-PVC-40",
+        "name": "PVC elbow 40mm",
+        "category": "PLUMBING",
+        "unit": "EA",
+        "reorderThreshold": 20,
+        "critical": false,
+        "unitCostPaise": 3500,
+        "onHand": 114
+      },
+      {
+        "id": "ITM-FLUSH-VALVE",
+        "sku": "FLUSH-VALVE",
+        "name": "Flush valve",
+        "category": "PLUMBING",
+        "unit": "EA",
+        "reorderThreshold": 4,
+        "critical": false,
+        "unitCostPaise": 76000,
+        "onHand": 21
+      },
+      {
+        "id": "ITM-WATER-PUMP-1HP",
+        "sku": "WATER-PUMP-1HP",
+        "name": "Water pump 1HP",
+        "category": "PLUMBING",
+        "unit": "EA",
+        "reorderThreshold": 1,
+        "critical": true,
+        "unitCostPaise": 1120000,
+        "onHand": 4
+      },
+      {
+        "id": "ITM-TEFLON-TAPE",
+        "sku": "TEFLON-TAPE",
+        "name": "Teflon tape",
+        "category": "PLUMBING",
+        "unit": "EA",
+        "reorderThreshold": 30,
+        "critical": false,
+        "unitCostPaise": 1500,
+        "onHand": 125
+      },
+      {
+        "id": "ITM-COMPRESSOR-1.5T",
+        "sku": "COMPRESSOR-1.5T",
+        "name": "AC compressor 1.5 ton",
+        "category": "HVAC",
+        "unit": "EA",
+        "reorderThreshold": 1,
+        "critical": true,
+        "unitCostPaise": 1480000,
+        "onHand": 7
+      },
+      {
+        "id": "ITM-CAP-AC-35",
+        "sku": "CAP-AC-35",
+        "name": "AC run capacitor 35uF",
+        "category": "HVAC",
+        "unit": "EA",
+        "reorderThreshold": 8,
+        "critical": false,
+        "unitCostPaise": 34000,
+        "onHand": 44
+      },
+      {
+        "id": "ITM-FILTER-AC",
+        "sku": "FILTER-AC",
+        "name": "AC filter",
+        "category": "HVAC",
+        "unit": "EA",
+        "reorderThreshold": 12,
+        "critical": false,
+        "unitCostPaise": 22000,
+        "onHand": 49
+      },
+      {
+        "id": "ITM-GAS-R32",
+        "sku": "GAS-R32",
+        "name": "Refrigerant R32 cylinder",
+        "category": "HVAC",
+        "unit": "EA",
+        "reorderThreshold": 2,
+        "critical": false,
+        "unitCostPaise": 560000,
+        "onHand": 12
+      },
+      {
+        "id": "ITM-THERMOSTAT",
+        "sku": "THERMOSTAT",
+        "name": "Thermostat",
+        "category": "HVAC",
+        "unit": "EA",
+        "reorderThreshold": 4,
+        "critical": false,
+        "unitCostPaise": 64000,
+        "onHand": 22
+      },
+      {
+        "id": "ITM-FAN-MOTOR-AC",
+        "sku": "FAN-MOTOR-AC",
+        "name": "AC fan motor",
+        "category": "HVAC",
+        "unit": "EA",
+        "reorderThreshold": 2,
+        "critical": false,
+        "unitCostPaise": 290000,
+        "onHand": 7
+      },
+      {
+        "id": "ITM-HINGE-4IN",
+        "sku": "HINGE-4IN",
+        "name": "Door hinge 4 inch",
+        "category": "CARPENTRY",
+        "unit": "EA",
+        "reorderThreshold": 20,
+        "critical": false,
+        "unitCostPaise": 5500,
+        "onHand": 91
+      },
+      {
+        "id": "ITM-LOCK-MORTISE",
+        "sku": "LOCK-MORTISE",
+        "name": "Mortise lock",
+        "category": "CARPENTRY",
+        "unit": "EA",
+        "reorderThreshold": 6,
+        "critical": false,
+        "unitCostPaise": 78000,
+        "onHand": 27
+      },
+      {
+        "id": "ITM-PLY-18MM",
+        "sku": "PLY-18MM",
+        "name": "Plywood 18mm sheet",
+        "category": "CARPENTRY",
+        "unit": "EA",
+        "reorderThreshold": 4,
+        "critical": false,
+        "unitCostPaise": 210000,
+        "onHand": 7
+      },
+      {
+        "id": "ITM-SCREWS-PACK",
+        "sku": "SCREWS-PACK",
+        "name": "Wood screws pack",
+        "category": "CARPENTRY",
+        "unit": "PK",
+        "reorderThreshold": 15,
+        "critical": false,
+        "unitCostPaise": 9000,
+        "onHand": 79
+      },
+      {
+        "id": "ITM-WHITEBOARD",
+        "sku": "WHITEBOARD",
+        "name": "Whiteboard 4x6",
+        "category": "CARPENTRY",
+        "unit": "EA",
+        "reorderThreshold": 2,
+        "critical": false,
+        "unitCostPaise": 340000,
+        "onHand": 7
+      },
+      {
+        "id": "ITM-DESK-BENCH",
+        "sku": "DESK-BENCH",
+        "name": "Classroom bench",
+        "category": "CARPENTRY",
+        "unit": "EA",
+        "reorderThreshold": 6,
+        "critical": false,
+        "unitCostPaise": 280000,
+        "onHand": 35
+      },
+      {
+        "id": "ITM-PROJ-LAMP",
+        "sku": "PROJ-LAMP",
+        "name": "Projector lamp",
+        "category": "EQUIPMENT",
+        "unit": "EA",
+        "reorderThreshold": 4,
+        "critical": true,
+        "unitCostPaise": 540000,
+        "onHand": 12
+      },
+      {
+        "id": "ITM-HDMI-5M",
+        "sku": "HDMI-5M",
+        "name": "HDMI cable 5m",
+        "category": "EQUIPMENT",
+        "unit": "EA",
+        "reorderThreshold": 10,
+        "critical": false,
+        "unitCostPaise": 48000,
+        "onHand": 24
+      },
+      {
+        "id": "ITM-VGA-5M",
+        "sku": "VGA-5M",
+        "name": "VGA cable 5m",
+        "category": "EQUIPMENT",
+        "unit": "EA",
+        "reorderThreshold": 8,
+        "critical": false,
+        "unitCostPaise": 26000,
+        "onHand": 21
+      },
+      {
+        "id": "ITM-PROJECTOR-FULL",
+        "sku": "PROJECTOR-FULL",
+        "name": "Projector 4000 lumen",
+        "category": "EQUIPMENT",
+        "unit": "EA",
+        "reorderThreshold": 1,
+        "critical": true,
+        "unitCostPaise": 3800000,
+        "onHand": 0
+      },
+      {
+        "id": "ITM-SPEAKER-PA",
+        "sku": "SPEAKER-PA",
+        "name": "PA speaker",
+        "category": "EQUIPMENT",
+        "unit": "EA",
+        "reorderThreshold": 2,
+        "critical": false,
+        "unitCostPaise": 420000,
+        "onHand": 1
+      },
+      {
+        "id": "ITM-MIC-WIRELESS",
+        "sku": "MIC-WIRELESS",
+        "name": "Wireless microphone",
+        "category": "EQUIPMENT",
+        "unit": "EA",
+        "reorderThreshold": 2,
+        "critical": false,
+        "unitCostPaise": 680000,
+        "onHand": 2
+      },
+      {
+        "id": "ITM-CLICKER",
+        "sku": "CLICKER",
+        "name": "Presentation clicker",
+        "category": "EQUIPMENT",
+        "unit": "EA",
+        "reorderThreshold": 5,
+        "critical": false,
+        "unitCostPaise": 90000,
+        "onHand": 5
+      },
+      {
+        "id": "ITM-BATTERY-AA",
+        "sku": "BATTERY-AA",
+        "name": "AA battery pack",
+        "category": "EQUIPMENT",
+        "unit": "PK",
+        "reorderThreshold": 20,
+        "critical": false,
+        "unitCostPaise": 14000,
+        "onHand": 68
+      },
+      {
+        "id": "ITM-EXTENSION-4M",
+        "sku": "EXTENSION-4M",
+        "name": "Extension board 4m",
+        "category": "EQUIPMENT",
+        "unit": "EA",
+        "reorderThreshold": 10,
+        "critical": false,
+        "unitCostPaise": 42000,
+        "onHand": 10
+      },
+      {
+        "id": "ITM-BROOM-SET",
+        "sku": "BROOM-SET",
+        "name": "Cleaning broom set",
+        "category": "HOUSEKEEPING",
+        "unit": "EA",
+        "reorderThreshold": 10,
+        "critical": false,
+        "unitCostPaise": 18000,
+        "onHand": 19
+      },
+      {
+        "id": "ITM-BIN-LINER",
+        "sku": "BIN-LINER",
+        "name": "Bin liners pack",
+        "category": "HOUSEKEEPING",
+        "unit": "PK",
+        "reorderThreshold": 20,
+        "critical": false,
+        "unitCostPaise": 12000,
+        "onHand": 48
+      },
+      {
+        "id": "ITM-SANITIZER-5L",
+        "sku": "SANITIZER-5L",
+        "name": "Sanitizer 5L",
+        "category": "HOUSEKEEPING",
+        "unit": "EA",
+        "reorderThreshold": 6,
+        "critical": false,
+        "unitCostPaise": 64000,
+        "onHand": 20
+      },
+      {
+        "id": "ITM-MOP-KIT",
+        "sku": "MOP-KIT",
+        "name": "Mop kit",
+        "category": "HOUSEKEEPING",
+        "unit": "EA",
+        "reorderThreshold": 5,
+        "critical": false,
+        "unitCostPaise": 52000,
+        "onHand": 15
+      }
+    ],
+    "history": [
+      {
+        "id": "MH-0115",
+        "assetId": null,
+        "roomId": "BHB-105",
+        "buildingId": "B-BHB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0115",
+        "technicianId": "T-05",
+        "completedAt": "2025-07-17T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0087",
+        "assetId": null,
+        "roomId": "RLB-205",
+        "buildingId": "B-RLB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0087",
+        "technicianId": "T-06",
+        "completedAt": "2025-07-17T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0097",
+        "assetId": null,
+        "roomId": "ARB-301",
+        "buildingId": "B-ARB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0097",
+        "technicianId": "T-05",
+        "completedAt": "2025-07-18T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0140",
+        "assetId": null,
+        "roomId": "BHB-204",
+        "buildingId": "B-BHB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0140",
+        "technicianId": "T-05",
+        "completedAt": "2025-07-18T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0150",
+        "assetId": null,
+        "roomId": "BHB-201",
+        "buildingId": "B-BHB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0150",
+        "technicianId": "T-06",
+        "completedAt": "2025-07-18T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0027",
+        "assetId": null,
+        "roomId": "BHB-202",
+        "buildingId": "B-BHB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0027",
+        "technicianId": "T-03",
+        "completedAt": "2025-07-20T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0127",
+        "assetId": null,
+        "roomId": "RMB-204",
+        "buildingId": "B-RMB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0127",
+        "technicianId": "T-04",
+        "completedAt": "2025-07-21T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0119",
+        "assetId": null,
+        "roomId": "RLB-205",
+        "buildingId": "B-RLB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0119",
+        "technicianId": "T-01",
+        "completedAt": "2025-07-22T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0042",
+        "assetId": null,
+        "roomId": "RMB-104",
+        "buildingId": "B-RMB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0042",
+        "technicianId": "T-05",
+        "completedAt": "2025-07-23T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0082",
+        "assetId": null,
+        "roomId": "ARB-304",
+        "buildingId": "B-ARB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0082",
+        "technicianId": "T-04",
+        "completedAt": "2025-07-26T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0120",
+        "assetId": null,
+        "roomId": "RMB-304",
+        "buildingId": "B-RMB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0120",
+        "technicianId": "T-03",
+        "completedAt": "2025-07-29T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0143",
+        "assetId": null,
+        "roomId": "ARB-302",
+        "buildingId": "B-ARB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0143",
+        "technicianId": "T-04",
+        "completedAt": "2025-07-30T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0095",
+        "assetId": null,
+        "roomId": "ARB-305",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0095",
+        "technicianId": "T-03",
+        "completedAt": "2025-07-31T00:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0045",
+        "assetId": null,
+        "roomId": "ARB-104",
+        "buildingId": "B-ARB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0045",
+        "technicianId": "T-05",
+        "completedAt": "2025-08-04T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0117",
+        "assetId": null,
+        "roomId": "RLB-105",
+        "buildingId": "B-RLB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0117",
+        "technicianId": "T-04",
+        "completedAt": "2025-08-04T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0086",
+        "assetId": null,
+        "roomId": "ARB-205",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0086",
+        "technicianId": "T-01",
+        "completedAt": "2025-08-04T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0071",
+        "assetId": null,
+        "roomId": "RMB-305",
+        "buildingId": "B-RMB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0071",
+        "technicianId": "T-06",
+        "completedAt": "2025-08-05T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0050",
+        "assetId": null,
+        "roomId": "RLB-103",
+        "buildingId": "B-RLB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0050",
+        "technicianId": "T-01",
+        "completedAt": "2025-08-05T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0139",
+        "assetId": null,
+        "roomId": "ARB-404",
+        "buildingId": "B-ARB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0139",
+        "technicianId": "T-05",
+        "completedAt": "2025-08-06T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0118",
+        "assetId": null,
+        "roomId": "ARB-404",
+        "buildingId": "B-ARB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0118",
+        "technicianId": "T-06",
+        "completedAt": "2025-08-06T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0033",
+        "assetId": null,
+        "roomId": "BHB-205",
+        "buildingId": "B-BHB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0033",
+        "technicianId": "T-06",
+        "completedAt": "2025-08-06T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0077",
+        "assetId": null,
+        "roomId": "ARB-206",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0077",
+        "technicianId": "T-03",
+        "completedAt": "2025-08-07T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0023",
+        "assetId": null,
+        "roomId": "BHB-104",
+        "buildingId": "B-BHB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0023",
+        "technicianId": "T-06",
+        "completedAt": "2025-08-08T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0046",
+        "assetId": null,
+        "roomId": "RMB-201",
+        "buildingId": "B-RMB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0046",
+        "technicianId": "T-05",
+        "completedAt": "2025-08-09T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0142",
+        "assetId": null,
+        "roomId": "BHB-304",
+        "buildingId": "B-BHB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0142",
+        "technicianId": "T-04",
+        "completedAt": "2025-08-09T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0093",
+        "assetId": null,
+        "roomId": "ARB-203",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0093",
+        "technicianId": "T-03",
+        "completedAt": "2025-08-10T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0100",
+        "assetId": null,
+        "roomId": "ARB-205",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0100",
+        "technicianId": "T-01",
+        "completedAt": "2025-08-11T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0051",
+        "assetId": null,
+        "roomId": "RLB-204",
+        "buildingId": "B-RLB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0051",
+        "technicianId": "T-04",
+        "completedAt": "2025-08-12T00:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0135",
+        "assetId": null,
+        "roomId": "BHB-306",
+        "buildingId": "B-BHB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0135",
+        "technicianId": "T-05",
+        "completedAt": "2025-08-13T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0098",
+        "assetId": null,
+        "roomId": "ARB-305",
+        "buildingId": "B-ARB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0098",
+        "technicianId": "T-05",
+        "completedAt": "2025-08-15T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0096",
+        "assetId": null,
+        "roomId": "RMB-302",
+        "buildingId": "B-RMB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0096",
+        "technicianId": "T-01",
+        "completedAt": "2025-08-15T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0005",
+        "assetId": "AST-AP-ARB-F2-2",
+        "roomId": "ARB-203",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Access point drops clients and reboots",
+        "workOrderId": "WO-H-0005",
+        "technicianId": "T-03",
+        "completedAt": "2025-08-17T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0028",
+        "assetId": null,
+        "roomId": "BHB-205",
+        "buildingId": "B-BHB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0028",
+        "technicianId": "T-06",
+        "completedAt": "2025-08-21T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0129",
+        "assetId": null,
+        "roomId": "ARB-401",
+        "buildingId": "B-ARB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0129",
+        "technicianId": "T-06",
+        "completedAt": "2025-08-22T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0099",
+        "assetId": null,
+        "roomId": "RMB-304",
+        "buildingId": "B-RMB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0099",
+        "technicianId": "T-01",
+        "completedAt": "2025-08-22T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0124",
+        "assetId": null,
+        "roomId": "BHB-102",
+        "buildingId": "B-BHB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0124",
+        "technicianId": "T-01",
+        "completedAt": "2025-08-22T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0110",
+        "assetId": null,
+        "roomId": "ARB-102",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0110",
+        "technicianId": "T-01",
+        "completedAt": "2025-08-23T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0061",
+        "assetId": null,
+        "roomId": "ARB-203",
+        "buildingId": "B-ARB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0061",
+        "technicianId": "T-05",
+        "completedAt": "2025-08-23T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0031",
+        "assetId": null,
+        "roomId": "ARB-306",
+        "buildingId": "B-ARB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0031",
+        "technicianId": "T-05",
+        "completedAt": "2025-08-24T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0048",
+        "assetId": null,
+        "roomId": "BHB-104",
+        "buildingId": "B-BHB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0048",
+        "technicianId": "T-05",
+        "completedAt": "2025-08-28T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0149",
+        "assetId": null,
+        "roomId": "RMB-201",
+        "buildingId": "B-RMB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0149",
+        "technicianId": "T-01",
+        "completedAt": "2025-08-31T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0017",
+        "assetId": null,
+        "roomId": "KLH-304",
+        "buildingId": "B-KLH",
+        "category": "PLUMBING",
+        "summary": "Bathroom tap leaking",
+        "workOrderId": "WO-H-0017",
+        "technicianId": "T-05",
+        "completedAt": "2025-08-31T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0109",
+        "assetId": null,
+        "roomId": "BHB-302",
+        "buildingId": "B-BHB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0109",
+        "technicianId": "T-06",
+        "completedAt": "2025-09-01T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0108",
+        "assetId": null,
+        "roomId": "BHB-104",
+        "buildingId": "B-BHB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0108",
+        "technicianId": "T-04",
+        "completedAt": "2025-09-02T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0037",
+        "assetId": null,
+        "roomId": "RLB-101",
+        "buildingId": "B-RLB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0037",
+        "technicianId": "T-01",
+        "completedAt": "2025-09-04T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0006",
+        "assetId": "AST-AP-ARB-F2-2",
+        "roomId": "ARB-203",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Access point drops clients and reboots",
+        "workOrderId": "WO-H-0006",
+        "technicianId": "T-03",
+        "completedAt": "2025-09-04T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0128",
+        "assetId": null,
+        "roomId": "ARB-305",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0128",
+        "technicianId": "T-01",
+        "completedAt": "2025-09-05T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0066",
+        "assetId": null,
+        "roomId": "RLB-103",
+        "buildingId": "B-RLB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0066",
+        "technicianId": "T-03",
+        "completedAt": "2025-09-05T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0146",
+        "assetId": null,
+        "roomId": "BHB-105",
+        "buildingId": "B-BHB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0146",
+        "technicianId": "T-05",
+        "completedAt": "2025-09-07T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0057",
+        "assetId": null,
+        "roomId": "RLB-104",
+        "buildingId": "B-RLB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0057",
+        "technicianId": "T-05",
+        "completedAt": "2025-09-11T00:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0072",
+        "assetId": null,
+        "roomId": "ARB-403",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0072",
+        "technicianId": "T-01",
+        "completedAt": "2025-09-12T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0069",
+        "assetId": null,
+        "roomId": "RLB-203",
+        "buildingId": "B-RLB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0069",
+        "technicianId": "T-05",
+        "completedAt": "2025-09-15T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0004",
+        "assetId": "AST-AP-ARB-F2-2",
+        "roomId": "ARB-203",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Access point drops clients and reboots",
+        "workOrderId": "WO-H-0004",
+        "technicianId": "T-03",
+        "completedAt": "2025-09-15T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0133",
+        "assetId": null,
+        "roomId": "ARB-203",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0133",
+        "technicianId": "T-03",
+        "completedAt": "2025-09-17T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0053",
+        "assetId": null,
+        "roomId": "BHB-204",
+        "buildingId": "B-BHB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0053",
+        "technicianId": "T-05",
+        "completedAt": "2025-09-17T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0092",
+        "assetId": null,
+        "roomId": "RMB-303",
+        "buildingId": "B-RMB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0092",
+        "technicianId": "T-01",
+        "completedAt": "2025-09-17T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0132",
+        "assetId": null,
+        "roomId": "ARB-306",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0132",
+        "technicianId": "T-01",
+        "completedAt": "2025-09-18T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0029",
+        "assetId": null,
+        "roomId": "RLB-202",
+        "buildingId": "B-RLB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0029",
+        "technicianId": "T-01",
+        "completedAt": "2025-09-19T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0032",
+        "assetId": null,
+        "roomId": "ARB-406",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0032",
+        "technicianId": "T-01",
+        "completedAt": "2025-09-20T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0141",
+        "assetId": null,
+        "roomId": "RMB-206",
+        "buildingId": "B-RMB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0141",
+        "technicianId": "T-01",
+        "completedAt": "2025-09-20T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0039",
+        "assetId": null,
+        "roomId": "RLB-102",
+        "buildingId": "B-RLB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0039",
+        "technicianId": "T-01",
+        "completedAt": "2025-09-21T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0068",
+        "assetId": null,
+        "roomId": "ARB-304",
+        "buildingId": "B-ARB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0068",
+        "technicianId": "T-05",
+        "completedAt": "2025-09-26T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0122",
+        "assetId": null,
+        "roomId": "RMB-305",
+        "buildingId": "B-RMB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0122",
+        "technicianId": "T-06",
+        "completedAt": "2025-09-27T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0113",
+        "assetId": null,
+        "roomId": "BHB-201",
+        "buildingId": "B-BHB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0113",
+        "technicianId": "T-05",
+        "completedAt": "2025-09-29T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0102",
+        "assetId": null,
+        "roomId": "RMB-203",
+        "buildingId": "B-RMB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0102",
+        "technicianId": "T-05",
+        "completedAt": "2025-09-30T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0052",
+        "assetId": null,
+        "roomId": "RLB-202",
+        "buildingId": "B-RLB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0052",
+        "technicianId": "T-05",
+        "completedAt": "2025-10-01T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0058",
+        "assetId": null,
+        "roomId": "ARB-405",
+        "buildingId": "B-ARB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0058",
+        "technicianId": "T-06",
+        "completedAt": "2025-10-03T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0111",
+        "assetId": null,
+        "roomId": "RMB-205",
+        "buildingId": "B-RMB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0111",
+        "technicianId": "T-01",
+        "completedAt": "2025-10-06T00:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0145",
+        "assetId": null,
+        "roomId": "ARB-405",
+        "buildingId": "B-ARB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0145",
+        "technicianId": "T-04",
+        "completedAt": "2025-10-07T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0091",
+        "assetId": null,
+        "roomId": "RLB-205",
+        "buildingId": "B-RLB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0091",
+        "technicianId": "T-06",
+        "completedAt": "2025-10-07T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0076",
+        "assetId": null,
+        "roomId": "BHB-305",
+        "buildingId": "B-BHB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0076",
+        "technicianId": "T-06",
+        "completedAt": "2025-10-09T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0138",
+        "assetId": null,
+        "roomId": "ARB-104",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0138",
+        "technicianId": "T-03",
+        "completedAt": "2025-10-10T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0104",
+        "assetId": null,
+        "roomId": "RLB-204",
+        "buildingId": "B-RLB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0104",
+        "technicianId": "T-05",
+        "completedAt": "2025-10-10T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0047",
+        "assetId": null,
+        "roomId": "RLB-202",
+        "buildingId": "B-RLB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0047",
+        "technicianId": "T-05",
+        "completedAt": "2025-10-11T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0105",
+        "assetId": null,
+        "roomId": "RMB-302",
+        "buildingId": "B-RMB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0105",
+        "technicianId": "T-03",
+        "completedAt": "2025-10-12T00:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0094",
+        "assetId": null,
+        "roomId": "BHB-203",
+        "buildingId": "B-BHB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0094",
+        "technicianId": "T-05",
+        "completedAt": "2025-10-14T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0083",
+        "assetId": null,
+        "roomId": "BHB-106",
+        "buildingId": "B-BHB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0083",
+        "technicianId": "T-05",
+        "completedAt": "2025-10-15T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0121",
+        "assetId": null,
+        "roomId": "ARB-105",
+        "buildingId": "B-ARB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0121",
+        "technicianId": "T-05",
+        "completedAt": "2025-10-16T00:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0055",
+        "assetId": null,
+        "roomId": "ARB-103",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0055",
+        "technicianId": "T-03",
+        "completedAt": "2025-10-17T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0103",
+        "assetId": null,
+        "roomId": "RLB-105",
+        "buildingId": "B-RLB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0103",
+        "technicianId": "T-05",
+        "completedAt": "2025-10-17T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0123",
+        "assetId": null,
+        "roomId": "ARB-401",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0123",
+        "technicianId": "T-03",
+        "completedAt": "2025-10-18T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0010",
+        "assetId": "AST-PR-ARB-204",
+        "roomId": "ARB-204",
+        "buildingId": "B-ARB",
+        "category": "EQUIPMENT",
+        "summary": "Projector lamp failed or image flickers",
+        "workOrderId": "WO-H-0010",
+        "technicianId": "T-04",
+        "completedAt": "2025-10-21T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0114",
+        "assetId": null,
+        "roomId": "ARB-103",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0114",
+        "technicianId": "T-01",
+        "completedAt": "2025-10-22T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0043",
+        "assetId": null,
+        "roomId": "ARB-402",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0043",
+        "technicianId": "T-01",
+        "completedAt": "2025-10-25T00:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0036",
+        "assetId": null,
+        "roomId": "RMB-103",
+        "buildingId": "B-RMB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0036",
+        "technicianId": "T-04",
+        "completedAt": "2025-10-25T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0075",
+        "assetId": null,
+        "roomId": "RMB-202",
+        "buildingId": "B-RMB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0075",
+        "technicianId": "T-05",
+        "completedAt": "2025-10-28T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0085",
+        "assetId": null,
+        "roomId": "RMB-301",
+        "buildingId": "B-RMB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0085",
+        "technicianId": "T-05",
+        "completedAt": "2025-10-29T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0009",
+        "assetId": "AST-PR-ARB-204",
+        "roomId": "ARB-204",
+        "buildingId": "B-ARB",
+        "category": "EQUIPMENT",
+        "summary": "Projector lamp failed or image flickers",
+        "workOrderId": "WO-H-0009",
+        "technicianId": "T-04",
+        "completedAt": "2025-10-30T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0073",
+        "assetId": null,
+        "roomId": "ARB-404",
+        "buildingId": "B-ARB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0073",
+        "technicianId": "T-04",
+        "completedAt": "2025-11-01T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0056",
+        "assetId": null,
+        "roomId": "BHB-105",
+        "buildingId": "B-BHB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0056",
+        "technicianId": "T-05",
+        "completedAt": "2025-11-02T00:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0130",
+        "assetId": null,
+        "roomId": "RMB-105",
+        "buildingId": "B-RMB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0130",
+        "technicianId": "T-01",
+        "completedAt": "2025-11-02T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0131",
+        "assetId": null,
+        "roomId": "ARB-401",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0131",
+        "technicianId": "T-03",
+        "completedAt": "2025-11-05T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0070",
+        "assetId": null,
+        "roomId": "BHB-301",
+        "buildingId": "B-BHB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0070",
+        "technicianId": "T-06",
+        "completedAt": "2025-11-06T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0026",
+        "assetId": null,
+        "roomId": "ARB-302",
+        "buildingId": "B-ARB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0026",
+        "technicianId": "T-06",
+        "completedAt": "2025-11-07T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0020",
+        "assetId": "AST-AC-RLB-102",
+        "roomId": "RLB-102",
+        "buildingId": "B-RLB",
+        "category": "HVAC",
+        "summary": "Lab air conditioner not cooling",
+        "workOrderId": "WO-H-0020",
+        "technicianId": "T-06",
+        "completedAt": "2025-11-09T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0112",
+        "assetId": null,
+        "roomId": "BHB-202",
+        "buildingId": "B-BHB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0112",
+        "technicianId": "T-05",
+        "completedAt": "2025-11-10T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0136",
+        "assetId": null,
+        "roomId": "BHB-204",
+        "buildingId": "B-BHB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0136",
+        "technicianId": "T-04",
+        "completedAt": "2025-11-10T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0024",
+        "assetId": null,
+        "roomId": "ARB-402",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0024",
+        "technicianId": "T-01",
+        "completedAt": "2025-11-12T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0003",
+        "assetId": "AST-AP-ARB-F2-2",
+        "roomId": "ARB-203",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Access point drops clients and reboots",
+        "workOrderId": "WO-H-0003",
+        "technicianId": "T-03",
+        "completedAt": "2025-11-13T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0013",
+        "assetId": "AST-DB-BHB-F1",
+        "roomId": "BHB-103",
+        "buildingId": "B-BHB",
+        "category": "ELECTRICAL",
+        "summary": "MCB trips when several rooms load at once",
+        "workOrderId": "WO-H-0013",
+        "technicianId": "T-01",
+        "completedAt": "2025-11-15T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0016",
+        "assetId": null,
+        "roomId": "KLH-304",
+        "buildingId": "B-KLH",
+        "category": "PLUMBING",
+        "summary": "Bathroom tap leaking",
+        "workOrderId": "WO-H-0016",
+        "technicianId": "T-05",
+        "completedAt": "2025-11-15T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0038",
+        "assetId": null,
+        "roomId": "ARB-403",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0038",
+        "technicianId": "T-03",
+        "completedAt": "2025-11-15T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0040",
+        "assetId": null,
+        "roomId": "BHB-102",
+        "buildingId": "B-BHB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0040",
+        "technicianId": "T-06",
+        "completedAt": "2025-11-16T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0081",
+        "assetId": null,
+        "roomId": "BHB-203",
+        "buildingId": "B-BHB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0081",
+        "technicianId": "T-01",
+        "completedAt": "2025-11-16T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0064",
+        "assetId": null,
+        "roomId": "BHB-206",
+        "buildingId": "B-BHB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0064",
+        "technicianId": "T-04",
+        "completedAt": "2025-11-17T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0080",
+        "assetId": null,
+        "roomId": "ARB-401",
+        "buildingId": "B-ARB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0080",
+        "technicianId": "T-05",
+        "completedAt": "2025-11-18T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0116",
+        "assetId": null,
+        "roomId": "BHB-103",
+        "buildingId": "B-BHB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0116",
+        "technicianId": "T-05",
+        "completedAt": "2025-11-18T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0049",
+        "assetId": null,
+        "roomId": "RMB-202",
+        "buildingId": "B-RMB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0049",
+        "technicianId": "T-04",
+        "completedAt": "2025-11-18T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0074",
+        "assetId": null,
+        "roomId": "RMB-201",
+        "buildingId": "B-RMB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0074",
+        "technicianId": "T-06",
+        "completedAt": "2025-11-18T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0015",
+        "assetId": null,
+        "roomId": "KLH-304",
+        "buildingId": "B-KLH",
+        "category": "PLUMBING",
+        "summary": "Bathroom tap leaking",
+        "workOrderId": "WO-H-0015",
+        "technicianId": "T-05",
+        "completedAt": "2025-11-19T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0084",
+        "assetId": null,
+        "roomId": "ARB-405",
+        "buildingId": "B-ARB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0084",
+        "technicianId": "T-06",
+        "completedAt": "2025-11-19T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0063",
+        "assetId": null,
+        "roomId": "ARB-401",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0063",
+        "technicianId": "T-01",
+        "completedAt": "2025-11-22T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0054",
+        "assetId": null,
+        "roomId": "RMB-205",
+        "buildingId": "B-RMB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0054",
+        "technicianId": "T-01",
+        "completedAt": "2025-11-24T00:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0012",
+        "assetId": "AST-DB-BHB-F1",
+        "roomId": "BHB-103",
+        "buildingId": "B-BHB",
+        "category": "ELECTRICAL",
+        "summary": "MCB trips when several rooms load at once",
+        "workOrderId": "WO-H-0012",
+        "technicianId": "T-01",
+        "completedAt": "2025-11-24T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0137",
+        "assetId": null,
+        "roomId": "ARB-203",
+        "buildingId": "B-ARB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0137",
+        "technicianId": "T-06",
+        "completedAt": "2025-11-25T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0060",
+        "assetId": null,
+        "roomId": "RMB-205",
+        "buildingId": "B-RMB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0060",
+        "technicianId": "T-05",
+        "completedAt": "2025-11-25T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0019",
+        "assetId": "AST-AC-RLB-102",
+        "roomId": "RLB-102",
+        "buildingId": "B-RLB",
+        "category": "HVAC",
+        "summary": "Lab air conditioner not cooling",
+        "workOrderId": "WO-H-0019",
+        "technicianId": "T-06",
+        "completedAt": "2025-11-26T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0148",
+        "assetId": null,
+        "roomId": "BHB-302",
+        "buildingId": "B-BHB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0148",
+        "technicianId": "T-01",
+        "completedAt": "2025-11-26T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0059",
+        "assetId": null,
+        "roomId": "RMB-101",
+        "buildingId": "B-RMB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0059",
+        "technicianId": "T-01",
+        "completedAt": "2025-11-27T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0126",
+        "assetId": null,
+        "roomId": "ARB-105",
+        "buildingId": "B-ARB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0126",
+        "technicianId": "T-05",
+        "completedAt": "2025-11-29T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0002",
+        "assetId": "AST-AP-ARB-F2-2",
+        "roomId": "ARB-203",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Access point drops clients and reboots",
+        "workOrderId": "WO-H-0002",
+        "technicianId": "T-03",
+        "completedAt": "2025-11-30T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0089",
+        "assetId": null,
+        "roomId": "ARB-306",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0089",
+        "technicianId": "T-01",
+        "completedAt": "2025-12-01T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0090",
+        "assetId": null,
+        "roomId": "ARB-306",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0090",
+        "technicianId": "T-01",
+        "completedAt": "2025-12-02T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0106",
+        "assetId": null,
+        "roomId": "ARB-202",
+        "buildingId": "B-ARB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0106",
+        "technicianId": "T-06",
+        "completedAt": "2025-12-02T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0008",
+        "assetId": "AST-PR-ARB-204",
+        "roomId": "ARB-204",
+        "buildingId": "B-ARB",
+        "category": "EQUIPMENT",
+        "summary": "Projector lamp failed or image flickers",
+        "workOrderId": "WO-H-0008",
+        "technicianId": "T-04",
+        "completedAt": "2025-12-04T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0030",
+        "assetId": null,
+        "roomId": "ARB-301",
+        "buildingId": "B-ARB",
+        "category": "ELECTRICAL",
+        "summary": "Repaired loose socket",
+        "workOrderId": "WO-H-0030",
+        "technicianId": "T-01",
+        "completedAt": "2025-12-06T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0062",
+        "assetId": null,
+        "roomId": "RMB-103",
+        "buildingId": "B-RMB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0062",
+        "technicianId": "T-05",
+        "completedAt": "2025-12-07T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0134",
+        "assetId": null,
+        "roomId": "RMB-306",
+        "buildingId": "B-RMB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0134",
+        "technicianId": "T-01",
+        "completedAt": "2025-12-08T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0125",
+        "assetId": null,
+        "roomId": "RLB-103",
+        "buildingId": "B-RLB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0125",
+        "technicianId": "T-05",
+        "completedAt": "2025-12-08T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0065",
+        "assetId": null,
+        "roomId": "BHB-204",
+        "buildingId": "B-BHB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0065",
+        "technicianId": "T-06",
+        "completedAt": "2025-12-10T19:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0035",
+        "assetId": null,
+        "roomId": "RLB-205",
+        "buildingId": "B-RLB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0035",
+        "technicianId": "T-03",
+        "completedAt": "2025-12-14T16:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0147",
+        "assetId": null,
+        "roomId": "RMB-204",
+        "buildingId": "B-RMB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0147",
+        "technicianId": "T-04",
+        "completedAt": "2025-12-14T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0044",
+        "assetId": null,
+        "roomId": "BHB-104",
+        "buildingId": "B-BHB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0044",
+        "technicianId": "T-01",
+        "completedAt": "2025-12-15T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0021",
+        "assetId": null,
+        "roomId": "ARB-401",
+        "buildingId": "B-ARB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0021",
+        "technicianId": "T-06",
+        "completedAt": "2025-12-16T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0022",
+        "assetId": null,
+        "roomId": "RMB-103",
+        "buildingId": "B-RMB",
+        "category": "NETWORK",
+        "summary": "Replaced patch cord",
+        "workOrderId": "WO-H-0022",
+        "technicianId": "T-03",
+        "completedAt": "2025-12-16T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0144",
+        "assetId": null,
+        "roomId": "ARB-301",
+        "buildingId": "B-ARB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0144",
+        "technicianId": "T-05",
+        "completedAt": "2025-12-21T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0079",
+        "assetId": null,
+        "roomId": "ARB-205",
+        "buildingId": "B-ARB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0079",
+        "technicianId": "T-05",
+        "completedAt": "2025-12-21T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0078",
+        "assetId": null,
+        "roomId": "BHB-105",
+        "buildingId": "B-BHB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0078",
+        "technicianId": "T-06",
+        "completedAt": "2025-12-22T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0014",
+        "assetId": null,
+        "roomId": "KLH-304",
+        "buildingId": "B-KLH",
+        "category": "PLUMBING",
+        "summary": "Bathroom tap leaking",
+        "workOrderId": "WO-H-0014",
+        "technicianId": "T-05",
+        "completedAt": "2025-12-23T18:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0001",
+        "assetId": "AST-AP-ARB-F2-2",
+        "roomId": "ARB-203",
+        "buildingId": "B-ARB",
+        "category": "NETWORK",
+        "summary": "Access point drops clients and reboots",
+        "workOrderId": "WO-H-0001",
+        "technicianId": "T-03",
+        "completedAt": "2025-12-23T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0018",
+        "assetId": "AST-AC-RLB-102",
+        "roomId": "RLB-102",
+        "buildingId": "B-RLB",
+        "category": "HVAC",
+        "summary": "Lab air conditioner not cooling",
+        "workOrderId": "WO-H-0018",
+        "technicianId": "T-06",
+        "completedAt": "2025-12-23T20:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0007",
+        "assetId": "AST-PR-ARB-204",
+        "roomId": "ARB-204",
+        "buildingId": "B-ARB",
+        "category": "EQUIPMENT",
+        "summary": "Projector lamp failed or image flickers",
+        "workOrderId": "WO-H-0007",
+        "technicianId": "T-04",
+        "completedAt": "2025-12-23T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0011",
+        "assetId": "AST-DB-BHB-F1",
+        "roomId": "BHB-103",
+        "buildingId": "B-BHB",
+        "category": "ELECTRICAL",
+        "summary": "MCB trips when several rooms load at once",
+        "workOrderId": "WO-H-0011",
+        "technicianId": "T-01",
+        "completedAt": "2025-12-23T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0025",
+        "assetId": null,
+        "roomId": "ARB-202",
+        "buildingId": "B-ARB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0025",
+        "technicianId": "T-05",
+        "completedAt": "2025-12-23T23:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0034",
+        "assetId": null,
+        "roomId": "BHB-103",
+        "buildingId": "B-BHB",
+        "category": "ELECTRICAL",
+        "summary": "Replaced faulty tube light",
+        "workOrderId": "WO-H-0034",
+        "technicianId": "T-01",
+        "completedAt": "2025-12-26T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 450000
+      },
+      {
+        "id": "MH-0041",
+        "assetId": null,
+        "roomId": "RLB-201",
+        "buildingId": "B-RLB",
+        "category": "HVAC",
+        "summary": "Serviced air conditioner filter",
+        "workOrderId": "WO-H-0041",
+        "technicianId": "T-06",
+        "completedAt": "2025-12-26T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 120000
+      },
+      {
+        "id": "MH-0067",
+        "assetId": null,
+        "roomId": "ARB-403",
+        "buildingId": "B-ARB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0067",
+        "technicianId": "T-05",
+        "completedAt": "2025-12-26T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0101",
+        "assetId": null,
+        "roomId": "RMB-205",
+        "buildingId": "B-RMB",
+        "category": "PLUMBING",
+        "summary": "Cleared blocked drain",
+        "workOrderId": "WO-H-0101",
+        "technicianId": "T-05",
+        "completedAt": "2025-12-27T21:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 35000
+      },
+      {
+        "id": "MH-0088",
+        "assetId": null,
+        "roomId": "ARB-305",
+        "buildingId": "B-ARB",
+        "category": "EQUIPMENT",
+        "summary": "Replaced HDMI cable",
+        "workOrderId": "WO-H-0088",
+        "technicianId": "T-04",
+        "completedAt": "2025-12-28T22:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      },
+      {
+        "id": "MH-0107",
+        "assetId": null,
+        "roomId": "RLB-205",
+        "buildingId": "B-RLB",
+        "category": "CARPENTRY",
+        "summary": "Fixed door hinge",
+        "workOrderId": "WO-H-0107",
+        "technicianId": "T-05",
+        "completedAt": "2026-01-01T17:00:00+00:00",
+        "partsUsed": [],
+        "costPaise": 0
+      }
+    ]
+  },
+  "demoAccounts": [
+    {
+      "email": "student@unio.demo",
+      "name": "Asha Nair",
+      "roleKey": "STUDENT",
+      "roleLabel": "Student",
+      "accent": "sky"
+    },
+    {
+      "email": "faculty@unio.demo",
+      "name": "Dr. Kiran Rao",
+      "roleKey": "FACULTY",
+      "roleLabel": "Faculty",
+      "accent": "indigo"
+    },
+    {
+      "email": "dept@unio.demo",
+      "name": "Meera Iyer",
+      "roleKey": "DEPARTMENT_MANAGER",
+      "roleLabel": "Department Manager",
+      "accent": "teal"
+    },
+    {
+      "email": "facilities@unio.demo",
+      "name": "Arjun Menon",
+      "roleKey": "FACILITIES_ADMIN",
+      "roleLabel": "Facilities Administrator",
+      "accent": "rose"
+    },
+    {
+      "email": "procure@unio.demo",
+      "name": "Divya Pillai",
+      "roleKey": "PROCUREMENT_APPROVER",
+      "roleLabel": "Procurement Approver",
+      "accent": "violet"
+    },
+    {
+      "email": "tech@unio.demo",
+      "name": "Ravi Kumar",
+      "roleKey": "TECHNICIAN",
+      "roleLabel": "Technician",
+      "accent": "amber"
+    },
+    {
+      "email": "sysadmin@unio.demo",
+      "name": "Sam Thomas",
+      "roleKey": "SYSTEM_ADMIN",
+      "roleLabel": "System Administrator",
+      "accent": "slate"
+    }
+  ],
+  "roles": [
+    {
+      "key": "DEPARTMENT_MANAGER",
+      "label": "Department Manager",
+      "workspace": "department",
+      "accent": "teal",
+      "permissions": [
+        "issue.create",
+        "issue.read.department",
+        "incident.triage",
+        "incident.transition",
+        "incident.link.duplicate",
+        "incident.summary.read",
+        "booking.request",
+        "booking.read.department",
+        "workorder.read.department",
+        "workorder.assign.department",
+        "workorder.verify",
+        "technician.availability.manage",
+        "collision.check",
+        "collision.review",
+        "cascade.read",
+        "inventory.read.department",
+        "inventory.reserve",
+        "approval.request.create",
+        "approval.read.department",
+        "approval.decide.repair",
+        "approval.decide.override",
+        "sla.read.department",
+        "map.read.operational",
+        "analytics.read.department"
+      ],
+      "scopes": {
+        "INCIDENT": "DEPARTMENT",
+        "BOOKING": "DEPARTMENT",
+        "WORK_ORDER": "DEPARTMENT",
+        "INVENTORY": "DEPARTMENT",
+        "APPROVAL": "DEPARTMENT",
+        "SLA": "DEPARTMENT"
+      },
+      "version": 0
+    },
+    {
+      "key": "FACILITIES_ADMIN",
+      "label": "Facilities Administrator",
+      "workspace": "facilities",
+      "accent": "rose",
+      "permissions": [
+        "issue.create",
+        "issue.read.campus",
+        "inbox.read",
+        "inbox.triage",
+        "incident.triage",
+        "incident.transition",
+        "incident.link.duplicate",
+        "incident.summary.read",
+        "booking.request",
+        "booking.read.campus",
+        "booking.coordinate",
+        "booking.cancel.any",
+        "workorder.read.campus",
+        "workorder.assign.campus",
+        "workorder.verify",
+        "technician.availability.manage",
+        "collision.check",
+        "collision.review",
+        "cascade.read",
+        "simulation.run",
+        "simulation.execute",
+        "inventory.read.campus",
+        "inventory.reserve",
+        "approval.request.create",
+        "approval.read.all",
+        "approval.decide.purchase",
+        "approval.decide.repair",
+        "approval.decide.override",
+        "invoice.read",
+        "sla.read.campus",
+        "map.read.operational",
+        "analytics.read.campus",
+        "audit.read.campus"
+      ],
+      "scopes": {
+        "INCIDENT": "CAMPUS",
+        "BOOKING": "CAMPUS",
+        "WORK_ORDER": "CAMPUS",
+        "INVENTORY": "CAMPUS",
+        "APPROVAL": "CAMPUS",
+        "SLA": "CAMPUS",
+        "AUDIT": "CAMPUS"
+      },
+      "version": 0
+    },
+    {
+      "key": "FACULTY",
+      "label": "Faculty",
+      "workspace": "faculty",
+      "accent": "indigo",
+      "permissions": [
+        "issue.create",
+        "issue.read.own",
+        "incident.summary.read",
+        "booking.request",
+        "booking.read.own",
+        "collision.check",
+        "cascade.read",
+        "sla.read.own",
+        "map.read.public"
+      ],
+      "scopes": {
+        "INCIDENT": "OWN",
+        "BOOKING": "OWN",
+        "SLA": "OWN",
+        "APPROVAL": "OWN"
+      },
+      "version": 0
+    },
+    {
+      "key": "PROCUREMENT_APPROVER",
+      "label": "Procurement Approver",
+      "workspace": "procurement",
+      "accent": "violet",
+      "permissions": [
+        "issue.create",
+        "collision.check",
+        "inventory.read.campus",
+        "inventory.transact",
+        "approval.read.all",
+        "approval.decide.purchase",
+        "approval.decide.repair",
+        "purchase.order.manage",
+        "invoice.upload",
+        "invoice.read",
+        "invoice.validate",
+        "receipt.validate",
+        "sla.read.procurement",
+        "analytics.read.procurement",
+        "audit.read.procurement"
+      ],
+      "scopes": {
+        "INVENTORY": "CAMPUS",
+        "APPROVAL": "CAMPUS",
+        "SLA": "PROCUREMENT",
+        "AUDIT": "PROCUREMENT"
+      },
+      "version": 0
+    },
+    {
+      "key": "STUDENT",
+      "label": "Student",
+      "workspace": "student",
+      "accent": "sky",
+      "permissions": [
+        "issue.create",
+        "issue.read.own",
+        "incident.summary.read",
+        "sla.read.own",
+        "map.read.public"
+      ],
+      "scopes": {
+        "INCIDENT": "OWN",
+        "SLA": "OWN"
+      },
+      "version": 0
+    },
+    {
+      "key": "SYSTEM_ADMIN",
+      "label": "System Administrator",
+      "workspace": "system",
+      "accent": "slate",
+      "permissions": [
+        "issue.create",
+        "inbox.read",
+        "inventory.master.manage",
+        "sla.read.system",
+        "analytics.read.system",
+        "audit.read.system",
+        "admin.users",
+        "admin.roles",
+        "admin.campus",
+        "admin.staff",
+        "admin.rules",
+        "admin.sla.policy",
+        "admin.integrations",
+        "admin.seed"
+      ],
+      "scopes": {
+        "SLA": "SYSTEM",
+        "AUDIT": "SYSTEM"
+      },
+      "version": 0
+    },
+    {
+      "key": "TECHNICIAN",
+      "label": "Technician",
+      "workspace": "technician",
+      "accent": "amber",
+      "permissions": [
+        "issue.create",
+        "issue.read.assigned",
+        "incident.summary.read",
+        "workorder.read.assigned",
+        "workorder.execute",
+        "technician.availability.self",
+        "inventory.read.reserved",
+        "sla.read.own",
+        "map.read.public"
+      ],
+      "scopes": {
+        "INCIDENT": "ASSIGNED",
+        "WORK_ORDER": "ASSIGNED",
+        "INVENTORY": "RESERVED",
+        "SLA": "ASSIGNED"
+      },
+      "version": 0
+    }
+  ],
+  "permissions": [
+    "admin.campus",
+    "admin.integrations",
+    "admin.roles",
+    "admin.rules",
+    "admin.seed",
+    "admin.sla.policy",
+    "admin.staff",
+    "admin.users",
+    "analytics.read.campus",
+    "analytics.read.department",
+    "analytics.read.procurement",
+    "analytics.read.system",
+    "approval.decide.override",
+    "approval.decide.purchase",
+    "approval.decide.repair",
+    "approval.read.all",
+    "approval.read.department",
+    "approval.read.own",
+    "approval.request.create",
+    "audit.read.campus",
+    "audit.read.procurement",
+    "audit.read.system",
+    "booking.cancel.any",
+    "booking.coordinate",
+    "booking.read.campus",
+    "booking.read.department",
+    "booking.read.own",
+    "booking.request",
+    "cascade.read",
+    "collision.check",
+    "collision.review",
+    "inbox.read",
+    "inbox.triage",
+    "incident.link.duplicate",
+    "incident.summary.read",
+    "incident.transition",
+    "incident.triage",
+    "inventory.master.manage",
+    "inventory.read.campus",
+    "inventory.read.department",
+    "inventory.read.reserved",
+    "inventory.reserve",
+    "inventory.transact",
+    "invoice.read",
+    "invoice.upload",
+    "invoice.validate",
+    "issue.create",
+    "issue.read.assigned",
+    "issue.read.campus",
+    "issue.read.department",
+    "issue.read.own",
+    "map.read.operational",
+    "map.read.public",
+    "purchase.order.manage",
+    "receipt.validate",
+    "simulation.execute",
+    "simulation.run",
+    "sla.read.campus",
+    "sla.read.department",
+    "sla.read.own",
+    "sla.read.procurement",
+    "sla.read.system",
+    "technician.availability.manage",
+    "technician.availability.self",
+    "workorder.assign.campus",
+    "workorder.assign.department",
+    "workorder.execute",
+    "workorder.read.assigned",
+    "workorder.read.campus",
+    "workorder.read.department",
+    "workorder.verify"
+  ],
+  "users": {
+    "items": [
+      {
+        "id": "U-FACILITIES",
+        "name": "Arjun Menon",
+        "email": "facilities@unio.demo",
+        "roleKey": "FACILITIES_ADMIN",
+        "departmentId": "D-ELEC",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      },
+      {
+        "id": "U-STUDENT",
+        "name": "Asha Nair",
+        "email": "student@unio.demo",
+        "roleKey": "STUDENT",
+        "departmentId": "D-CSE",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      },
+      {
+        "id": "U-PROCURE",
+        "name": "Divya Pillai",
+        "email": "procure@unio.demo",
+        "roleKey": "PROCUREMENT_APPROVER",
+        "departmentId": null,
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      },
+      {
+        "id": "U-FACULTY",
+        "name": "Dr. Kiran Rao",
+        "email": "faculty@unio.demo",
+        "roleKey": "FACULTY",
+        "departmentId": "D-CSE",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      },
+      {
+        "id": "U-TECH3",
+        "name": "Joseph Paul",
+        "email": "tech3@unio.demo",
+        "roleKey": "TECHNICIAN",
+        "departmentId": "D-NET",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      },
+      {
+        "id": "U-TECH4",
+        "name": "Lakshmi Bose",
+        "email": "tech4@unio.demo",
+        "roleKey": "TECHNICIAN",
+        "departmentId": "D-NET",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      },
+      {
+        "id": "U-TECH2",
+        "name": "Meena Das",
+        "email": "tech2@unio.demo",
+        "roleKey": "TECHNICIAN",
+        "departmentId": "D-ELEC",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      },
+      {
+        "id": "U-DEPT",
+        "name": "Meera Iyer",
+        "email": "dept@unio.demo",
+        "roleKey": "DEPARTMENT_MANAGER",
+        "departmentId": "D-CSE",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      },
+      {
+        "id": "U-PROCURE2",
+        "name": "Nisha Varma",
+        "email": "procure2@unio.demo",
+        "roleKey": "PROCUREMENT_APPROVER",
+        "departmentId": null,
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      },
+      {
+        "id": "U-TECH",
+        "name": "Ravi Kumar",
+        "email": "tech@unio.demo",
+        "roleKey": "TECHNICIAN",
+        "departmentId": "D-ELEC",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      },
+      {
+        "id": "U-SYSADMIN",
+        "name": "Sam Thomas",
+        "email": "sysadmin@unio.demo",
+        "roleKey": "SYSTEM_ADMIN",
+        "departmentId": null,
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [],
+        "unavailableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate",
+            "reason": "You cannot deactivate your own account."
+          },
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role",
+            "reason": "You cannot change your own role."
+          }
+        ]
+      },
+      {
+        "id": "U-DEPT2",
+        "name": "Vikram Shetty",
+        "email": "dept2@unio.demo",
+        "roleKey": "DEPARTMENT_MANAGER",
+        "departmentId": "D-ECE",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      }
+    ],
+    "page": 0,
+    "size": 100,
+    "total": 12
+  }
+}

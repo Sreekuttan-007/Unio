@@ -1,0 +1,115 @@
+[
+  {
+    "key": "STUDENT",
+    "label": "Student",
+    "workspace": "student",
+    "accent": "sky",
+    "scopes": { "INCIDENT": "OWN", "SLA": "OWN" },
+    "permissions": [
+      "issue.create", "issue.read.own", "incident.summary.read",
+      "sla.read.own", "map.read.public"
+    ]
+  },
+  {
+    "key": "FACULTY",
+    "label": "Faculty",
+    "workspace": "faculty",
+    "accent": "indigo",
+    "scopes": { "INCIDENT": "OWN", "BOOKING": "OWN", "SLA": "OWN", "APPROVAL": "OWN" },
+    "permissions": [
+      "issue.create", "issue.read.own", "incident.summary.read",
+      "booking.request", "booking.read.own", "collision.check", "cascade.read",
+      "sla.read.own", "map.read.public"
+    ]
+  },
+  {
+    "key": "DEPARTMENT_MANAGER",
+    "label": "Department Manager",
+    "workspace": "department",
+    "accent": "teal",
+    "scopes": {
+      "INCIDENT": "DEPARTMENT", "BOOKING": "DEPARTMENT", "WORK_ORDER": "DEPARTMENT",
+      "INVENTORY": "DEPARTMENT", "APPROVAL": "DEPARTMENT", "SLA": "DEPARTMENT"
+    },
+    "permissions": [
+      "issue.create", "issue.read.department",
+      "incident.triage", "incident.transition", "incident.link.duplicate", "incident.summary.read",
+      "booking.request", "booking.read.department",
+      "workorder.read.department", "workorder.assign.department", "workorder.verify",
+      "technician.availability.manage",
+      "collision.check", "collision.review", "cascade.read",
+      "inventory.read.department", "inventory.reserve",
+      "approval.request.create", "approval.read.department",
+      "approval.decide.repair", "approval.decide.override",
+      "sla.read.department", "map.read.operational", "analytics.read.department"
+    ]
+  },
+  {
+    "key": "FACILITIES_ADMIN",
+    "label": "Facilities Administrator",
+    "workspace": "facilities",
+    "accent": "rose",
+    "scopes": {
+      "INCIDENT": "CAMPUS", "BOOKING": "CAMPUS", "WORK_ORDER": "CAMPUS", "INVENTORY": "CAMPUS",
+      "APPROVAL": "CAMPUS", "SLA": "CAMPUS", "AUDIT": "CAMPUS"
+    },
+    "permissions": [
+      "issue.create", "issue.read.campus", "inbox.read", "inbox.triage",
+      "incident.triage", "incident.transition", "incident.link.duplicate", "incident.summary.read",
+      "booking.request", "booking.read.campus", "booking.coordinate", "booking.cancel.any",
+      "workorder.read.campus", "workorder.assign.campus", "workorder.verify",
+      "technician.availability.manage",
+      "collision.check", "collision.review", "cascade.read",
+      "simulation.run", "simulation.execute",
+      "inventory.read.campus", "inventory.reserve",
+      "approval.request.create", "approval.read.all",
+      "approval.decide.purchase", "approval.decide.repair", "approval.decide.override",
+      "invoice.read", "sla.read.campus", "map.read.operational",
+      "analytics.read.campus", "audit.read.campus"
+    ]
+  },
+  {
+    "key": "PROCUREMENT_APPROVER",
+    "label": "Procurement Approver",
+    "workspace": "procurement",
+    "accent": "violet",
+    "scopes": {
+      "INVENTORY": "CAMPUS", "APPROVAL": "CAMPUS", "SLA": "PROCUREMENT", "AUDIT": "PROCUREMENT"
+    },
+    "permissions": [
+      "issue.create", "collision.check",
+      "inventory.read.campus", "inventory.transact",
+      "approval.read.all", "approval.decide.purchase", "approval.decide.repair",
+      "purchase.order.manage", "invoice.upload", "invoice.read", "invoice.validate",
+      "receipt.validate", "sla.read.procurement",
+      "analytics.read.procurement", "audit.read.procurement"
+    ]
+  },
+  {
+    "key": "TECHNICIAN",
+    "label": "Technician",
+    "workspace": "technician",
+    "accent": "amber",
+    "scopes": {
+      "INCIDENT": "ASSIGNED", "WORK_ORDER": "ASSIGNED", "INVENTORY": "RESERVED", "SLA": "ASSIGNED"
+    },
+    "permissions": [
+      "issue.create", "issue.read.assigned", "incident.summary.read",
+      "workorder.read.assigned", "workorder.execute", "technician.availability.self",
+      "inventory.read.reserved", "sla.read.own", "map.read.public"
+    ]
+  },
+  {
+    "key": "SYSTEM_ADMIN",
+    "label": "System Administrator",
+    "workspace": "system",
+    "accent": "slate",
+    "scopes": { "SLA": "SYSTEM", "AUDIT": "SYSTEM" },
+    "permissions": [
+      "issue.create", "inbox.read", "inventory.master.manage",
+      "sla.read.system", "analytics.read.system", "audit.read.system",
+      "admin.users", "admin.roles", "admin.campus", "admin.staff", "admin.rules",
+      "admin.sla.policy", "admin.integrations", "admin.seed"
+    ]
+  }
+]
