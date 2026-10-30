@@ -28,6 +28,7 @@ from app.incidents.router import router as incidents_router
 from app.approvals.policy import ensure_procurement_policy
 from app.notify.router import router as notify_router
 from app.procurement.router import router as procurement_router
+from app.scenarios.router import router as scenarios_router
 from app.services import build_services
 from app.simulation.router import router as simulation_router
 from app.system.router import reserved, router as system_router
@@ -130,6 +131,7 @@ def create_app(settings: Settings | None = None, db: Any = None) -> FastAPI:
     app.include_router(simulation_router)
     app.include_router(procurement_router)
     app.include_router(notify_router)
+    app.include_router(scenarios_router)
     app.include_router(files_router)
     app.include_router(reserved)
     assert_all_routes_guarded(app)

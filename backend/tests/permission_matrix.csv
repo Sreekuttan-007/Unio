@@ -96,3 +96,5 @@ GET,/api/v1/admin/integrations,DENY,DENY,DENY,DENY,DENY,DENY,ALLOW
 PATCH,/api/v1/admin/integrations/features/x,DENY,DENY,DENY,DENY,DENY,DENY,ALLOW
 POST,/api/v1/admin/webhooks/x/test,DENY,DENY,DENY,DENY,DENY,DENY,ALLOW
 GET,/api/v1/admin/system/health,DENY,DENY,DENY,DENY,DENY,DENY,ALLOW
+GET,/api/v1/admin/scenarios,DENY,DENY,DENY,DENY,DENY,DENY,ALLOW
+POST,/api/v1/admin/scenarios/x/reset,DENY,DENY,DENY,DENY,DENY,DENY,ALLOW

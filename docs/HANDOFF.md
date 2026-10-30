@@ -1,51 +1,48 @@
-# Handoff: UNIO build, Phase 7 in progress
+# Handoff: UNIO build, Phases 7 to 13 done in code
 
-Written 2026-10-30 for cross-account continuation without the original chat.
-Read `AGENTS.md` first. This handoff is project context and should travel with the source.
+Updated 2026-10-30. Read `AGENTS.md` first. This handoff travels with the source.
 
 ## Where things stand
 
-- Branch `main` is based on `293d72b` (Phases 1 to 6). This handoff accompanies the in-progress Phase 7 implementation.
-- Current checks: backend 831 tests passed, with one pre-existing `RuntimeWarning` in the simultaneous-booking test; frontend typecheck, lint, 46 tests and production build pass; API contract check passes.
-- The original challenge brief is supplied separately and is intentionally not copied into this repository.
-- Continue Phases 7, 8, 9 and 10 in order (see `IMPLEMENTATION_PLAN.md` section 6). Report honestly, including what is unverified.
+- Phases 7 to 12 are complete and each has a green tag: `phase-07-green` to `phase-12-green`. Phase 13 is done for everything that can be done in code (see "Not verified" below).
+- Gates on the final commit: backend tests pass (run `pytest -q`), the API contract check passes, frontend typecheck, lint, tests and build pass, and `scripts/phone-check.mjs` opens all 57 screens of the 7 roles at 360px with no sideways scroll, crash or console error, both against `npm run dev:mock` and against the real backend (`dev_server.py`).
+- Every phase is one commit on its own branch, stacked: `phase/07-work-orders` → … → `phase/13-harden`.
 
-## Phase 7 progress (work orders)
+## What each phase added
 
-| Implemented in this snapshot | Notes |
-|---|---|
-| `backend/app/workorders/state.py, policy.py, scoring.py, service.py, router.py` | State machine, skill/duration policy, 5-factor explainable score, assignment via `collisions.enforce(ASSIGN_TECHNICIAN)`, technician slot claims, flag/propose reassignment, preemption, availability, maintenance history |
-| `backend/app/files/service.py, router.py` | `FileStore` (JSON base64 uploads, size and magic-byte checks), `GET /files/{id}` |
-| `backend/app/collision/acknowledge.py` | Shared `Acknowledging` body, bookings router now imports it |
-| `backend/app/bookings/slots.py` | `SlotClaims(db, collection, key_field)` generalised, technicians use `technician_slots` |
-| `backend/app/incidents/service.py` | `collisions` param, DEP-001 used for resolve, `_apply/advance/note_assignment/note/refresh_impact` |
-| `backend/app/collision/reader.py` | `technician_tasks` now also returns priority, buildingId, estimatedMinutes |
-| `services.py, main.py, db.py, system/router.py, incidents/router.py, staff/service.py` | Wired, work-order placeholders removed, indexes added, `needsReplacement` on technician cards |
-| `backend/tests/permission_matrix.csv` | 18 rows added by `matrix.py` (generates rows from `roles.json`) |
+| Phase | Backend | Frontend | Tests |
+|---|---|---|---|
+| 7 Work orders | Fixed: the loser of a concurrent assignment deleted the winner's technician slots | AssignPanel sends `acknowledgedCodes`; photo evidence on completion; verify / send back from `availableActions` | `test_workorders.py` |
+| 8 Cascade | `app/cascade/`: pure BFS over `dependency_edges`, `impact_snapshots`, `impactRoomIds` used by bookings, map overlays from snapshots, recompute with root assets, faculty-scoped academic view | Command Centre and Academic Impact use real incidents (no hard-coded INC-1041) | `test_cascade.py` |
+| 9 Simulator | `app/simulation/`: in-memory `SnapshotReader` (the live reader over a copy), three rule-based plans judged by the collision engine, fingerprint-checked execution through the normal services, `STALE` | Simulator defaults to a real open incident | `test_simulation.py` (live hash unchanged, import boundary, stale refused) |
+| 10 Inventory | `app/inventory/` (CAS reservations, ledger with unique `postingKey` and reconciler), `app/approvals/` (routing table, collision rules, STALE), `app/procurement/` (POs, invoice reader and matching, goods receipts) | Part picker on the blocker sheet; invoice upload sends the file | `test_inventory.py` (the full missing-part gate, 20 concurrent reservations) |
+| 11 SLA and notify | `app/notify/` (notifications and signed webhooks as outbox handlers), `app/sla/board.py` (lists, summary, escalation sweep), `app/analytics/` | Notification bell and centre; navigation badges | `test_notify.py` (analytics fixture with known answers) |
+| 12 Polish | `session.move` offered in impact views | Reschedule a booking; move an affected class from triage; `.env.mock` committed so mock mode works on a fresh clone; analytics key fix | `scripts/phone-check.mjs` |
+| 13 Harden | `app/scenarios/`: one-click reset of Scenarios A to D (demo mode only, audit kept) | Admin Scenarios screen now real | `test_scenarios.py` |
 
-Known to-do inside Phase 7:
-1. Write `backend/tests/test_workorders.py`: state machine, double-assignment races (two WOs/one technician and one WO/two technicians), sick-technician reassignment suggestions, technician task scope, blocked-work completion denial, completion notes, preemption, `review_late`, scoring, and incident `createWorkOrder` end to end.
-2. Tests need a shift around "now" (`shifts` collection) for in-shift assertions, or use P1 urgent work. Seeded shifts follow real time.
-3. Frontend: `AssignPanel` sends `acknowledged/overrideReason` but the backend wants `acknowledgedCodes` plus `overrideReason`. Send the displayed SOFT finding codes. Update `mocks/domainHandlers.ts` to match. Technician completion should send photos as base64 `evidence`. Block sheet needs a part picker (needs `GET /inventory/catalog`, Phase 10). Work order sheet needs verify/reject buttons driven by `availableActions`. `needsReassignment.suggestedName` can now be null.
-4. Add `docs/ASSUMPTIONS.md` rows A15 and onwards: policy table for skills and durations, `RESUMED` folded into `RESUME` to `IN_PROGRESS`, `CREATED` folded into `PENDING_ASSIGNMENT`, preemption only flags, reassignment only proposes.
-5. Add focused Phase 7 coverage before considering the phase complete.
+All new business rules are listed in `docs/ASSUMPTIONS.md` (A15 to A36).
 
-## Remaining phases (design decisions already made)
+## Not verified, and why (keep reporting)
 
-- **Phase 8 cascade** `backend/app/cascade/`: pure BFS over `dependency_edges` (visited set, depth limit), sessions derived from `timetable_sessions` by affected room, ranking by directness, exams, headcount, SLA, asset criticality. `impact_snapshots` refreshed through `IncidentService.refresh_impact` (`incidents.cascade = cascade` set in `build_services`; add refresh calls in `_create`, `_join`, `complete_placement`, `_merge`). Endpoints `GET /cascading/impact/{id}`, `POST .../recompute`, plus a faculty-scoped `GET /cascading/academic` (Academic Impact screen currently hardcodes INC-1041). Map overlays should use impact snapshots. Recipients are only the affected people. Seed topology: transformer to panel to room (POWERS), transformer to building switch to floor switch to AP (CONNECTS) to room (SERVES).
-- **Phase 9 simulator** `backend/app/simulation/`: `SnapshotReader` implements `StateReader` in memory with version and hash and an `apply()` so later actions see earlier ones. Rule-based plan generator, plans judged by the same `CollisionEngine`, metrics from stored data only, optional LLM narration with numbers supplied by Python. Only write is `simulation_runs`. Execute recomputes a fingerprint of the facts the plan depended on from live data; changed gives `STALE`; otherwise apply through the normal services (`bookings.move_session`, `workorders`, inventory) as the user. Tests: hash of live collections unchanged, import-boundary test, stale plan refused. Frontend `SimulatorScreen` expects `SimulationRun {id, incidentId, snapshotAt, plans[], recommendedPlanId}`.
-- **Phase 10** inventory, approvals, procurement, invoices, receipts: shapes the UI expects are in `frontend/src/types/domain.ts` and `mocks/domainHandlers.ts` (`/inventory/items`, `/inventory/mine`, `/approvals`, `/approvals/{id}/decide`, `/purchase-orders`, `/invoices`, `/invoices/{id}/resolve|validate`, `/goods-receipts`, `/goods-receipts/{id}/validate`). Conditional `$inc` reservation, immutable ledger with unique `postingKey` and a startup reconciler, approvals routed by amount (`approval_rules`), self-approval and limits via the collision rules already in `collision/rules.py`, revalidation at execution (`STALE`), invoice upload never moves stock, only a validated goods receipt posts, receipt verifier must differ from approval requester and receiver, then reserve and resume the blocked work order and release the SLA pause. `WorkOrderService.inventory` is the hook (`request_parts`, `issue_for_completion`, `release_for_work_order`). `pypdf` was pip-installed (add to `requirements.txt`). Gemini invoice extraction needs a fallback text parser. Remove the remaining 501 placeholders in `app/system/router.py` as each lands.
+- **Median APK, Render hosting, timed rehearsals and the backup video**: these need accounts, devices and people. Nothing here was tested on a phone or a hosted deployment.
+- **Real MongoDB concurrency**: tests use mongomock. Set `MONGODB_TEST_URI` to run the race tests (reservations, assignments, slot claims) against a real database.
+- **Gemini**: never called. Invoices are read by a deterministic text reader; photos and scanned PDFs arrive with a "nothing read" discrepancy (A30). No ML SLA-risk signal (A35).
+- **Inbound webhooks from outside**: not built, because it needs a new public route, which is a frozen-file change (A33).
+- **Playwright end-to-end scenario scripts**: the scenarios are covered by API-level tests and the reset tests, and every screen is opened by the phone check, but click-through scripts for each scenario were not written.
 
-## Rules and habits that matter
+## Running it
 
-- Frozen files need an explicit human yes (list in `AGENTS.md` section 4). No new permissions are needed for Phases 7 to 10; the ones required already exist in `core/permission.py`.
-- Every route needs `require(...)` or `authenticated` and a row in `permission_matrix.csv` (`scratchpad/matrix.py` style generator, or add rows by hand using `x` for path params).
-- Shell: Bash heredocs break on apostrophes in this environment. Write files with the editor/Write tool, or put a patch script in a file and run it.
-- Validation errors are HTTP 400, domain rule errors 422, version conflicts 409, out-of-scope rows 404.
-- Windows blocks scikit-learn; ML here is pure Python.
-- Tests use mongomock, which cannot prove real unique-index concurrency. Set `MONGODB_TEST_URI` to test on real MongoDB.
-- Gate before reporting done: backend `.venv/Scripts/python -m pytest -q`, frontend `npm run typecheck && npm run lint && npm test`, frontend `npm run build`, and backend `python -m tools.contract --check`.
+```bash
+# backend (from backend/)
+python -m pytest -q
+python dev_server.py                      # API on :8000 with demo accounts and in-memory data
+python -m tools.contract --check
 
-## Known unverified items (keep reporting)
+# frontend (from frontend/)
+npm run typecheck && npm run lint && npm test && npm run build
+npm run dev                               # http://localhost:5173 against the backend
+npm run dev:mock                          # no backend needed
+NODE_PATH=$(npm root -g) node scripts/phone-check.mjs http://localhost:5173   # needs Playwright installed globally
+```
 
-Gemini live calls, real MongoDB concurrency, Median APK, Docker and `render.yaml`, outbox delivery to notifications (Phase 11), no UI yet for reschedule-booking and move-class.
+On Windows use `.venv\Scripts\python` instead of `python`.

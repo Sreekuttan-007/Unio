@@ -2329,6 +2329,80 @@
         ]
       }
     },
+    "/api/v1/admin/scenarios": {
+      "get": {
+        "operationId": "scenarios_api_v1_admin_scenarios_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Scenarios Api V1 Admin Scenarios Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Scenarios",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/scenarios/{scenario_id}/reset": {
+      "post": {
+        "description": "Wipes operational data and stages a demo scenario. Refused unless this is a demo deployment.",
+        "operationId": "reset_scenario_api_v1_admin_scenarios__scenario_id__reset_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scenario_id",
+            "required": true,
+            "schema": {
+              "title": "Scenario Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Reset Scenario Api V1 Admin Scenarios  Scenario Id  Reset Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Reset Scenario",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
     "/api/v1/admin/sla-policies": {
       "get": {
         "operationId": "sla_policies_api_v1_admin_sla_policies_get",
