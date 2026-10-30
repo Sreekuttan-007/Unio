@@ -457,7 +457,19 @@ export function createDomainHandlers() {
       const role = roleOf(request)
       if (!role) return unauthenticated()
       await lag()
-      const items = workOrdersFor(role)
+      // Managers get the assign and verify moves, as the backend's availableActions gives them.
+      const manager = role === 'FACILITIES_ADMIN' || role === 'DEPARTMENT_MANAGER'
+      const items = workOrdersFor(role).map((order) =>
+        manager
+          ? {
+              ...order,
+              availableActions: [
+                ...(['PENDING_ASSIGNMENT', 'ASSIGNED', 'ACCEPTED', 'IN_PROGRESS', 'BLOCKED'].includes(order.status) ? [{ key: 'workorder.assign', label: order.status === 'PENDING_ASSIGNMENT' ? 'Assign' : 'Reassign' }] : []),
+                ...(order.status === 'COMPLETED' && role === 'FACILITIES_ADMIN' ? [{ key: 'workorder.verify', label: 'Verify the repair' }, { key: 'workorder.reject', label: 'Send back' }] : []),
+              ],
+            }
+          : order,
+      )
       return HttpResponse.json({ items, page: 0, size: 50, total: items.length })
     }),
     http.get(`${BASE}/work-orders/:id/candidates`, ({ params, request }) => {
@@ -470,7 +482,7 @@ export function createDomainHandlers() {
       if (!role) return unauthenticated()
       const order = workOrders.find((item) => item.id === params.id)
       if (!order) return problem(404, 'NOT_FOUND', 'Work order was not found.')
-      const body = (await request.json()) as { technicianId: string; acknowledged?: boolean; overrideReason?: string }
+      const body = (await request.json()) as { technicianId: string; acknowledgedCodes?: string[]; overrideReason?: string }
       const candidate = candidatesFor(order, technicians).find((item) => item.technicianId === body.technicianId)
       const tech = technicians.find((item) => item.id === body.technicianId)
       if (!candidate || !tech) return problem(404, 'NOT_FOUND', 'Technician was not found.')
@@ -478,7 +490,8 @@ export function createDomainHandlers() {
         collisions.unshift({ id: `CC-${5110 + collisions.length}`, at: clock.at(0), actionType: 'ASSIGN_TECHNICIAN', summary: `Assign ${order.id} to ${tech.name}`, actor: USER_NAME[role] ?? role, decision: 'BLOCK', findings: candidate.findings, override: null })
         return problem(422, 'COLLISION_BLOCKED', candidate.findings[0]?.message ?? 'This assignment is not allowed.', { decision: 'BLOCK', findings: candidate.findings })
       }
-      if (candidate.decision === 'WARN' && !(body.acknowledged && body.overrideReason)) {
+      const soft = candidate.findings.filter((finding) => finding.severity === 'SOFT').map((finding) => finding.code)
+      if (candidate.decision === 'WARN' && !(body.overrideReason?.trim() && soft.every((code) => body.acknowledgedCodes?.includes(code)))) {
         return problem(409, 'COLLISION_WARNING', 'This assignment raises a warning that needs a reason.', { decision: 'WARN', findings: candidate.findings, requiresReason: true })
       }
       order.assignedTechnicianId = tech.id
@@ -495,19 +508,20 @@ export function createDomainHandlers() {
       const order = workOrders.find((item) => item.id === params.id)
       if (!order) return problem(404, 'NOT_FOUND', 'Work order was not found.')
       const body = (await request.json().catch(() => ({}))) as { reason?: string; notes?: string }
-      const next: Record<string, WorkOrder['status']> = { accept: 'ACCEPTED', start: 'IN_PROGRESS', block: 'BLOCKED', complete: 'COMPLETED', resume: 'IN_PROGRESS' }
+      const next: Record<string, WorkOrder['status']> = { accept: 'ACCEPTED', start: 'IN_PROGRESS', block: 'BLOCKED', complete: 'COMPLETED', resume: 'IN_PROGRESS', verify: 'VERIFIED', reject: 'IN_PROGRESS' }
       const action = String(params.action)
       if (action === 'request-reassign') {
         order.needsReassignment = { reason: body.reason ?? 'Technician asked to be reassigned', suggestedTechnicianId: 'T-02', suggestedName: 'Meena Das' }
         return HttpResponse.json(order)
       }
       if (!next[action]) return problem(404, 'NOT_FOUND', 'Unknown action.')
-      if (!order.availableActions.some((item) => item.key === `workorder.${action}`)) {
+      const managerMove = (action === 'verify' || action === 'reject') && order.status === 'COMPLETED'
+      if (!managerMove && !order.availableActions.some((item) => item.key === `workorder.${action}`)) {
         return problem(422, 'ILLEGAL_TRANSITION', `Cannot ${action} while the status is ${order.status}.`)
       }
       if (action === 'complete' && !body.notes?.trim()) return problem(422, 'COMPLETION_NOTES_REQUIRED', 'Add a short note about what you did before completing.')
       order.status = next[action]!
-      order.blockReason = action === 'block' ? 'WAITING_FOR_PARTS' : null
+      order.blockReason = action === 'block' ? ((body.reason as WorkOrder['blockReason']) ?? 'WAITING_FOR_PARTS') : null
       Object.assign(order, actionsFor(order.status))
       return HttpResponse.json(order)
     }),

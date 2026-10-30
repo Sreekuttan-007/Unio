@@ -36,6 +36,8 @@ const WORK_ORDER: Record<WorkOrderStatus, Tone> = {
   BLOCKED: 'danger',
   COMPLETED: 'success',
   VERIFIED: 'success',
+  CLOSED: 'neutral',
+  CANCELLED: 'neutral',
 }
 
 export function WorkOrderStatusBadge({ status }: { status: WorkOrderStatus }) {

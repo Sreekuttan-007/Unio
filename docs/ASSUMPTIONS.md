@@ -34,3 +34,8 @@ that affect behaviour must live in configuration, not hard-coded logic.
 | A12 | 2026-10-30 | Departments are matched on the department of the person who booked, so a department manager sees the bookings of their own staff. | `bookings.departmentId` | Open |
 | A13 | 2026-10-30 | Collision review is campus-wide for the two roles that hold it, because it records decisions rather than personal data. | `GET /collisions` | Open |
 | A14 | 2026-10-30 | A classroom booking is overridden only by a reason (soft findings) or by an approved override bound to the exact action (approval findings). Hard findings are never overridable. | `app/collision/engine.py` | Open |
+| A15 | 2026-10-30 | Each incident category maps to one required skill and minimum level, an estimated duration, and a safety note (for example ELECTRICAL needs level 2, 90 minutes). The ranking weights are skill 30, workload 25, start time 20, shift 15, proximity 10. | `app/workorders/policy.py` | Open |
+| A16 | 2026-10-30 | The plan's `CREATED` state is folded into `PENDING_ASSIGNMENT`, and `RESUMED` is the `RESUME` event back to `IN_PROGRESS`, so there is one less state to explain and test. | `app/workorders/state.py` | Open |
+| A17 | 2026-10-30 | Preemption and event-driven reassignment only flag work and propose a replacement. Nothing moves until a Facilities or Department manager confirms. | `WorkOrderService.flag` | Open |
+| A18 | 2026-10-30 | Work not accepted within 10/30/120/240 minutes (P1 to P4), or running 15 minutes past its slot, is flagged as late. | `app/workorders/policy.py` | Open |
+| A19 | 2026-10-30 | The person who did a repair cannot verify it. Verification is by a different user holding `workorder.verify`. | `WorkOrderService.verify` | Open |

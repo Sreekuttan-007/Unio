@@ -10,6 +10,17 @@ import { useAction, useApi } from '../shared/useApi'
 import { SessionCard } from '../shell/SessionCard'
 
 const PART_TONE = { RESERVED: 'success', SHORT: 'danger', ISSUED: 'neutral' } as const
+const BLOCKED_TEXT = { ACCESS: 'You reported that you cannot get access.', SKILL_MISMATCH: 'You reported that this needs a different skill. Facilities is choosing someone.' } as const
+
+/** A photo as the base64 data URL the completion endpoint accepts. */
+function asEvidence(file: File): Promise<{ name: string; mime: string; contentBase64: string }> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve({ name: file.name.slice(0, 120), mime: file.type, contentBase64: String(reader.result) })
+    reader.onerror = () => reject(reader.error ?? new Error('That photo could not be read.'))
+    reader.readAsDataURL(file)
+  })
+}
 
 type Pending = { order: WorkOrder; action: 'block' | 'complete' } | null
 
@@ -28,7 +39,8 @@ function TaskCard({ order, onAct, onSheet, busy }: { order: WorkOrder; onAct: (k
         </div>
         <SlaSummary sla={order.sla} />
         {order.safetyNote ? <Banner tone="warning" title="Safety">{order.safetyNote}</Banner> : null}
-        {order.status === 'BLOCKED' ? <Banner tone="danger" title="Waiting for a part" role="status">The part is out of stock. Purchase request {order.approvalId ?? ''} is with Procurement, and you will be told when it arrives.</Banner> : null}
+        {order.status === 'BLOCKED' && order.blockReason === 'WAITING_FOR_PARTS' ? <Banner tone="danger" title="Waiting for a part" role="status">The part is out of stock.{order.approvalId ? ` Purchase request ${order.approvalId} is with Procurement.` : ''} You will be told when it arrives.</Banner> : null}
+        {order.status === 'BLOCKED' && (order.blockReason === 'ACCESS' || order.blockReason === 'SKILL_MISMATCH') ? <Banner tone="danger" title="Blocked" role="status">{BLOCKED_TEXT[order.blockReason]}</Banner> : null}
         {order.needsReassignment ? <Banner tone="warning" title="Reassignment requested">{order.needsReassignment.reason}</Banner> : null}
         {order.parts.length > 0 ? (
           <ul className="space-y-1.5 text-sm">
@@ -84,7 +96,7 @@ export function MyTasksScreen() {
       {error ? <Banner tone="danger" title="That did not work" role="alert">{error}</Banner> : null}
       <QueryBoundary query={orders} isEmpty={(data) => data.items.length === 0} emptyTitle="No tasks" emptyDescription="New work shows up here the moment it is assigned to you.">
         {(data) => {
-          const rank: Record<WorkOrder['status'], number> = { IN_PROGRESS: 0, ACCEPTED: 1, ASSIGNED: 2, BLOCKED: 3, PENDING_ASSIGNMENT: 4, COMPLETED: 5, VERIFIED: 6 }
+          const rank: Record<WorkOrder['status'], number> = { IN_PROGRESS: 0, ACCEPTED: 1, ASSIGNED: 2, BLOCKED: 3, PENDING_ASSIGNMENT: 4, COMPLETED: 5, VERIFIED: 6, CLOSED: 7, CANCELLED: 8 }
           const sorted = [...data.items].sort((a, b) => a.priority.localeCompare(b.priority) || rank[a.status] - rank[b.status])
           return (
             <div className="space-y-4">
@@ -99,8 +111,14 @@ export function MyTasksScreen() {
       <Sheet open={pending?.action === 'complete'} title={`Complete ${pending?.order.id ?? ''}`} onClose={() => setPending(null)}>
         <div className="space-y-4">
           <TextArea label="What did you do" value={notes} onChange={(event) => setNotes(event.target.value)} hint="Required. Short is fine." />
-          <Dropzone label="Add a completion photo" hint={photos.length ? photos.map((file) => file.name).join(', ') : 'Use the camera'} accept="image/*" capture onFiles={setPhotos} />
-          <Button className="w-full" loading={act.isPending} disabled={!notes.trim()} onClick={() => pending && void run(pending.order.id, 'complete', { notes })}>Mark complete</Button>
+          <Dropzone label="Add a completion photo" hint={photos.length ? photos.map((file) => file.name).join(', ') : 'Use the camera'} accept="image/jpeg,image/png,image/webp" capture onFiles={setPhotos} />
+          <Button className="w-full" loading={act.isPending} disabled={!notes.trim()} onClick={() => pending && void (async () => {
+            try {
+              await run(pending.order.id, 'complete', { notes, evidence: await Promise.all(photos.slice(0, 4).map(asEvidence)) })
+            } catch (failure) {
+              setError(describeError(failure))
+            }
+          })()}>Mark complete</Button>
         </div>
       </Sheet>
 

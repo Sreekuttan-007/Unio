@@ -109,7 +109,7 @@ export interface InboundEmail {
   note: string | null
 }
 
-export type WorkOrderStatus = 'PENDING_ASSIGNMENT' | 'ASSIGNED' | 'ACCEPTED' | 'IN_PROGRESS' | 'BLOCKED' | 'COMPLETED' | 'VERIFIED'
+export type WorkOrderStatus = 'PENDING_ASSIGNMENT' | 'ASSIGNED' | 'ACCEPTED' | 'IN_PROGRESS' | 'BLOCKED' | 'COMPLETED' | 'VERIFIED' | 'CLOSED' | 'CANCELLED'
 
 export interface PartLine {
   sku: string
@@ -136,7 +136,7 @@ export interface WorkOrder {
   parts: PartLine[]
   sla: Sla
   safetyNote: string | null
-  needsReassignment: { reason: string; suggestedTechnicianId: string; suggestedName: string } | null
+  needsReassignment: { reason: string; suggestedTechnicianId: string | null; suggestedName: string | null } | null
   approvalId: string | null
   createdAt: string
   availableActions: ActionHint[]

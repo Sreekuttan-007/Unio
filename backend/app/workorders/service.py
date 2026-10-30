@@ -341,7 +341,6 @@ class WorkOrderService:
             inside = any(ensure_utc(shift["startAt"]) <= start and ensure_utc(shift["endAt"]) >= end for shift in shifts)
         payload = self._payload(order, technician_id, start, end)
         check = await self._collisions.enforce(user, ActionType.ASSIGN_TECHNICIAN, payload, acknowledgement=acknowledgement, expected_state_token=expected_state_token)
-        old_slots = self._slot_ids(order)
         try:
             await self.slots.claim("WORK_ORDER", order["_id"], technician_id, start, end)
         except SlotTaken:
@@ -355,7 +354,10 @@ class WorkOrderService:
             }
         }
         if not await try_guarded_update(self._db["work_orders"], order["_id"], order["version"], status, update):
-            await self.slots.release(order["_id"], keep=old_slots)
+            # Lost the race: keep whatever the winner now holds, drop only what this attempt added.
+            # shortcut: slots are owned per work order, not per attempt, so a third in-flight attempt can still lose its fresh claim; own slots by attempt id if that shows up.
+            current = await self._db["work_orders"].find_one({"_id": order["_id"]})
+            await self.slots.release(order["_id"], keep=self._slot_ids(current or {}))
             raise conflict("VERSION_CONFLICT", "This work order changed while you were assigning it. Reload it and try again.")
         wanted = {slot_id(technician_id, slot) for slot in slot_starts(start, end)}
         await self.slots.release(order["_id"], keep=wanted)

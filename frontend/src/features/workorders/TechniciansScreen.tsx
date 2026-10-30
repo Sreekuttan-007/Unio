@@ -27,7 +27,7 @@ export function TechniciansScreen() {
       <PageHeader title="Technicians" description="Skills, shifts, availability and workload. Assignment is checked against all of them." />
       {flagged.map((order) => (
         <Banner key={order.id} tone="warning" title={`${order.id} needs a new technician`} action={<Button variant="secondary" compact onClick={() => setOpenId(order.id)}>Reassign</Button>}>
-          {order.needsReassignment?.reason}. {order.needsReassignment?.suggestedName} is the best qualified replacement.
+          {order.needsReassignment?.reason}. {order.needsReassignment?.suggestedName ? `${order.needsReassignment.suggestedName} is the best qualified replacement.` : 'Nobody qualified is free right now.'}
         </Banner>
       ))}
       <QueryBoundary query={technicians}>

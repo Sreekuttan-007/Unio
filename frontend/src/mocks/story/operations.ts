@@ -6,7 +6,7 @@ const TECH_ACTIONS = {
   ASSIGNED: [{ key: 'workorder.accept', label: 'Accept' }, { key: 'workorder.decline', label: 'Decline' }],
   ACCEPTED: [{ key: 'workorder.start', label: 'Start work' }],
   IN_PROGRESS: [{ key: 'workorder.block', label: 'Report a blocker' }, { key: 'workorder.complete', label: 'Complete' }],
-  BLOCKED: [{ key: 'workorder.requestReassign', label: 'Request reassignment' }],
+  BLOCKED: [{ key: 'workorder.request-reassign', label: 'Ask for a replacement' }],
 } as const
 
 export function actionsFor(status: WorkOrder['status']): Pick<WorkOrder, 'availableActions' | 'unavailableActions'> {

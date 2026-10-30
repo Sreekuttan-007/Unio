@@ -15,7 +15,7 @@ const DECISION_LABEL = { ALLOW: 'Allowed', WARN: 'Warning', BLOCK: 'Blocked' } a
  */
 export function AssignPanel({ order, onAssigned }: { order: WorkOrder; onAssigned?: () => void }) {
   const candidates = useApi<Candidate[]>(`/work-orders/${order.id}/candidates`)
-  const assign = useAction<{ technicianId: string; acknowledged?: boolean; overrideReason?: string }, WorkOrder>('POST', `/work-orders/${order.id}/assign`, ['/work-orders', '/technicians'])
+  const assign = useAction<{ technicianId: string; acknowledgedCodes?: string[]; overrideReason?: string }, WorkOrder>('POST', `/work-orders/${order.id}/assign`, ['/work-orders', '/technicians'])
   const [pending, setPending] = useState<Candidate | null>(null)
   const [findings, setFindings] = useState<Finding[]>([])
   const [reason, setReason] = useState('')
@@ -27,7 +27,9 @@ export function AssignPanel({ order, onAssigned }: { order: WorkOrder; onAssigne
     setError(null)
     setPending(candidate)
     try {
-      await assign.mutateAsync({ technicianId: candidate.technicianId, acknowledged: withReason ? acknowledged : undefined, overrideReason: withReason ? reason : undefined })
+      // The backend wants the exact soft codes the person saw, not a yes/no.
+      const codes = findings.filter((finding) => finding.severity === 'SOFT').map((finding) => finding.code)
+      await assign.mutateAsync(withReason && acknowledged ? { technicianId: candidate.technicianId, acknowledgedCodes: codes, overrideReason: reason } : { technicianId: candidate.technicianId })
       setDone(`${order.id} is now assigned to ${candidate.name}.`)
       setPending(null)
       onAssigned?.()
