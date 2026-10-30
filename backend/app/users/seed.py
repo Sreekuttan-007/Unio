@@ -34,6 +34,8 @@ DEMO_USERS = (
     ("U-TECH2", "Meena Das", "tech2@unio.demo", "TECHNICIAN", "D-ELEC", False, (), 0),
     ("U-TECH3", "Joseph Paul", "tech3@unio.demo", "TECHNICIAN", "D-NET", False, (), 0),
     ("U-TECH4", "Lakshmi Bose", "tech4@unio.demo", "TECHNICIAN", "D-NET", False, (), 0),
+    ("U-TECH5", "Hari Menon", "tech5@unio.demo", "TECHNICIAN", "D-ELEC", False, (), 0),
+    ("U-TECH6", "Sneha Joshi", "tech6@unio.demo", "TECHNICIAN", "D-ELEC", False, (), 0),
 )
 
 
@@ -43,19 +45,37 @@ async def _insert_if_missing(collection: Any, document: dict[str, Any]) -> None:
 
 
 async def seed_roles(services: Services) -> None:
+    """Inserts missing roles, and merges permissions the seed gained since the last run.
+
+    Permissions an administrator removed stay removed: only permissions that were not in the
+    previous seed baseline are added, so editing roles at runtime is never undone by a restart.
+    """
     now = utcnow()
+    roles = services.db["roles_permissions"]
     for role in json.loads((SEED_DIR / "roles.json").read_text(encoding="utf-8")):
-        document = {
-            "_id": role["key"],
-            "label": role["label"],
-            "workspace": role["workspace"],
-            "accent": role["accent"],
-            "permissions": role["permissions"],
-            "scopes": role["scopes"],
-            "version": 0,
-            "createdAt": now,
-        }
-        await _insert_if_missing(services.db["roles_permissions"], document)
+        existing = await roles.find_one({"_id": role["key"]})
+        if existing is None:
+            await roles.insert_one(
+                {
+                    "_id": role["key"],
+                    "label": role["label"],
+                    "workspace": role["workspace"],
+                    "accent": role["accent"],
+                    "permissions": role["permissions"],
+                    "seedBaseline": role["permissions"],
+                    "scopes": role["scopes"],
+                    "version": 0,
+                    "createdAt": now,
+                }
+            )
+            continue
+        baseline = set(existing.get("seedBaseline", existing["permissions"]))
+        added = [permission for permission in role["permissions"] if permission not in baseline]
+        new_scopes = {f"scopes.{key}": value for key, value in role["scopes"].items() if key not in existing.get("scopes", {})}
+        update: dict[str, Any] = {"$set": {"seedBaseline": role["permissions"], **new_scopes}}
+        if added:
+            update["$addToSet"] = {"permissions": {"$each": added}}
+        await roles.update_one({"_id": role["key"]}, update)
     await services.roles.refresh()
 
 
@@ -95,3 +115,7 @@ async def seed_reference_data(services: Services) -> None:
     await seed_roles(services)
     if services.settings.demo_mode_enabled:
         await seed_demo_data(services)
+        if services.settings.seed_campus:
+            from app.campus.seed import seed_campus
+
+            await seed_campus(services.db, services.settings.campus_id)

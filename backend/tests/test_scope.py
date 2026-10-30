@@ -35,8 +35,8 @@ def test_own_scope_matches_reporter_lists_and_owner_fields():
 
 def test_assigned_scope_reads_the_assignee_field_for_that_entity():
     user = make_user({EntityType.WORK_ORDER: DataScope.ASSIGNED, EntityType.INCIDENT: DataScope.ASSIGNED})
-    assert scope_filter(user, EntityType.WORK_ORDER) == {"assignedTechnicianId": "U-1"}
-    assert scope_filter(user, EntityType.INCIDENT) == {"assignedTechnicianIds": "U-1"}
+    assert scope_filter(user, EntityType.WORK_ORDER) == {"assignedUserId": "U-1"}
+    assert scope_filter(user, EntityType.INCIDENT) == {"assignedUserIds": "U-1"}
 
 
 def test_a_scope_with_no_meaning_for_the_entity_matches_nothing():

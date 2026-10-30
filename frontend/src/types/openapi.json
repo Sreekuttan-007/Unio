@@ -1,6 +1,37 @@
 {
   "components": {
     "schemas": {
+      "ActionRequest": {
+        "properties": {
+          "targetId": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Targetid"
+          }
+        },
+        "title": "ActionRequest",
+        "type": "object"
+      },
+      "ActionType": {
+        "enum": [
+          "BOOK_ROOM",
+          "MOVE_SESSION",
+          "ASSIGN_TECHNICIAN",
+          "RESERVE_PARTS",
+          "DECIDE_APPROVAL",
+          "VALIDATE_RECEIPT",
+          "RESOLVE_INCIDENT"
+        ],
+        "title": "ActionType",
+        "type": "string"
+      },
       "AuditEntry": {
         "properties": {
           "action": {
@@ -104,6 +135,171 @@
         "title": "AvailableAction",
         "type": "object"
       },
+      "BookingCheck": {
+        "properties": {
+          "end": {
+            "format": "date-time",
+            "title": "End",
+            "type": "string"
+          },
+          "expectedStateToken": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expectedstatetoken"
+          },
+          "headcount": {
+            "maximum": 2000.0,
+            "minimum": 1.0,
+            "title": "Headcount",
+            "type": "integer"
+          },
+          "kind": {
+            "default": "LECTURE",
+            "pattern": "^(LECTURE|PRACTICAL|EXAM|EVENT)$",
+            "title": "Kind",
+            "type": "string"
+          },
+          "purpose": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Purpose",
+            "type": "string"
+          },
+          "requiredFeatures": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 10,
+            "title": "Requiredfeatures",
+            "type": "array"
+          },
+          "roomCode": {
+            "maxLength": 20,
+            "minLength": 3,
+            "title": "Roomcode",
+            "type": "string"
+          },
+          "start": {
+            "format": "date-time",
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "roomCode",
+          "start",
+          "end",
+          "headcount"
+        ],
+        "title": "BookingCheck",
+        "type": "object"
+      },
+      "BookingCreate": {
+        "properties": {
+          "acknowledgedCodes": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Acknowledgedcodes",
+            "type": "array"
+          },
+          "end": {
+            "format": "date-time",
+            "title": "End",
+            "type": "string"
+          },
+          "expectedStateToken": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expectedstatetoken"
+          },
+          "headcount": {
+            "maximum": 2000.0,
+            "minimum": 1.0,
+            "title": "Headcount",
+            "type": "integer"
+          },
+          "kind": {
+            "default": "LECTURE",
+            "pattern": "^(LECTURE|PRACTICAL|EXAM|EVENT)$",
+            "title": "Kind",
+            "type": "string"
+          },
+          "overrideApprovalId": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overrideapprovalid"
+          },
+          "overrideReason": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overridereason"
+          },
+          "purpose": {
+            "maxLength": 200,
+            "minLength": 3,
+            "title": "Purpose",
+            "type": "string"
+          },
+          "requiredFeatures": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 10,
+            "title": "Requiredfeatures",
+            "type": "array"
+          },
+          "roomCode": {
+            "maxLength": 20,
+            "minLength": 3,
+            "title": "Roomcode",
+            "type": "string"
+          },
+          "start": {
+            "format": "date-time",
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "roomCode",
+          "start",
+          "end",
+          "headcount",
+          "purpose"
+        ],
+        "title": "BookingCreate",
+        "type": "object"
+      },
       "BootstrapResponse": {
         "description": "Everything the frontend needs to become the right application for this role.",
         "properties": {
@@ -177,6 +373,35 @@
           "serverTime"
         ],
         "title": "BootstrapResponse",
+        "type": "object"
+      },
+      "CheckRequest": {
+        "properties": {
+          "actionType": {
+            "$ref": "#/components/schemas/ActionType"
+          },
+          "expectedStateToken": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expectedstatetoken"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "title": "Payload",
+            "type": "object"
+          }
+        },
+        "required": [
+          "actionType"
+        ],
+        "title": "CheckRequest",
         "type": "object"
       },
       "CreateUser": {
@@ -293,6 +518,34 @@
         "title": "DepartmentSummary",
         "type": "object"
       },
+      "ExtractRequest": {
+        "properties": {
+          "text": {
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "ExtractRequest",
+        "type": "object"
+      },
+      "FeedbackRequest": {
+        "properties": {
+          "fixed": {
+            "title": "Fixed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "fixed"
+        ],
+        "title": "FeedbackRequest",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -327,6 +580,93 @@
           "password"
         ],
         "title": "LoginRequest",
+        "type": "object"
+      },
+      "MoveSession": {
+        "properties": {
+          "acknowledgedCodes": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Acknowledgedcodes",
+            "type": "array"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          },
+          "expectedStateToken": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expectedstatetoken"
+          },
+          "overrideApprovalId": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overrideapprovalid"
+          },
+          "overrideReason": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overridereason"
+          },
+          "roomCode": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "minLength": 3,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomcode"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          }
+        },
+        "title": "MoveSession",
         "type": "object"
       },
       "NavBadge": {
@@ -481,6 +821,96 @@
         "title": "ProfileUpdate",
         "type": "object"
       },
+      "Reschedule": {
+        "properties": {
+          "acknowledgedCodes": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Acknowledgedcodes",
+            "type": "array"
+          },
+          "end": {
+            "format": "date-time",
+            "title": "End",
+            "type": "string"
+          },
+          "expectedStateToken": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expectedstatetoken"
+          },
+          "headcount": {
+            "anyOf": [
+              {
+                "maximum": 2000.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Headcount"
+          },
+          "overrideApprovalId": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overrideapprovalid"
+          },
+          "overrideReason": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overridereason"
+          },
+          "roomCode": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "minLength": 3,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roomcode"
+          },
+          "start": {
+            "format": "date-time",
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ],
+        "title": "Reschedule",
+        "type": "object"
+      },
       "RoleChange": {
         "properties": {
           "roleKey": {
@@ -583,6 +1013,123 @@
         "title": "RoleUpdate",
         "type": "object"
       },
+      "RuleUpdate": {
+        "properties": {
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enabled"
+          },
+          "params": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Params"
+          }
+        },
+        "title": "RuleUpdate",
+        "type": "object"
+      },
+      "SimulateEmail": {
+        "properties": {
+          "from": {
+            "maxLength": 254,
+            "minLength": 3,
+            "title": "From",
+            "type": "string"
+          },
+          "inReplyTo": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inreplyto"
+          },
+          "messageId": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Messageid"
+          },
+          "subject": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Subject",
+            "type": "string"
+          },
+          "text": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "from",
+          "subject",
+          "text"
+        ],
+        "title": "SimulateEmail",
+        "type": "object"
+      },
+      "StatusChange": {
+        "properties": {
+          "reason": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "status": {
+            "pattern": "^(OPEN|CLOSED|MAINTENANCE)$",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "StatusChange",
+        "type": "object"
+      },
       "StatusUpdate": {
         "properties": {
           "status": {
@@ -595,6 +1142,45 @@
           "status"
         ],
         "title": "StatusUpdate",
+        "type": "object"
+      },
+      "SubmitRequest": {
+        "properties": {
+          "academicImpact": {
+            "anyOf": [
+              {
+                "pattern": "^(LECTURE|PRACTICAL|EXAM|EVENT)$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Academicimpact"
+          },
+          "channel": {
+            "default": "FORM",
+            "pattern": "^(FORM|CHAT)$",
+            "title": "Channel",
+            "type": "string"
+          },
+          "extraction": {
+            "additionalProperties": true,
+            "title": "Extraction",
+            "type": "object"
+          },
+          "text": {
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "extraction"
+        ],
+        "title": "SubmitRequest",
         "type": "object"
       },
       "Theme": {
@@ -627,6 +1213,21 @@
           "expiresAt"
         ],
         "title": "TokenResponse",
+        "type": "object"
+      },
+      "TransitionRequest": {
+        "properties": {
+          "event": {
+            "maxLength": 40,
+            "minLength": 3,
+            "title": "Event",
+            "type": "string"
+          }
+        },
+        "required": [
+          "event"
+        ],
+        "title": "TransitionRequest",
         "type": "object"
       },
       "UnavailableAction": {
@@ -810,6 +1411,146 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/v1/admin/campus/buildings/{ident}/status": {
+      "patch": {
+        "operationId": "set_building_status_api_v1_admin_campus_buildings__ident__status_patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ident",
+            "required": true,
+            "schema": {
+              "title": "Ident",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusChange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Set Building Status Api V1 Admin Campus Buildings  Ident  Status Patch"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Set Building Status",
+        "tags": [
+          "campus"
+        ]
+      }
+    },
+    "/api/v1/admin/campus/rooms/{code}/status": {
+      "patch": {
+        "operationId": "set_room_status_api_v1_admin_campus_rooms__code__status_patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "code",
+            "required": true,
+            "schema": {
+              "title": "Code",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusChange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Set Room Status Api V1 Admin Campus Rooms  Code  Status Patch"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Set Room Status",
+        "tags": [
+          "campus"
+        ]
+      }
+    },
+    "/api/v1/admin/campus/summary": {
+      "get": {
+        "operationId": "admin_campus_summary_api_v1_admin_campus_summary_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Admin Campus Summary Api V1 Admin Campus Summary Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Admin Campus Summary",
+        "tags": [
+          "campus"
+        ]
+      }
+    },
     "/api/v1/admin/permissions": {
       "get": {
         "description": "Every permission key that exists, so the role editor can offer the full set.",
@@ -925,6 +1666,115 @@
         "summary": "Update Role",
         "tags": [
           "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/rules": {
+      "get": {
+        "operationId": "list_rules_api_v1_admin_rules_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response List Rules Api V1 Admin Rules Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Rules",
+        "tags": [
+          "collisions"
+        ]
+      }
+    },
+    "/api/v1/admin/rules/{rule_id}": {
+      "patch": {
+        "operationId": "update_rule_api_v1_admin_rules__rule_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "rule_id",
+            "required": true,
+            "schema": {
+              "title": "Rule Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RuleUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Update Rule Api V1 Admin Rules  Rule Id  Patch"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Rule",
+        "tags": [
+          "collisions"
+        ]
+      }
+    },
+    "/api/v1/admin/staff": {
+      "get": {
+        "operationId": "admin_staff_api_v1_admin_staff_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Admin Staff Api V1 Admin Staff Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Admin Staff",
+        "tags": [
+          "campus"
         ]
       }
     },
@@ -1381,6 +2231,544 @@
         ]
       }
     },
+    "/api/v1/bookings": {
+      "get": {
+        "operationId": "list_bookings_api_v1_bookings_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^(CONFIRMED|RESCHEDULED|CANCELLED)$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response List Bookings Api V1 Bookings Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Bookings",
+        "tags": [
+          "bookings"
+        ]
+      },
+      "post": {
+        "operationId": "create_booking_api_v1_bookings_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookingCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Create Booking Api V1 Bookings Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Booking",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/check": {
+      "post": {
+        "operationId": "check_booking_api_v1_bookings_check_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookingCheck"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Check Booking Api V1 Bookings Check Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Check Booking",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/{booking_id}": {
+      "get": {
+        "operationId": "get_booking_api_v1_bookings__booking_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "booking_id",
+            "required": true,
+            "schema": {
+              "title": "Booking Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Booking Api V1 Bookings  Booking Id  Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Booking",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/{booking_id}/cancel": {
+      "post": {
+        "operationId": "cancel_booking_api_v1_bookings__booking_id__cancel_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "booking_id",
+            "required": true,
+            "schema": {
+              "title": "Booking Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Cancel Booking Api V1 Bookings  Booking Id  Cancel Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Cancel Booking",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/{booking_id}/reschedule": {
+      "post": {
+        "operationId": "reschedule_booking_api_v1_bookings__booking_id__reschedule_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "booking_id",
+            "required": true,
+            "schema": {
+              "title": "Booking Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Reschedule"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Reschedule Booking Api V1 Bookings  Booking Id  Reschedule Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Reschedule Booking",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/campus/buildings/{ident}": {
+      "get": {
+        "operationId": "campus_building_api_v1_campus_buildings__ident__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ident",
+            "required": true,
+            "schema": {
+              "title": "Ident",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Campus Building Api V1 Campus Buildings  Ident  Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Campus Building",
+        "tags": [
+          "campus"
+        ]
+      }
+    },
+    "/api/v1/campus/map": {
+      "get": {
+        "operationId": "campus_map_api_v1_campus_map_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Campus Map Api V1 Campus Map Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Campus Map",
+        "tags": [
+          "campus"
+        ]
+      }
+    },
+    "/api/v1/campus/resources": {
+      "get": {
+        "operationId": "campus_resources_api_v1_campus_resources_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Campus Resources Api V1 Campus Resources Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Campus Resources",
+        "tags": [
+          "campus"
+        ]
+      }
+    },
+    "/api/v1/campus/rooms": {
+      "get": {
+        "operationId": "campus_rooms_api_v1_campus_rooms_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "bookable",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Bookable",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Campus Rooms Api V1 Campus Rooms Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Campus Rooms",
+        "tags": [
+          "campus"
+        ]
+      }
+    },
+    "/api/v1/collisions": {
+      "get": {
+        "operationId": "records_api_v1_collisions_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Records Api V1 Collisions Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Records",
+        "tags": [
+          "collisions"
+        ]
+      }
+    },
+    "/api/v1/collisions/check": {
+      "post": {
+        "operationId": "check_api_v1_collisions_check_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Check Api V1 Collisions Check Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Check",
+        "tags": [
+          "collisions"
+        ]
+      }
+    },
     "/api/v1/goods-receipts/{receipt_id}/validate": {
       "post": {
         "operationId": "validate_receipt_api_v1_goods_receipts__receipt_id__validate_post",
@@ -1430,13 +2818,13 @@
     },
     "/api/v1/inbox": {
       "get": {
-        "operationId": "inbox_api_v1_inbox_get",
+        "operationId": "list_inbox_api_v1_inbox_get",
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Inbox Api V1 Inbox Get"
+                  "title": "Response List Inbox Api V1 Inbox Get"
                 }
               }
             },
@@ -1448,9 +2836,357 @@
             "HTTPBearer": []
           }
         ],
-        "summary": "Inbox",
+        "summary": "List Inbox",
         "tags": [
-          "reserved"
+          "incidents"
+        ]
+      }
+    },
+    "/api/v1/inbox/simulate": {
+      "post": {
+        "operationId": "simulate_email_api_v1_inbox_simulate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateEmail"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Simulate Email Api V1 Inbox Simulate Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Simulate Email",
+        "tags": [
+          "incidents"
+        ]
+      }
+    },
+    "/api/v1/inbox/{email_id}/process": {
+      "post": {
+        "operationId": "process_email_api_v1_inbox__email_id__process_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "email_id",
+            "required": true,
+            "schema": {
+              "title": "Email Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Process Email Api V1 Inbox  Email Id  Process Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Process Email",
+        "tags": [
+          "incidents"
+        ]
+      }
+    },
+    "/api/v1/incidents": {
+      "get": {
+        "operationId": "list_incidents_api_v1_incidents_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 30,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response List Incidents Api V1 Incidents Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Incidents",
+        "tags": [
+          "incidents"
+        ]
+      }
+    },
+    "/api/v1/incidents/{incident_id}": {
+      "get": {
+        "operationId": "get_incident_api_v1_incidents__incident_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "incident_id",
+            "required": true,
+            "schema": {
+              "title": "Incident Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Incident Api V1 Incidents  Incident Id  Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Incident",
+        "tags": [
+          "incidents"
+        ]
+      }
+    },
+    "/api/v1/incidents/{incident_id}/actions/{key}": {
+      "post": {
+        "operationId": "incident_action_api_v1_incidents__incident_id__actions__key__post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "incident_id",
+            "required": true,
+            "schema": {
+              "title": "Incident Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "key",
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/ActionRequest"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Incident Action Api V1 Incidents  Incident Id  Actions  Key  Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Incident Action",
+        "tags": [
+          "incidents"
+        ]
+      }
+    },
+    "/api/v1/incidents/{incident_id}/transition": {
+      "post": {
+        "operationId": "transition_incident_api_v1_incidents__incident_id__transition_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "incident_id",
+            "required": true,
+            "schema": {
+              "title": "Incident Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransitionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Transition Incident Api V1 Incidents  Incident Id  Transition Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Transition Incident",
+        "tags": [
+          "incidents"
         ]
       }
     },
@@ -1483,12 +3219,104 @@
     "/api/v1/issues": {
       "post": {
         "operationId": "submit_issue_api_v1_issues_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Submit Issue Api V1 Issues Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Submit Issue",
+        "tags": [
+          "incidents"
+        ]
+      }
+    },
+    "/api/v1/issues/extract": {
+      "post": {
+        "operationId": "extract_issue_api_v1_issues_extract_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Submit Issue Api V1 Issues Post"
+                  "title": "Response Extract Issue Api V1 Issues Extract Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Extract Issue",
+        "tags": [
+          "incidents"
+        ]
+      }
+    },
+    "/api/v1/issues/mine": {
+      "get": {
+        "operationId": "my_reports_api_v1_issues_mine_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response My Reports Api V1 Issues Mine Get"
                 }
               }
             },
@@ -1500,9 +3328,59 @@
             "HTTPBearer": []
           }
         ],
-        "summary": "Submit Issue",
+        "summary": "My Reports",
         "tags": [
-          "reserved"
+          "incidents"
+        ]
+      }
+    },
+    "/api/v1/issues/{report_id}/feedback": {
+      "post": {
+        "operationId": "report_feedback_api_v1_issues__report_id__feedback_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "report_id",
+            "required": true,
+            "schema": {
+              "title": "Report Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Report Feedback",
+        "tags": [
+          "incidents"
         ]
       }
     },
@@ -1609,6 +3487,32 @@
         ]
       }
     },
+    "/api/v1/notices": {
+      "get": {
+        "operationId": "list_notices_api_v1_notices_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response List Notices Api V1 Notices Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Notices",
+        "tags": [
+          "incidents"
+        ]
+      }
+    },
     "/api/v1/simulations": {
       "post": {
         "operationId": "run_simulation_api_v1_simulations_post",
@@ -1654,6 +3558,213 @@
         "summary": "Ping",
         "tags": [
           "system"
+        ]
+      }
+    },
+    "/api/v1/technicians": {
+      "get": {
+        "operationId": "list_technicians_api_v1_technicians_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response List Technicians Api V1 Technicians Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Technicians",
+        "tags": [
+          "campus"
+        ]
+      }
+    },
+    "/api/v1/timetable/affected": {
+      "get": {
+        "operationId": "timetable_affected_api_v1_timetable_affected_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "rooms",
+            "required": true,
+            "schema": {
+              "maxLength": 400,
+              "minLength": 3,
+              "title": "Rooms",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "required": true,
+            "schema": {
+              "format": "date-time",
+              "title": "Start",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": true,
+            "schema": {
+              "format": "date-time",
+              "title": "End",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Timetable Affected Api V1 Timetable Affected Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Timetable Affected",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/timetable/sessions/{session_id}/move": {
+      "post": {
+        "operationId": "move_session_api_v1_timetable_sessions__session_id__move_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveSession"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Move Session Api V1 Timetable Sessions  Session Id  Move Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Move Session",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/timetable/today": {
+      "get": {
+        "operationId": "timetable_today_api_v1_timetable_today_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 10,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Timetable Today Api V1 Timetable Today Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Timetable Today",
+        "tags": [
+          "bookings"
         ]
       }
     },

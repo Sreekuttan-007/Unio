@@ -8,5 +8,5 @@ export const screens: Record<string, ComponentType> = {
   'tech.parts': MyPartsScreen,
   'tech.availability': AvailabilityScreen,
   'tech.history': MaintenanceHistoryScreen,
-  'tech.map': () => <CampusMapScreen title="Site Map" description="Where your work is. Aryabhata Block is selected for your open tasks." initialSelected="bld-arb" />,
+  'tech.map': () => <CampusMapScreen title="Site Map" description="Where your work is. Tap a building for its status." />,
 }

@@ -40,16 +40,6 @@ def _not_built(phase: int) -> ApiException:
 reserved = GuardedRouter(prefix="/api/v1", tags=["reserved"])
 
 
-@reserved.post("/issues", dependencies=[Depends(require(P.ISSUE_CREATE))])
-async def submit_issue() -> Any:
-    raise _not_built(4)
-
-
-@reserved.get("/inbox", dependencies=[Depends(require(P.INBOX_READ))])
-async def inbox() -> Any:
-    raise _not_built(4)
-
-
 @reserved.get(
     "/work-orders",
     dependencies=[Depends(require(P.WORKORDER_READ_ASSIGNED, P.WORKORDER_READ_DEPARTMENT, P.WORKORDER_READ_CAMPUS))],

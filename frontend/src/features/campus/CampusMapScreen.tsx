@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Badge, Banner, Card, CardBody, CardHeader, CampusMap, ListRow, MapLegend, PageHeader, type MapDecor, type MapMarker, type MapRegion, type RegionOverlay } from '@/ui'
+import { Badge, Banner, Card, CardBody, CardHeader, CampusMap, ListRow, MapLegend, PageHeader, Sheet, type MapDecor, type MapMarker, type MapRegion, type RegionOverlay } from '@/ui'
 import type { Priority } from '@/types/domain'
 import { PriorityBadge } from '../shared/badges'
 import { QueryBoundary } from '../shared/QueryBoundary'
@@ -90,14 +90,21 @@ export function CampusMapScreen({ title, description, initialSelected = null }: 
         {(data) => (
           <div className="space-y-4">
             {data.view === 'PUBLIC' ? <Banner tone="info" title="Public view">Closures and affected buildings are shown. Repair and staff detail is limited to campus staff.</Banner> : null}
-            <div className="grid gap-4 lg:grid-cols-[1fr_22rem]">
+            <div className="grid gap-4 2xl:grid-cols-[1fr_24rem]">
               <div className="space-y-3">
                 <CampusMap viewBox={data.viewBox} decor={data.decor} regions={data.regions} overlays={data.overlays} markers={data.markers} selectedId={selected} onSelect={setSelected} />
                 <MapLegend />
                 {data.markers.length > 0 ? <p className="text-xs text-muted">Dots are open incidents. Red is P1, amber is P2.</p> : null}
               </div>
-              <div aria-live="polite">
+              {/* On a wide screen the details sit beside the map. Anywhere narrower they slide over it. */}
+              <div className="hidden 2xl:block" aria-live="polite">
                 {selected ? <BuildingPanel regionId={selected} /> : <Card><CardBody className="text-sm text-muted">Select a building to see its status, rooms and open incidents.</CardBody></Card>}
+              </div>
+              <div className="2xl:hidden">
+                <Sheet open={selected !== null} title="Building" onClose={() => setSelected(null)}>
+                  {selected ? <BuildingPanel regionId={selected} /> : null}
+                </Sheet>
+                {selected === null ? <p className="text-sm text-muted">Tap a building to see its status, rooms and open incidents.</p> : null}
               </div>
             </div>
           </div>

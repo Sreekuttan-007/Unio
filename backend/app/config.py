@@ -28,6 +28,12 @@ class Settings(BaseSettings):
     outbox_poll_seconds: float = 5.0
     outbox_max_attempts: int = 5
     api_docs_enabled: bool = True
+    seed_campus: bool = True
+    seed_story: bool = True
+    gemini_api_key: str = ""
+    gemini_model: str = "gemini-3.8-flash"
+    llm_provider: str = "gemini"
+    llm_timeout_seconds: float = 8.0
 
     @model_validator(mode="after")
     def _check_secrets(self) -> "Settings":

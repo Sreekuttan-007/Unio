@@ -232,7 +232,18 @@ export function createDomainHandlers() {
             fit: candidate.buildingId === room?.buildingId ? 'Same building, free then' : 'Free then, short walk',
           }))
       : []
-    return { allowed: !blocked, findings, alternatives, affectedClasses: affected }
+    const warned = !blocked && findings.length > 0
+    return {
+      allowed: findings.length === 0,
+      decision: blocked ? 'BLOCK' : warned ? 'WARN' : 'ALLOW',
+      findings,
+      alternatives,
+      timeAlternatives: [],
+      affectedClasses: affected,
+      requiresReason: warned,
+      requiresApproval: false,
+      stateToken: 'mock-state',
+    }
   }
 
   const slaSummary = () => {
@@ -564,11 +575,24 @@ export function createDomainHandlers() {
       if (!role) return unauthenticated()
       const body = (await request.json()) as { roomCode: string; start: string; end: string; headcount: number; purpose: string }
       const check = bookingCheck(body)
-      if (!check.allowed) return problem(422, 'COLLISION_BLOCKED', check.findings[0]?.message ?? 'This booking is not allowed.', { decision: 'BLOCK', findings: check.findings })
+      const acknowledged = (body as { overrideReason?: string }).overrideReason
+      if (check.decision === 'WARN' && !acknowledged) return problem(409, 'COLLISION_WARNING', check.findings[0]?.message ?? 'This booking needs a reason.', { decision: 'WARN', findings: check.findings, requiresReason: true })
+      if (check.decision === 'BLOCK') return problem(422, 'COLLISION_BLOCKED', check.findings[0]?.message ?? 'This booking is not allowed.', { decision: 'BLOCK', findings: check.findings })
       const room = roomByCode(body.roomCode)!
       const row: BookingRow = { id: `BK-${2300 + bookings.length}`, roomCode: room.code, roomType: room.type, building: buildingById(room.buildingId)?.name ?? '', purpose: body.purpose || 'Booking', start: body.start, end: body.end, status: 'CONFIRMED', requester: USER_NAME[role] ?? role, headcount: body.headcount, impact: 'LECTURE' }
       bookings.unshift(row)
       return HttpResponse.json(row, { status: 201 })
+    }),
+    http.post(`${BASE}/bookings/:id/reschedule`, async ({ params, request }) => {
+      if (!roleOf(request)) return unauthenticated()
+      const booking = bookings.find((item) => item.id === params.id)
+      if (!booking) return problem(404, 'NOT_FOUND', 'Booking was not found.')
+      const body = (await request.json()) as { start: string; end: string; roomCode?: string }
+      booking.start = body.start
+      booking.end = body.end
+      booking.roomCode = body.roomCode ?? booking.roomCode
+      booking.status = 'RESCHEDULED'
+      return HttpResponse.json(booking)
     }),
     http.post(`${BASE}/bookings/:id/cancel`, ({ params, request }) => {
       if (!roleOf(request)) return unauthenticated()

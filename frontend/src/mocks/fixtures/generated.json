@@ -191,6 +191,7 @@
         "approval.request.create",
         "booking.read.department",
         "booking.request",
+        "campus.read",
         "cascade.read",
         "collision.check",
         "collision.review",
@@ -204,6 +205,7 @@
         "issue.read.department",
         "map.read.operational",
         "sla.read.department",
+        "staff.read",
         "technician.availability.manage",
         "workorder.assign.department",
         "workorder.read.department",
@@ -215,7 +217,8 @@
         "WORK_ORDER": "DEPARTMENT",
         "INVENTORY": "DEPARTMENT",
         "APPROVAL": "DEPARTMENT",
-        "SLA": "DEPARTMENT"
+        "SLA": "DEPARTMENT",
+        "RESOURCE": "DEPARTMENT"
       },
       "navigation": [
         {
@@ -323,6 +326,7 @@
         "booking.coordinate",
         "booking.read.campus",
         "booking.request",
+        "campus.read",
         "cascade.read",
         "collision.check",
         "collision.review",
@@ -341,6 +345,7 @@
         "simulation.execute",
         "simulation.run",
         "sla.read.campus",
+        "staff.read",
         "technician.availability.manage",
         "workorder.assign.campus",
         "workorder.read.campus",
@@ -353,7 +358,8 @@
         "INVENTORY": "CAMPUS",
         "APPROVAL": "CAMPUS",
         "SLA": "CAMPUS",
-        "AUDIT": "CAMPUS"
+        "AUDIT": "CAMPUS",
+        "RESOURCE": "CAMPUS"
       },
       "navigation": [
         {
@@ -681,14 +687,17 @@
         "admin.users",
         "analytics.read.system",
         "audit.read.system",
+        "campus.read",
         "inbox.read",
         "inventory.master.manage",
         "issue.create",
-        "sla.read.system"
+        "sla.read.system",
+        "staff.read"
       ],
       "scopes": {
         "SLA": "SYSTEM",
-        "AUDIT": "SYSTEM"
+        "AUDIT": "SYSTEM",
+        "RESOURCE": "SYSTEM"
       },
       "navigation": [
         {
@@ -3440,12 +3449,12 @@
       },
       {
         "id": "SES-CSE-2A-20260107T0800",
-        "courseName": "Computer Networks lab",
+        "courseName": "Computer Networks lab (batch A)",
         "kind": "PRACTICAL",
         "roomId": "RLB-103",
         "facultyId": "FAC-15",
         "studentGroup": "CSE-2A",
-        "headcount": 57,
+        "headcount": 29,
         "start": "13:30",
         "end": "15:30"
       },
@@ -3704,12 +3713,12 @@
       },
       {
         "id": "SES-ECE-4A-20260107T0800",
-        "courseName": "Machine Learning lab",
+        "courseName": "Machine Learning lab (batch A)",
         "kind": "PRACTICAL",
         "roomId": "RLB-203",
         "facultyId": "FAC-20",
         "studentGroup": "ECE-4A",
-        "headcount": 50,
+        "headcount": 25,
         "start": "13:30",
         "end": "15:30"
       }
@@ -6410,7 +6419,9 @@
         "approval.decide.override",
         "sla.read.department",
         "map.read.operational",
-        "analytics.read.department"
+        "analytics.read.department",
+        "campus.read",
+        "staff.read"
       ],
       "scopes": {
         "INCIDENT": "DEPARTMENT",
@@ -6418,7 +6429,8 @@
         "WORK_ORDER": "DEPARTMENT",
         "INVENTORY": "DEPARTMENT",
         "APPROVAL": "DEPARTMENT",
-        "SLA": "DEPARTMENT"
+        "SLA": "DEPARTMENT",
+        "RESOURCE": "DEPARTMENT"
       },
       "version": 0
     },
@@ -6460,7 +6472,9 @@
         "sla.read.campus",
         "map.read.operational",
         "analytics.read.campus",
-        "audit.read.campus"
+        "audit.read.campus",
+        "campus.read",
+        "staff.read"
       ],
       "scopes": {
         "INCIDENT": "CAMPUS",
@@ -6469,7 +6483,8 @@
         "INVENTORY": "CAMPUS",
         "APPROVAL": "CAMPUS",
         "SLA": "CAMPUS",
-        "AUDIT": "CAMPUS"
+        "AUDIT": "CAMPUS",
+        "RESOURCE": "CAMPUS"
       },
       "version": 0
     },
@@ -6564,11 +6579,14 @@
         "admin.rules",
         "admin.sla.policy",
         "admin.integrations",
-        "admin.seed"
+        "admin.seed",
+        "campus.read",
+        "staff.read"
       ],
       "scopes": {
         "SLA": "SYSTEM",
-        "AUDIT": "SYSTEM"
+        "AUDIT": "SYSTEM",
+        "RESOURCE": "SYSTEM"
       },
       "version": 0
     },
@@ -6626,6 +6644,7 @@
     "booking.read.department",
     "booking.read.own",
     "booking.request",
+    "campus.read",
     "cascade.read",
     "collision.check",
     "collision.review",
@@ -6660,6 +6679,7 @@
     "sla.read.own",
     "sla.read.procurement",
     "sla.read.system",
+    "staff.read",
     "technician.availability.manage",
     "technician.availability.self",
     "workorder.assign.campus",
@@ -6756,6 +6776,32 @@
         "email": "faculty@unio.demo",
         "roleKey": "FACULTY",
         "departmentId": "D-CSE",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      },
+      {
+        "id": "U-TECH5",
+        "name": "Hari Menon",
+        "email": "tech5@unio.demo",
+        "roleKey": "TECHNICIAN",
+        "departmentId": "D-ELEC",
         "status": "ACTIVE",
         "lastLoginAt": null,
         "availableActions": [
@@ -6960,6 +7006,32 @@
         ]
       },
       {
+        "id": "U-TECH6",
+        "name": "Sneha Joshi",
+        "email": "tech6@unio.demo",
+        "roleKey": "TECHNICIAN",
+        "departmentId": "D-ELEC",
+        "status": "ACTIVE",
+        "lastLoginAt": null,
+        "availableActions": [
+          {
+            "key": "user.deactivate",
+            "label": "Deactivate"
+          },
+          {
+            "key": "user.changeRole",
+            "label": "Change role"
+          }
+        ],
+        "unavailableActions": [
+          {
+            "key": "user.activate",
+            "label": "Activate",
+            "reason": "This account is already active."
+          }
+        ]
+      },
+      {
         "id": "U-DEPT2",
         "name": "Vikram Shetty",
         "email": "dept2@unio.demo",
@@ -6988,6 +7060,6 @@
     ],
     "page": 0,
     "size": 100,
-    "total": 12
+    "total": 14
   }
 }

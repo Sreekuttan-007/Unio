@@ -26,7 +26,7 @@ const navKeys = () => screen.queryAllByTestId(/^nav-/).map((node) => node.datase
 describe('signing in', () => {
   it('sends a signed-out visitor to the login screen with one demo chip per role', async () => {
     renderApp('/')
-    expect(await screen.findByRole('heading', { name: /sign in to your campus workspace/i })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: /welcome back/i })).toBeInTheDocument()
     expect(await screen.findAllByTestId(/^demo-/)).toHaveLength(7)
   })
 
@@ -97,7 +97,7 @@ describe('one workspace per role', () => {
   it('drops back to the login screen when the server rejects the token', async () => {
     tokenStore.set('mock.SOMEONE_ELSE')
     renderApp('/w/student/home')
-    expect(await screen.findByRole('heading', { name: /sign in to your campus workspace/i })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: /welcome back/i })).toBeInTheDocument()
     expect(tokenStore.get()).toBeNull()
   })
 
@@ -107,7 +107,7 @@ describe('one workspace per role', () => {
     await screen.findByRole('heading', { level: 1, name: 'Home' })
     await userEvent.click(screen.getByTestId('account-menu'))
     await userEvent.click(screen.getByTestId('sign-out'))
-    expect(await screen.findByRole('heading', { name: /sign in to your campus workspace/i })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: /welcome back/i })).toBeInTheDocument()
     await waitFor(() => expect(tokenStore.get()).toBeNull())
   })
 })

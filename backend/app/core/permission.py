@@ -90,3 +90,7 @@ class Permission(StrEnum):
     ADMIN_SLA_POLICY = "admin.sla.policy"
     ADMIN_INTEGRATIONS = "admin.integrations"
     ADMIN_SEED = "admin.seed"
+
+    # campus and staff directories (Phase 3)
+    CAMPUS_READ = "campus.read"
+    STAFF_READ = "staff.read"

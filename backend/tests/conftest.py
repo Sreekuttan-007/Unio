@@ -33,6 +33,8 @@ def make_settings(**overrides: Any) -> Settings:
         "demo_mode_enabled": True,
         "demo_user_password": DEMO_PASSWORD,
         "outbox_enabled": False,
+        "seed_campus": False,
+        "seed_story": False,
     }
     values.update(overrides)
     return Settings(_env_file=None, **values)

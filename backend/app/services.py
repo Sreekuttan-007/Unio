@@ -4,9 +4,15 @@ from typing import Any
 from fastapi import Request
 
 from app.audit.service import AuditService
+from app.bookings.service import BookingService
+from app.collision.service import CollisionService
 from app.config import Settings
 from app.core.outbox import OutboxService
 from app.core.security import JwtService, LoginRateLimiter, PasswordService
+from app.incidents.inbox import InboxService
+from app.incidents.service import IncidentService
+from app.ml.service import MlService
+from app.sla.service import SlaService
 from app.users.directory import UserDirectory
 from app.users.roles import RoleService
 from app.users.service import AuthService, IdentityService
@@ -26,6 +32,12 @@ class Services:
     auth: AuthService
     directory: UserDirectory
     outbox: OutboxService
+    ml: MlService
+    sla: SlaService
+    incidents: IncidentService
+    inbox: InboxService
+    collisions: CollisionService
+    bookings: BookingService
 
 
 def build_services(settings: Settings, db: Any) -> Services:
@@ -34,6 +46,11 @@ def build_services(settings: Settings, db: Any) -> Services:
     passwords = PasswordService()
     jwt_service = JwtService(settings.jwt_secret, settings.jwt_ttl_minutes)
     limiter = LoginRateLimiter(settings.login_max_failures, settings.login_failure_window_seconds)
+    outbox = OutboxService(db, settings.outbox_max_attempts)
+    ml = MlService(db, settings)
+    sla = SlaService(db)
+    incidents = IncidentService(db, ml, sla, audit, outbox, settings.campus_id)
+    collisions = CollisionService(db, audit, settings.campus_id)
     return Services(
         settings=settings,
         db=db,
@@ -44,7 +61,13 @@ def build_services(settings: Settings, db: Any) -> Services:
         identity=IdentityService(db, roles, jwt_service),
         auth=AuthService(db, passwords, jwt_service, limiter, audit),
         directory=UserDirectory(db, roles, passwords, audit, settings.campus_id),
-        outbox=OutboxService(db, settings.outbox_max_attempts),
+        outbox=outbox,
+        ml=ml,
+        sla=sla,
+        incidents=incidents,
+        inbox=InboxService(db, ml, incidents, audit, sla),
+        collisions=collisions,
+        bookings=BookingService(db, collisions, audit, outbox, settings.campus_id),
     )
 
 

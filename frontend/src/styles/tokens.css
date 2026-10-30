@@ -39,11 +39,6 @@
   --accent-h: 235;
   --accent-c: 0.16;
   --accent-l: 0.56;
-  --accent: oklch(var(--accent-l) var(--accent-c) var(--accent-h));
-  --accent-hover: oklch(calc(var(--accent-l) - 0.06) var(--accent-c) var(--accent-h));
-  --accent-soft: oklch(0.95 calc(var(--accent-c) * 0.28) var(--accent-h));
-  --accent-ink: oklch(0.4 var(--accent-c) var(--accent-h));
-  --accent-contrast: oklch(0.99 0 0);
 
   /* shape and depth */
   --radius-sm: 0.5rem;
@@ -91,11 +86,6 @@
   --info: oklch(0.74 0.12 240);
   --info-soft: oklch(0.3 0.05 240);
   --info-ink: oklch(0.86 0.08 240);
-  --accent: oklch(calc(var(--accent-l) + 0.16) var(--accent-c) var(--accent-h));
-  --accent-hover: oklch(calc(var(--accent-l) + 0.1) var(--accent-c) var(--accent-h));
-  --accent-soft: oklch(0.3 calc(var(--accent-c) * 0.45) var(--accent-h));
-  --accent-ink: oklch(0.86 calc(var(--accent-c) * 0.7) var(--accent-h));
-  --accent-contrast: oklch(0.18 0.02 255);
   --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.4);
   --shadow-md: 0 8px 24px oklch(0 0 0 / 0.45);
 }
@@ -124,13 +114,40 @@
     --info: oklch(0.74 0.12 240);
     --info-soft: oklch(0.3 0.05 240);
     --info-ink: oklch(0.86 0.08 240);
+    --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.4);
+    --shadow-md: 0 8px 24px oklch(0 0 0 / 0.45);
+  }
+}
+
+/* Derived accent colours. They are declared on every element that can pick an accent, because a custom
+   property is resolved where it is declared: a child that changes --accent-h would otherwise keep the
+   colour its ancestor already calculated. */
+:root,
+[data-accent] {
+  --accent: oklch(var(--accent-l) var(--accent-c) var(--accent-h));
+  --accent-hover: oklch(calc(var(--accent-l) - 0.06) var(--accent-c) var(--accent-h));
+  --accent-soft: oklch(0.95 calc(var(--accent-c) * 0.28) var(--accent-h));
+  --accent-ink: oklch(0.4 var(--accent-c) var(--accent-h));
+  --accent-contrast: oklch(0.99 0 0);
+}
+
+:root[data-theme='dark'],
+:root[data-theme='dark'] [data-accent] {
+  --accent: oklch(calc(var(--accent-l) + 0.16) var(--accent-c) var(--accent-h));
+  --accent-hover: oklch(calc(var(--accent-l) + 0.1) var(--accent-c) var(--accent-h));
+  --accent-soft: oklch(0.3 calc(var(--accent-c) * 0.45) var(--accent-h));
+  --accent-ink: oklch(0.86 calc(var(--accent-c) * 0.7) var(--accent-h));
+  --accent-contrast: oklch(0.18 0.02 255);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']),
+  :root:not([data-theme='light']) [data-accent] {
     --accent: oklch(calc(var(--accent-l) + 0.16) var(--accent-c) var(--accent-h));
     --accent-hover: oklch(calc(var(--accent-l) + 0.1) var(--accent-c) var(--accent-h));
     --accent-soft: oklch(0.3 calc(var(--accent-c) * 0.45) var(--accent-h));
     --accent-ink: oklch(0.86 calc(var(--accent-c) * 0.7) var(--accent-h));
     --accent-contrast: oklch(0.18 0.02 255);
-    --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.4);
-    --shadow-md: 0 8px 24px oklch(0 0 0 / 0.45);
   }
 }
 
@@ -140,5 +157,6 @@
 [data-accent='teal'] { --accent-h: 190; --accent-l: 0.52; }
 [data-accent='rose'] { --accent-h: 10; }
 [data-accent='violet'] { --accent-h: 305; }
-[data-accent='amber'] { --accent-h: 75; --accent-l: 0.78; --accent-contrast: oklch(0.2 0.03 70); }
+[data-accent='amber'] { --accent-h: 75; --accent-l: 0.78; }
+[data-accent='amber'], :root[data-theme='dark'] [data-accent='amber'] { --accent-contrast: oklch(0.2 0.03 70); }
 [data-accent='slate'] { --accent-h: 255; --accent-c: 0.035; --accent-l: 0.42; }

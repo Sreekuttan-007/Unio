@@ -17,40 +17,78 @@ interface RoomOption {
   closedReason: string | null
 }
 
+const KINDS = [
+  { value: 'LECTURE', label: 'Lecture or tutorial' },
+  { value: 'PRACTICAL', label: 'Practical' },
+  { value: 'EXAM', label: 'Exam' },
+  { value: 'EVENT', label: 'Event' },
+]
+
 const when = (date: string, time: string) => new Date(`${date}T${time}:00`).toISOString()
+const timeOf = (iso: string) => {
+  const date = new Date(iso)
+  return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+}
+
+interface BookingBody {
+  roomCode: string
+  start: string
+  end: string
+  headcount: number
+  kind: string
+}
 
 export function BookRoomScreen() {
   const rooms = useApi<RoomOption[]>('/campus/rooms', { query: { bookable: true } })
-  const [form, setForm] = useState({ roomCode: 'ARB-204', date: inputDate(), start: '09:00', end: '10:30', headcount: 40, purpose: 'Revision class' })
+  const [form, setForm] = useState({ roomCode: 'ARB-204', date: inputDate(), start: '09:00', end: '10:30', headcount: 40, purpose: 'Revision class', kind: 'LECTURE' })
   const [result, setResult] = useState<BookingCheck | null>(null)
   const [confirmed, setConfirmed] = useState<BookingRow | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [reason, setReason] = useState('')
 
-  const check = useAction<{ roomCode: string; start: string; end: string; headcount: number }, BookingCheck>('POST', '/bookings/check')
-  const book = useAction<{ roomCode: string; start: string; end: string; headcount: number; purpose: string }, BookingRow>('POST', '/bookings', ['/bookings'], { idempotent: true })
+  const check = useAction<BookingBody, BookingCheck>('POST', '/bookings/check')
+  const book = useAction<BookingBody & { purpose: string; expectedStateToken?: string; acknowledgedCodes?: string[]; overrideReason?: string }, BookingRow>('POST', '/bookings', ['/bookings'], { idempotent: true })
 
-  const payload = { roomCode: form.roomCode, start: when(form.date, form.start), end: when(form.date, form.end), headcount: form.headcount }
+  const payload = (next = form): BookingBody => ({ roomCode: next.roomCode, start: when(next.date, next.start), end: when(next.date, next.end), headcount: next.headcount, kind: next.kind })
+  const edit = (change: Partial<typeof form>) => {
+    setForm({ ...form, ...change })
+    setResult(null)
+  }
 
-  const run = async (override?: string) => {
+  const run = async (next = form) => {
     setError(null)
     setConfirmed(null)
-    const next = override ? { ...form, roomCode: override } : form
-    if (override) setForm(next)
+    setReason('')
+    setForm(next)
     try {
-      setResult(await check.mutateAsync({ ...payload, roomCode: next.roomCode }))
+      setResult(await check.mutateAsync(payload(next)))
     } catch (failure) {
+      setResult(null)
       setError(describeError(failure))
     }
   }
 
   const confirm = async () => {
+    if (!result) return
     try {
-      setConfirmed(await book.mutateAsync({ ...payload, purpose: form.purpose }))
+      const warned = result.decision === 'WARN'
+      setConfirmed(
+        await book.mutateAsync({
+          ...payload(),
+          purpose: form.purpose,
+          expectedStateToken: result.stateToken,
+          acknowledgedCodes: warned ? result.findings.map((finding) => finding.code) : undefined,
+          overrideReason: warned ? reason.trim() : undefined,
+        }),
+      )
       setResult(null)
     } catch (failure) {
       setError(describeError(failure))
     }
   }
+
+  const warned = result?.decision === 'WARN'
+  const blocked = result && result.decision !== 'ALLOW' && !warned
 
   return (
     <div className="space-y-6">
@@ -66,39 +104,56 @@ export function BookRoomScreen() {
               <SelectField
                 label="Room"
                 value={form.roomCode}
-                onChange={(event) => setForm({ ...form, roomCode: event.target.value })}
-                options={options.map((room) => ({ value: room.code, label: `${room.code} · ${titleCase(room.type)} · seats ${room.capacity}${room.status === 'CLOSED' ? ' · closed' : ''}` }))}
+                onChange={(event) => edit({ roomCode: event.target.value })}
+                options={options.map((room) => ({ value: room.code, label: `${room.code} · ${titleCase(room.type)} · seats ${room.capacity}${room.status !== 'OPEN' ? ` · ${room.status.toLowerCase()}` : ''}` }))}
               />
             )}
           </QueryBoundary>
-          <TextField label="Date" type="date" value={form.date} onChange={(event) => setForm({ ...form, date: event.target.value })} />
-          <TextField label="People" type="number" min={1} value={form.headcount} onChange={(event) => setForm({ ...form, headcount: Number(event.target.value) })} />
-          <TextField label="From" type="time" value={form.start} onChange={(event) => setForm({ ...form, start: event.target.value })} />
-          <TextField label="To" type="time" value={form.end} onChange={(event) => setForm({ ...form, end: event.target.value })} />
-          <TextField label="Purpose" value={form.purpose} onChange={(event) => setForm({ ...form, purpose: event.target.value })} />
-          <div className="sm:col-span-2 lg:col-span-3">
+          <TextField label="Date" type="date" value={form.date} onChange={(event) => edit({ date: event.target.value })} />
+          <TextField label="People" type="number" min={1} value={form.headcount} onChange={(event) => edit({ headcount: Number(event.target.value) })} />
+          <TextField label="From" type="time" step={900} value={form.start} onChange={(event) => edit({ start: event.target.value })} />
+          <TextField label="To" type="time" step={900} value={form.end} onChange={(event) => edit({ end: event.target.value })} />
+          <SelectField label="What for" value={form.kind} onChange={(event) => edit({ kind: event.target.value })} options={KINDS} />
+          <div className="sm:col-span-2">
+            <TextField label="Purpose" value={form.purpose} onChange={(event) => edit({ purpose: event.target.value })} />
+          </div>
+          <div className="flex items-end">
             <Button loading={check.isPending} onClick={() => void run()}>Check availability</Button>
           </div>
         </CardBody>
       </Card>
 
-      {result?.allowed ? (
-        <Banner tone="success" title={`${form.roomCode} is free then`} role="status" action={<Button loading={book.isPending} onClick={() => void confirm()}>Book it</Button>}>
+      {result?.decision === 'ALLOW' ? (
+        <Banner tone="success" title={`${form.roomCode} is free then`} role="status" action={<Button loading={book.isPending} disabled={!form.purpose.trim()} onClick={() => void confirm()}>Book it</Button>}>
           No clashes. The server checks again at the moment you book.
         </Banner>
       ) : null}
 
-      {result && !result.allowed ? (
+      {warned && result ? (
+        <Banner tone="warning" title="You can book this, with a reason" role="status" data-testid="warning-panel">
+          <ul className="mt-1 list-disc space-y-1 pl-5">
+            {result.findings.map((finding) => <li key={finding.code}>{finding.message}</li>)}
+          </ul>
+          <div className="mt-3 flex flex-wrap items-end gap-2">
+            <div className="min-w-56 flex-1">
+              <TextField label="Why is this fine?" value={reason} onChange={(event) => setReason(event.target.value)} hint="Kept in the audit trail" />
+            </div>
+            <Button loading={book.isPending} disabled={reason.trim().length < 5 || !form.purpose.trim()} onClick={() => void confirm()}>Book anyway</Button>
+          </div>
+        </Banner>
+      ) : null}
+
+      {blocked && result ? (
         <div className="space-y-4" data-testid="conflict-panel">
           <Banner tone="danger" title={`${form.roomCode} cannot be booked then`} role="alert">
             <ul className="mt-1 list-disc space-y-1 pl-5">
-              {result.findings.map((finding) => <li key={finding.code}>{finding.message}</li>)}
+              {result.findings.map((finding) => <li key={`${finding.code}-${finding.message}`}>{finding.message}</li>)}
             </ul>
           </Banner>
           {result.affectedClasses.length > 0 ? (
             <Card>
-              <CardHeader title="Classes in the way" description="These are the sessions that hold the room." />
-              {result.affectedClasses.map((item) => <ListRow key={item.course} title={item.course} subtitle={`${item.group} · ${item.headcount} students`} meta={`${item.start} to ${item.end}`} />)}
+              <CardHeader title="In the way" description="These hold the room at that time." />
+              {result.affectedClasses.map((item) => <ListRow key={`${item.course}-${item.start}`} title={item.course} subtitle={`${item.group} · ${item.headcount} people`} meta={`${item.start} to ${item.end}`} />)}
             </Card>
           ) : null}
           {result.alternatives.length > 0 ? (
@@ -110,7 +165,21 @@ export function BookRoomScreen() {
                   testId={`alt-${room.roomCode}`}
                   title={`${room.roomCode} · ${titleCase(room.type)} · seats ${room.capacity}`}
                   subtitle={`${room.building} · ${room.fit}`}
-                  trailing={<Button variant="secondary" compact onClick={() => void run(room.roomCode)}>Use this room</Button>}
+                  trailing={<Button variant="secondary" compact onClick={() => void run({ ...form, roomCode: room.roomCode })}>Use this room</Button>}
+                />
+              ))}
+            </Card>
+          ) : null}
+          {result.timeAlternatives && result.timeAlternatives.length > 0 ? (
+            <Card>
+              <CardHeader title={`Other times in ${form.roomCode}`} description="Same room, same length." />
+              {result.timeAlternatives.map((slot) => (
+                <ListRow
+                  key={slot.start}
+                  testId={`time-${timeOf(slot.start)}`}
+                  title={slot.label}
+                  subtitle={slot.reason}
+                  trailing={<Button variant="secondary" compact onClick={() => void run({ ...form, start: timeOf(slot.start), end: timeOf(slot.end) })}>Use this time</Button>}
                 />
               ))}
             </Card>
@@ -123,27 +192,43 @@ export function BookRoomScreen() {
 
 export function MyBookingsScreen({ title = 'My Bookings', description = 'Upcoming, past and rescheduled.' }: { title?: string; description?: string }) {
   const bookings = useApi<{ items: BookingRow[] }>('/bookings')
+  const [error, setError] = useState<string | null>(null)
   const cancel = useAction<{ id: string }>('POST', (body) => `/bookings/${body.id}/cancel`, ['/bookings'])
   const TONE = { CONFIRMED: 'success', REQUESTED: 'info', RESCHEDULED: 'warning', CANCELLED: 'neutral', REJECTED: 'danger' } as const
+
+  const onCancel = async (id: string) => {
+    setError(null)
+    try {
+      await cancel.mutateAsync({ id })
+    } catch (failure) {
+      setError(describeError(failure))
+    }
+  }
+
   return (
     <div>
       <PageHeader title={title} description={description} />
+      {error ? <Banner tone="danger" title="That did not work" role="alert">{error}</Banner> : null}
       <QueryBoundary query={bookings} isEmpty={(data) => data.items.length === 0} emptyTitle="No bookings yet">
         {(data) => (
           <Card>
-            {data.items.map((booking) => (
-              <ListRow
-                key={booking.id}
-                title={`${booking.roomCode} · ${booking.purpose}`}
-                subtitle={`${dateTime(booking.start)} to ${dateTime(booking.end)} · ${booking.building} · ${booking.requester}`}
-                trailing={
-                  <span className="flex items-center gap-2">
-                    <Badge tone={TONE[booking.status]}>{titleCase(booking.status)}</Badge>
-                    {['CONFIRMED', 'REQUESTED'].includes(booking.status) ? <Button variant="ghost" compact onClick={() => cancel.mutate({ id: booking.id })}>Cancel</Button> : null}
-                  </span>
-                }
-              />
-            ))}
+            {data.items.map((booking) => {
+              const canCancel = booking.availableActions?.some((action) => action.key === 'booking.cancel')
+              const why = booking.unavailableActions?.find((action) => action.key === 'booking.cancel')?.reason
+              return (
+                <ListRow
+                  key={booking.id}
+                  title={`${booking.roomCode} · ${booking.purpose}`}
+                  subtitle={`${dateTime(booking.start)} to ${dateTime(booking.end)} · ${booking.building} · ${booking.requester}${why && booking.status !== 'CANCELLED' ? ` · ${why}` : ''}`}
+                  trailing={
+                    <span className="flex items-center gap-2">
+                      <Badge tone={TONE[booking.status]}>{titleCase(booking.status)}</Badge>
+                      {canCancel ? <Button variant="ghost" compact onClick={() => void onCancel(booking.id)}>Cancel</Button> : null}
+                    </span>
+                  }
+                />
+              )
+            })}
           </Card>
         )}
       </QueryBoundary>

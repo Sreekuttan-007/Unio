@@ -10,6 +10,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pymongo import AsyncMongoClient
 
 from app.audit.router import router as audit_router
+from app.bookings.router import router as bookings_router
+from app.campus.router import router as campus_router
+from app.collision.router import router as collisions_router
 from app.config import Settings, get_settings
 from app.core import correlation, idempotency
 from app.core.access import assert_all_routes_guarded
@@ -19,6 +22,7 @@ from app.core.headers import SecurityHeadersMiddleware
 from app.core.idempotency import IdempotencyMiddleware
 from app.core.outbox import run_outbox_loop
 from app.db import ensure_indexes
+from app.incidents.router import router as incidents_router
 from app.services import build_services
 from app.system.router import reserved, router as system_router
 from app.users.router import admin_router, auth_router, demo_router, me_router
@@ -60,6 +64,9 @@ def create_app(settings: Settings | None = None, db: Any = None) -> FastAPI:
         app.state.db = database
         await ensure_indexes(database)
         await seed_reference_data(services)
+        await services.sla.ensure_policies()
+        await services.collisions.ensure_rules()
+        await services.bookings.claim_sessions()
         outbox_task = None
         if settings.outbox_enabled:
             outbox_task = asyncio.create_task(run_outbox_loop(services.outbox, settings.outbox_poll_seconds))
@@ -104,6 +111,10 @@ def create_app(settings: Settings | None = None, db: Any = None) -> FastAPI:
     app.include_router(me_router)
     app.include_router(admin_router)
     app.include_router(audit_router)
+    app.include_router(campus_router)
+    app.include_router(incidents_router)
+    app.include_router(collisions_router)
+    app.include_router(bookings_router)
     app.include_router(reserved)
     assert_all_routes_guarded(app)
     return app

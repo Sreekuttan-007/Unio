@@ -69,6 +69,34 @@ const MIN_ZOOM = 1
 const MAX_ZOOM = 4
 const DRAG_THRESHOLD = 5
 
+
+const LABEL_SIZE = 27
+const CAPTION_SIZE = 19
+
+/** Splits a label on spaces so each line fits the building width, at most two lines. */
+function wrapLabel(label: string, width: number): string[] {
+  const perLine = Math.max(6, Math.floor((width - 36) / (LABEL_SIZE * 0.56)))
+  const words = label.split(' ')
+  const lines: string[] = []
+  let current = ''
+  for (const word of words) {
+    if (current && `${current} ${word}`.length > perLine) {
+      lines.push(current)
+      current = word
+    } else {
+      current = current ? `${current} ${word}` : word
+    }
+  }
+  if (current) lines.push(current)
+  if (lines.length > 2) return [lines[0]!, `${lines.slice(1).join(' ').slice(0, perLine - 1)}...`]
+  return lines
+}
+
+function clip(text: string, width: number): string {
+  const perLine = Math.floor((width - 36) / (CAPTION_SIZE * 0.52))
+  return text.length > perLine ? `${text.slice(0, Math.max(3, perLine - 1))}...` : text
+}
+
 interface View {
   k: number
   x: number
@@ -215,25 +243,26 @@ export function CampusMap({ viewBox, decor, regions, overlays, selectedId, onSel
               >
                 <rect x={x} y={y} width={w} height={h} rx={r ?? 10} strokeWidth={selected ? 5 : 2} className={cn(REGION_CLASS[overlay.state], selected && 'stroke-accent')} />
                 {overlay.state === 'CLOSED' ? <rect x={x} y={y} width={w} height={h} rx={r ?? 10} fill={`url(#${hatchId})`} pointerEvents="none" /> : null}
-                <text x={x + 14} y={y + 28} fontSize={17} fontWeight={600} className="fill-ink" pointerEvents="none">
-                  {region.label}
-                </text>
-                <text x={x + 14} y={y + 50} fontSize={13} className="fill-muted" pointerEvents="none">
-                  {STATE_TEXT[overlay.state]}
-                  {overlay.caption ? ` · ${overlay.caption}` : ''}
+                {wrapLabel(region.label, w).map((line, index) => (
+                  <text key={index} x={x + 18} y={y + 38 + index * (LABEL_SIZE + 4)} fontSize={LABEL_SIZE} fontWeight={650} className="fill-ink" pointerEvents="none">
+                    {line}
+                  </text>
+                ))}
+                <text x={x + 18} y={y + 38 + wrapLabel(region.label, w).length * (LABEL_SIZE + 4) + 4} fontSize={CAPTION_SIZE} className="fill-muted" pointerEvents="none">
+                  {clip(`${STATE_TEXT[overlay.state]}${overlay.caption ? ` · ${overlay.caption}` : ''}`, w)}
                 </text>
                 {overlay.state !== 'OPEN' ? (
                   <g pointerEvents="none">
-                    <circle cx={x + w - 22} cy={y + 22} r={13} className="fill-surface stroke-ink" strokeWidth={1.5} />
-                    <text x={x + w - 22} y={y + 27} fontSize={15} fontWeight={700} textAnchor="middle" className="fill-ink">
+                    <circle cx={x + w - 26} cy={y + 26} r={17} className="fill-surface stroke-ink" strokeWidth={2} />
+                    <text x={x + w - 26} y={y + 33} fontSize={20} fontWeight={700} textAnchor="middle" className="fill-ink">
                       {STATE_GLYPH[overlay.state]}
                     </text>
                   </g>
                 ) : null}
                 {overlay.badge ? (
                   <g pointerEvents="none">
-                    <circle cx={x + w - 22} cy={y + h - 22} r={14} className="fill-danger" />
-                    <text x={x + w - 22} y={y + h - 17} fontSize={14} fontWeight={700} textAnchor="middle" className="fill-accent-contrast">
+                    <circle cx={x + w - 28} cy={y + h - 28} r={19} className="fill-danger" />
+                    <text x={x + w - 28} y={y + h - 21} fontSize={21} fontWeight={700} textAnchor="middle" className="fill-accent-contrast">
                       {overlay.badge}
                     </text>
                   </g>
@@ -245,13 +274,13 @@ export function CampusMap({ viewBox, decor, regions, overlays, selectedId, onSel
           {markers.map((marker) => (
             <g key={marker.id} data-testid={`marker-${marker.id}`}>
               <title>{marker.label}</title>
-              <circle cx={marker.x} cy={marker.y} r={9} className={cn(MARKER_FILL[marker.tone], 'stroke-surface')} strokeWidth={3} />
+              <circle cx={marker.x} cy={marker.y} r={13} className={cn(MARKER_FILL[marker.tone], 'stroke-surface')} strokeWidth={3} />
             </g>
           ))}
         </g>
       </svg>
 
-      <div className="absolute right-3 top-3 flex flex-col overflow-hidden rounded-md border border-line-strong bg-surface shadow-card">
+      <div className="absolute bottom-3 right-3 flex flex-col overflow-hidden rounded-md border border-line-strong bg-surface shadow-card">
         <button type="button" aria-label="Zoom in" onClick={() => zoomAround(1.4, centre.x, centre.y)} className="grid size-11 place-items-center hover:bg-surface-2">
           <Plus aria-hidden="true" className="size-5" />
         </button>

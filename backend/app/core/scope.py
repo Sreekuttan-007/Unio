@@ -23,17 +23,19 @@ class EntityType(StrEnum):
     APPROVAL = "APPROVAL"
     SLA = "SLA"
     AUDIT = "AUDIT"
+    RESOURCE = "RESOURCE"
 
 
 # (field read by OWN, field read by ASSIGNED and RESERVED). None means that scope matches nothing.
 _USER_FIELDS: dict[EntityType, tuple[str | None, str | None]] = {
-    EntityType.INCIDENT: ("reporterIds", "assignedTechnicianIds"),
-    EntityType.WORK_ORDER: (None, "assignedTechnicianId"),
+    EntityType.INCIDENT: ("reporterIds", "assignedUserIds"),
+    EntityType.WORK_ORDER: (None, "assignedUserId"),
     EntityType.BOOKING: ("requesterId", None),
     EntityType.INVENTORY: (None, "reservedForTechnicianIds"),
     EntityType.APPROVAL: ("requesterId", None),
-    EntityType.SLA: ("subjectOwnerIds", "assignedTechnicianId"),
+    EntityType.SLA: ("subjectOwnerIds", "assignedUserId"),
     EntityType.AUDIT: (None, None),
+    EntityType.RESOURCE: (None, None),
 }
 
 # Audit rows carry a domain instead of an owner. Values are AuditDomain names.

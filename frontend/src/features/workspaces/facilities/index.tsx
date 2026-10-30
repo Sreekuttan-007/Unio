@@ -15,7 +15,7 @@ import { WorkOrderBoard } from '@/features/workorders/WorkOrderBoard'
 /** Facilities Administrator workspace: the campus-wide command centre. */
 export const screens: Record<string, ComponentType> = {
   'fac.command': CommandCentreScreen,
-  'fac.map': () => <CampusMapScreen title="Live Campus Map" description="Incidents, closures and impact zones on the campus." initialSelected="bld-arb" />,
+  'fac.map': () => <CampusMapScreen title="Live Campus Map" description="Incidents, closures and impact zones on the campus." />,
   'fac.inbox': InboxScreen,
   'fac.triage': () => <IncidentsScreen variant="triage" title="Incident Triage" description="Duplicate clusters, correlation, summaries and assignment in one queue." />,
   'fac.workOrders': () => <WorkOrderBoard title="Work Orders" description="The full lifecycle board. Open a card to assign or reassign." />,

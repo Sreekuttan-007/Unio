@@ -158,7 +158,8 @@ export interface TechnicianCard {
 
 export interface Finding {
   code: string
-  severity: 'HARD' | 'SOFT'
+  /** HARD cannot be overridden. APPROVAL needs an approved override. SOFT needs a reason. */
+  severity: 'HARD' | 'SOFT' | 'APPROVAL'
   message: string
   affected: string
 }
@@ -233,13 +234,22 @@ export interface BookingRow {
   requester: string
   headcount: number
   impact: 'LECTURE' | 'PRACTICAL' | 'EXAM' | 'EVENT' | null
+  rescheduledCount?: number
+  availableActions?: ActionHint[]
+  unavailableActions?: UnavailableHint[]
 }
 
 export interface BookingCheck {
   allowed: boolean
+  decision?: 'ALLOW' | 'WARN' | 'REQUIRE_APPROVAL' | 'BLOCK'
   findings: Finding[]
   alternatives: { roomCode: string; type: string; capacity: number; building: string; fit: string }[]
-  affectedClasses: { course: string; group: string; headcount: number; start: string; end: string }[]
+  timeAlternatives?: { label: string; start: string; end: string; reason: string }[]
+  affectedClasses: { course: string; group: string; headcount: number; start: string; end: string; kind?: 'SESSION' | 'BOOKING' }[]
+  /** True when the only findings are warnings, which go ahead with a written reason. */
+  requiresReason?: boolean
+  requiresApproval?: boolean
+  stateToken?: string
 }
 
 export interface TodaySession {

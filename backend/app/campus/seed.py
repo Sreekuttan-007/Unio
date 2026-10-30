@@ -322,7 +322,7 @@ def generate_campus(anchor: date, campus_id: str = "CAMPUS-1") -> dict[str, list
                     if period >= 3 and practical_day:
                         if period == 3:
                             sessions.append(
-                                _session(group_id, department, size, labs[g], f"FAC-{13 + g:02d}", f"{COURSES[(g + weekday) % len(COURSES)]} lab", "PRACTICAL", day, PERIODS[3][0], PERIODS[4][1], campus_id)
+                                _session(group_id, department, (size + 1) // 2, labs[g], f"FAC-{13 + g:02d}", f"{COURSES[(g + weekday) % len(COURSES)]} lab (batch A)", "PRACTICAL", day, PERIODS[3][0], PERIODS[4][1], campus_id)
                             )
                         continue
                     # Latin square: for a fixed day and period, no two groups share a lecturer.

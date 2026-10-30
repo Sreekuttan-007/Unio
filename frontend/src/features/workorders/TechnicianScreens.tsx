@@ -1,4 +1,4 @@
-import { MapPin, ShieldAlert } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 import { useState } from 'react'
 import { Badge, Banner, Button, Card, CardBody, CardHeader, Dropzone, ListRow, PageHeader, SegmentedControl, SelectField, Sheet, TextArea } from '@/ui'
 import type { TechnicianCard, WorkOrder } from '@/types/domain'
@@ -27,7 +27,7 @@ function TaskCard({ order, onAct, onSheet, busy }: { order: WorkOrder; onAct: (k
           <p className="mt-1 flex items-start gap-1.5 text-sm text-muted"><MapPin aria-hidden="true" className="mt-0.5 size-4 shrink-0" />{order.location}</p>
         </div>
         <SlaSummary sla={order.sla} />
-        {order.safetyNote ? <Banner tone="warning" title="Safety"><span className="flex gap-2"><ShieldAlert aria-hidden="true" className="size-4 shrink-0" />{order.safetyNote}</span></Banner> : null}
+        {order.safetyNote ? <Banner tone="warning" title="Safety">{order.safetyNote}</Banner> : null}
         {order.status === 'BLOCKED' ? <Banner tone="danger" title="Waiting for a part" role="status">The part is out of stock. Purchase request {order.approvalId ?? ''} is with Procurement, and you will be told when it arrives.</Banner> : null}
         {order.needsReassignment ? <Banner tone="warning" title="Reassignment requested">{order.needsReassignment.reason}</Banner> : null}
         {order.parts.length > 0 ? (

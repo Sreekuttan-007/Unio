@@ -22,3 +22,15 @@ that affect behaviour must live in configuration, not hard-coded logic.
 | Login survives app restart in Median | Not yet tested |
 | Backend and ML fit in deployed memory | Not yet measured |
 | Calling external AI APIs is allowed at the event | Ask organisers |
+
+## Phases 4 to 6 (added 2026-10-30)
+
+| ID | Date | Assumption | Where it lives | Status |
+|---|---|---|---|---|
+| A8 | 2026-10-30 | Priority comes from a fixed table of urgency to P1-P4. Five or more reports raise it one step, and it is never lowered. | `app/incidents/policy.py` | Open |
+| A9 | 2026-10-30 | A new report joins an open incident of the same category in the same building within 48 hours when it names the same room, reads at least 0.6 alike, or (network and electrical only) reads at least 0.2 alike, or 0.12 once the incident already has company. With similarity scoring off, the same room, or any area-wide fault in the building, joins. | `app/incidents/service.py` | Open |
+| A10 | 2026-10-30 | Bookings run in 15 minute steps, last 15 minutes to 12 hours, and open 120 days ahead. They confirm immediately when the collision check passes, with no approval step. | `app/bookings/service.py` | Open |
+| A11 | 2026-10-30 | Booking outside a building's opening hours is a warning that needs a reason, not a block. | `collision_rules` ROOM-006 | Open |
+| A12 | 2026-10-30 | Departments are matched on the department of the person who booked, so a department manager sees the bookings of their own staff. | `bookings.departmentId` | Open |
+| A13 | 2026-10-30 | Collision review is campus-wide for the two roles that hold it, because it records decisions rather than personal data. | `GET /collisions` | Open |
+| A14 | 2026-10-30 | A classroom booking is overridden only by a reason (soft findings) or by an approved override bound to the exact action (approval findings). Hard findings are never overridable. | `app/collision/engine.py` | Open |
