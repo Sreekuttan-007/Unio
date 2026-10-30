@@ -675,6 +675,18 @@ export function createDomainHandlers() {
       approval.decisions.push({ by: USER_NAME[role] ?? role, decision: decision === 'APPROVE' ? 'APPROVED' : decision === 'REJECT' ? 'REJECTED' : 'CLARIFICATION REQUESTED', reason: reason ?? null, at: clock.at(0) })
       return HttpResponse.json({ ...approval, ...approvalActions(approval, role) })
     }),
+    http.post(`${BASE}/approvals/:id/answer`, async ({ params, request }) => {
+      const role = roleOf(request)
+      if (!role) return unauthenticated()
+      const approval = approvals.find((item) => item.id === params.id)
+      if (!approval) return problem(404, 'NOT_FOUND', 'Approval was not found.')
+      if (approval.requesterName !== USER_NAME[role]) return problem(404, 'NOT_FOUND', 'Approval was not found.')
+      if (approval.status !== 'NEEDS_CLARIFICATION') return problem(422, 'NOTHING_ASKED', 'Nobody has asked a question about this request.')
+      const { text } = (await request.json()) as { text: string }
+      approval.status = 'SUBMITTED'
+      approval.decisions.push({ by: USER_NAME[role] ?? role, decision: 'CLARIFIED', reason: text, at: clock.at(0) })
+      return HttpResponse.json({ ...approval, ...approvalActions(approval, role) })
+    }),
     http.get(`${BASE}/purchase-orders`, ({ request }) => (roleOf(request) ? HttpResponse.json(purchaseOrders) : unauthenticated())),
     http.get(`${BASE}/invoices`, ({ request }) => (roleOf(request) ? HttpResponse.json(invoices) : unauthenticated())),
     http.post(`${BASE}/invoices`, async ({ request }) => {
