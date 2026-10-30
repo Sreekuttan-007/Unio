@@ -53,3 +53,15 @@ npm run build
 ```
 
 See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for environment configuration and deployment notes. Other design references are in [docs/](docs/).
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow and [AGENTS.md](AGENTS.md) for the rules a coding agent (or a human) follows when changing this codebase.
+
+## Security
+
+See [SECURITY.md](SECURITY.md) to report a vulnerability.
+
+## License
+
+[MIT](LICENSE).
