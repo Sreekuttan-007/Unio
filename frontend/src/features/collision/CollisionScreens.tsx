@@ -73,7 +73,7 @@ interface ExecuteResult {
 
 export function SimulatorScreen() {
   const incidents = useApi<{ items: Incident[] }>('/incidents')
-  const [incidentId, setIncidentId] = useState('INC-1041')
+  const [picked, setPicked] = useState('')
   const [run, setRun] = useState<SimulationRun | null>(null)
   const [result, setResult] = useState<ExecuteResult | null>(null)
   const [confirming, setConfirming] = useState<string | null>(null)
@@ -103,6 +103,7 @@ export function SimulatorScreen() {
   }
 
   const open = (incidents.data?.items ?? []).filter((item) => ['P1', 'P2'].includes(item.priority) && !['RESOLVED', 'CLOSED'].includes(item.status))
+  const incidentId = picked || open[0]?.id || ''
 
   return (
     <div className="space-y-5">
@@ -111,12 +112,12 @@ export function SimulatorScreen() {
         <CardBody className="flex flex-wrap items-end gap-3">
           <label className="min-w-64 flex-1 space-y-1.5 text-sm font-medium text-ink">
             Incident to recover from
-            <select value={incidentId} onChange={(event) => setIncidentId(event.target.value)} className="mt-1.5 min-h-11 w-full rounded-md border border-line-strong bg-surface px-3 text-sm">
+            <select value={incidentId} onChange={(event) => setPicked(event.target.value)} className="mt-1.5 min-h-11 w-full rounded-md border border-line-strong bg-surface px-3 text-sm">
               {open.map((incident) => <option key={incident.id} value={incident.id}>{incident.id} · {incident.title}</option>)}
-              {open.length === 0 ? <option value="INC-1041">INC-1041</option> : null}
+              {open.length === 0 ? <option value="">No urgent incident is open</option> : null}
             </select>
           </label>
-          <Button loading={simulate.isPending} onClick={() => void start()}>Run simulation</Button>
+          <Button loading={simulate.isPending} disabled={!incidentId} onClick={() => void start()}>Run simulation</Button>
         </CardBody>
       </Card>
       {error ? <Banner tone="danger" title="That did not work" role="alert">{error}</Banner> : null}

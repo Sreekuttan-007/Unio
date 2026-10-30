@@ -26,6 +26,7 @@ from app.db import ensure_indexes
 from app.files.router import router as files_router
 from app.incidents.router import router as incidents_router
 from app.services import build_services
+from app.simulation.router import router as simulation_router
 from app.system.router import reserved, router as system_router
 from app.users.router import admin_router, auth_router, demo_router, me_router
 from app.users.seed import seed_reference_data
@@ -120,6 +121,7 @@ def create_app(settings: Settings | None = None, db: Any = None) -> FastAPI:
     app.include_router(bookings_router)
     app.include_router(workorders_router)
     app.include_router(cascade_router)
+    app.include_router(simulation_router)
     app.include_router(files_router)
     app.include_router(reserved)
     assert_all_routes_guarded(app)

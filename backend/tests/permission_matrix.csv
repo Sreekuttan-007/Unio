@@ -72,3 +72,5 @@ GET,/api/v1/files/x,ALLOW,ALLOW,ALLOW,ALLOW,ALLOW,ALLOW,ALLOW
 GET,/api/v1/cascading/academic,DENY,ALLOW,ALLOW,ALLOW,DENY,DENY,DENY
 GET,/api/v1/cascading/impact/x,DENY,ALLOW,ALLOW,ALLOW,DENY,DENY,DENY
 POST,/api/v1/cascading/impact/x/recompute,DENY,DENY,ALLOW,ALLOW,DENY,DENY,DENY
+GET,/api/v1/simulations/x,DENY,DENY,DENY,ALLOW,DENY,DENY,DENY
+POST,/api/v1/simulations/x/plans/x/execute,DENY,DENY,DENY,ALLOW,DENY,DENY,DENY

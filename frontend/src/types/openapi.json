@@ -1319,6 +1319,21 @@
         "title": "RuleUpdate",
         "type": "object"
       },
+      "SimulateBody": {
+        "properties": {
+          "incidentId": {
+            "maxLength": 20,
+            "minLength": 3,
+            "title": "Incidentid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "incidentId"
+        ],
+        "title": "SimulateBody",
+        "type": "object"
+      },
       "SimulateEmail": {
         "properties": {
           "from": {
@@ -4011,9 +4026,20 @@
     },
     "/api/v1/simulations": {
       "post": {
+        "description": "Compares recovery plans on a frozen copy of the campus. Writes nothing but the run itself.",
         "operationId": "run_simulation_api_v1_simulations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateBody"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
-          "200": {
+          "201": {
             "content": {
               "application/json": {
                 "schema": {
@@ -4022,6 +4048,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
           }
         },
         "security": [
@@ -4031,7 +4067,110 @@
         ],
         "summary": "Run Simulation",
         "tags": [
-          "reserved"
+          "simulations"
+        ]
+      }
+    },
+    "/api/v1/simulations/{run_id}": {
+      "get": {
+        "operationId": "get_simulation_api_v1_simulations__run_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Simulation Api V1 Simulations  Run Id  Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Simulation",
+        "tags": [
+          "simulations"
+        ]
+      }
+    },
+    "/api/v1/simulations/{run_id}/plans/{plan_id}/execute": {
+      "post": {
+        "operationId": "execute_plan_api_v1_simulations__run_id__plans__plan_id__execute_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "plan_id",
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Execute Plan Api V1 Simulations  Run Id  Plans  Plan Id  Execute Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Execute Plan",
+        "tags": [
+          "simulations"
         ]
       }
     },

@@ -40,11 +40,6 @@ def _not_built(phase: int) -> ApiException:
 reserved = GuardedRouter(prefix="/api/v1", tags=["reserved"])
 
 
-@reserved.post("/simulations", dependencies=[Depends(require(P.SIMULATION_RUN))])
-async def run_simulation() -> Any:
-    raise _not_built(9)
-
-
 @reserved.post(
     "/approvals/{approval_id}/decide",
     dependencies=[

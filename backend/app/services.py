@@ -14,6 +14,7 @@ from app.files.service import FileStore
 from app.incidents.inbox import InboxService
 from app.incidents.service import IncidentService
 from app.ml.service import MlService
+from app.simulation.service import SimulationService
 from app.sla.service import SlaService
 from app.users.directory import UserDirectory
 from app.users.roles import RoleService
@@ -44,6 +45,7 @@ class Services:
     files: FileStore
     workorders: WorkOrderService
     cascade: CascadeService
+    simulations: SimulationService
 
 
 def build_services(settings: Settings, db: Any) -> Services:
@@ -82,6 +84,7 @@ def build_services(settings: Settings, db: Any) -> Services:
         files=files,
         workorders=workorders,
         cascade=cascade,
+        simulations=SimulationService(db, incidents, bookings, workorders, audit),
     )
 
 
