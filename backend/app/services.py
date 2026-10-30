@@ -121,4 +121,4 @@ def build_services(settings: Settings, db: Any) -> Services:
 
 
 def get_services(request: Request) -> Services:
-    return request.app.state.services
+    return request.app.state.services  # type: ignore[no-any-return]

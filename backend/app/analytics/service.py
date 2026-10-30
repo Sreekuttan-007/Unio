@@ -6,8 +6,8 @@ from collections import Counter
 from datetime import datetime, timedelta
 from typing import Any
 
-from app.core.authuser import AuthUser
 from app.bookings.service import local_day_bounds
+from app.core.authuser import AuthUser
 from app.core.clock import ensure_utc, utcnow
 from app.core.permission import Permission as P
 from app.sla.service import evaluate

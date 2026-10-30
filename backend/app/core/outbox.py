@@ -80,7 +80,7 @@ class OutboxService:
             for handler in self._handlers:
                 if handler.supports(event["eventType"]):
                     await handler.handle(event)
-        except Exception as exc:  # noqa: BLE001 - any handler failure is retried, then parked
+        except Exception as exc:  # any handler failure is retried, then parked
             log.warning("Outbox delivery failed for %s on attempt %s", event["_id"], event["attempts"], exc_info=exc)
             update: dict[str, Any] = {"lastError": str(exc)}
             if event["attempts"] >= self._max_attempts:
@@ -100,6 +100,6 @@ async def run_outbox_loop(outbox: OutboxService, interval_seconds: float, sweep:
             if sweep is not None:
                 await sweep()
             await outbox.dispatch_due()
-        except Exception as exc:  # noqa: BLE001 - the loop must survive a bad tick
+        except Exception as exc:  # the loop must survive a bad tick
             log.error("Outbox tick failed", exc_info=exc)
         await asyncio.sleep(interval_seconds)

@@ -153,7 +153,7 @@ class ApprovalService:
         done = await self._db["approvals"].update_one({"_id": approval["_id"], "version": approval["version"], "status": approval["status"]}, update)
         if done.modified_count != 1:
             raise conflict("ALREADY_DECIDED", f"{approval['_id']} was decided or changed by someone else. Reload it.")
-        return await self._db["approvals"].find_one({"_id": approval["_id"]})  # type: ignore[return-value]
+        return await self._db["approvals"].find_one({"_id": approval["_id"]})  # type: ignore[no-any-return]
 
     async def decide(self, user: AuthUser, approval_id: str, decision: str, reason: str | None) -> dict[str, Any]:
         approval = await self.get(user, approval_id)

@@ -110,7 +110,7 @@ async def test_a_new_permission_reaches_an_existing_role_but_removed_ones_stay_r
         # simulate a database seeded before campus.read existed, where an admin also removed a permission
         legacy = [p for p in (await roles.find_one({"_id": "FACILITIES_ADMIN"}))["permissions"] if p not in ("campus.read", "map.read.operational")]
         baseline = [p for p in legacy]
-        await roles.update_one({"_id": "FACILITIES_ADMIN"}, {"$set": {"permissions": legacy, "seedBaseline": baseline + ["map.read.operational"]}})
+        await roles.update_one({"_id": "FACILITIES_ADMIN"}, {"$set": {"permissions": legacy, "seedBaseline": [*baseline, "map.read.operational"]}})
         await seed_roles(env.services)
         role = await roles.find_one({"_id": "FACILITIES_ADMIN"})
         assert "campus.read" in role["permissions"]

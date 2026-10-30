@@ -282,7 +282,6 @@ class WorkOrderService:
     async def rank(self, order: dict[str, Any], *, exclude: str | None = None, now: datetime | None = None) -> list[dict[str, Any]]:
         """Every technician, each with an explainable score and the collision engine's verdict, best first."""
         now = now or utcnow()
-        config = await self._collisions.config()
         ranked: list[dict[str, Any]] = []
         names = {row["_id"]: row["name"] async for row in self._db["departments"].find({})}
         for tech in await self._collisions.reader().all_technicians():
@@ -373,7 +372,7 @@ class WorkOrderService:
         await self._sla.mark_responded(order["incidentId"])
         recipients = [tech["userId"]] + ([old["userId"]] if previous and (old := await self._db["technicians"].find_one({"_id": previous})) else [])
         await self._outbox.enqueue("workorder.reassigned" if previous else "workorder.assigned", {"workOrderId": order["_id"], "recipientIds": sorted(set(recipients)), "technicianId": technician_id})
-        return await self._db["work_orders"].find_one({"_id": order["_id"]})  # type: ignore[return-value]
+        return await self._db["work_orders"].find_one({"_id": order["_id"]})  # type: ignore[no-any-return]
 
     def _slot_ids(self, order: dict[str, Any]) -> set[str]:
         if not (order.get("assignedTechnicianId") and order.get("scheduledStartAt") and order.get("scheduledEndAt")):
@@ -404,7 +403,7 @@ class WorkOrderService:
             actor_id=actor_id, actor_role=actor_role, action=f"workorder.{event.value.lower()}", domain=AuditDomain.OPERATIONS, entity_type="WORK_ORDER", entity_id=order["_id"],
             before={"status": status.value}, after={"status": target.value}, reason=notes,
         )
-        return await self._db["work_orders"].find_one({"_id": order["_id"]})  # type: ignore[return-value]
+        return await self._db["work_orders"].find_one({"_id": order["_id"]})  # type: ignore[no-any-return]
 
     async def accept(self, user: AuthUser, work_order_id: str) -> dict[str, Any]:
         order = await self._mine(user, work_order_id)
@@ -440,7 +439,7 @@ class WorkOrderService:
         next_status(WorkOrderStatus(order["status"]), WorkOrderEvent.BLOCK)  # refuse before any stock is reserved
         if reason == "WAITING_FOR_PARTS" and parts and self.inventory is not None:
             await self.inventory.request_parts(user, order, parts)
-            order = await self._db["work_orders"].find_one({"_id": order["_id"]})  # type: ignore[assignment]
+            order = await self._db["work_orders"].find_one({"_id": order["_id"]})
         moved = await self._move(order, WorkOrderEvent.BLOCK, user.id, user.role_key, {"blockReason": reason, "blockNotes": (notes or "").strip() or None, "blockedAt": utcnow()}, notes=(notes or reason))
         if reason == "WAITING_FOR_PARTS":
             await self._sla.pause(order["incidentId"], "Waiting for parts")
@@ -448,7 +447,7 @@ class WorkOrderService:
         elif reason == "SKILL_MISMATCH":
             await self.flag(moved, "The technician says this needs a different skill", "SKILL_MISMATCH", exclude=order["assignedTechnicianId"])
         await self._outbox.enqueue("workorder.blocked", {"workOrderId": order["_id"], "reason": reason, "roles": ["FACILITIES_ADMIN"]})
-        return await self._db["work_orders"].find_one({"_id": order["_id"]})  # type: ignore[return-value]
+        return await self._db["work_orders"].find_one({"_id": order["_id"]})  # type: ignore[no-any-return]
 
     async def resume(self, user: AuthUser, work_order_id: str) -> dict[str, Any]:
         order = await self._mine(user, work_order_id)
@@ -472,7 +471,7 @@ class WorkOrderService:
         if len(evidence or []) > MAX_EVIDENCE:
             raise rule("TOO_MANY_PHOTOS", f"Attach at most {MAX_EVIDENCE} photos.")
         next_status(WorkOrderStatus(order["status"]), WorkOrderEvent.COMPLETE)  # refuse before storing anything
-        saved = []
+        saved: list[dict[str, Any]] = []
         for item in evidence or []:
             meta = await self._files.save(owner=user, purpose="EVIDENCE", name=item["name"], mime=item["mime"], data=decode_base64(item["content_base64"]), entity=("WORK_ORDER", order["_id"]))
             saved.append(self._files.view(meta))
@@ -555,7 +554,7 @@ class WorkOrderService:
             after={"trigger": trigger, "suggested": flag["suggestedTechnicianId"]}, reason=reason,
         )
         await self._outbox.enqueue("workorder.reassignment_proposed", {"workOrderId": order["_id"], "reason": reason, "suggested": flag["suggestedName"], "roles": ["FACILITIES_ADMIN"]})
-        return await self._db["work_orders"].find_one({"_id": order["_id"]})  # type: ignore[return-value]
+        return await self._db["work_orders"].find_one({"_id": order["_id"]})  # type: ignore[no-any-return]
 
     async def technician_unavailable(self, technician_id: str, reason: str, actor: tuple[str, str]) -> list[str]:
         """Their open work is flagged, each with the best replacement. Nothing is moved until a person confirms."""

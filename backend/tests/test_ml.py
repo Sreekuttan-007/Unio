@@ -17,7 +17,6 @@ from app.sla.service import default_policies, evaluate
 from tests.conftest import open_env
 from tests.test_incidents import report
 
-
 # ---- the classifier ---------------------------------------------------------------------------------
 
 
@@ -52,7 +51,7 @@ def test_confidence_is_a_probability_and_an_unseen_text_still_answers(model):
 
 
 def test_without_a_model_the_rules_answer_and_say_so():
-    label, confidence, source, version = classify("water is leaking from the tap in the washroom", None)
+    label, _confidence, source, version = classify("water is leaking from the tap in the washroom", None)
     assert label == "PLUMBING" and source == "RULE" and version == "rules-1"
 
 

@@ -143,7 +143,7 @@ class WebhookService:
         try:
             status = await (self._receive_internally(body, signature) if hook["url"] == INTERNAL_RECEIVER else asyncio.to_thread(self._post, hook["url"], body, signature))
             error = None
-        except Exception as exc:  # noqa: BLE001 - recorded, then re-raised for a retry
+        except Exception as exc:  # recorded, then re-raised for a retry
             status, error = 0, str(exc)[:300]
         record = {"_id": key, "webhookId": hook["_id"], "eventId": event_id, "eventType": event_type, "payload": payload, "status": status, "error": error, "at": utcnow()}
         await self._db["webhook_deliveries"].replace_one({"_id": key}, record, upsert=True)
@@ -155,7 +155,7 @@ class WebhookService:
     @staticmethod
     def _post(url: str, body: bytes, signature: str) -> int:
         request = urllib.request.Request(url, data=body, method="POST", headers={"Content-Type": "application/json", SIGNATURE_HEADER: signature})
-        with urllib.request.urlopen(request, timeout=5) as response:  # noqa: S310 - administrators configure https URLs
+        with urllib.request.urlopen(request, timeout=5) as response:  # administrators configure https URLs
             return int(response.status)
 
     async def _receive_internally(self, body: bytes, signature: str) -> int:

@@ -47,7 +47,7 @@ def read_text(mime: str, data: bytes) -> str:
             from pypdf import PdfReader
 
             return "\n".join(page.extract_text() or "" for page in PdfReader(io.BytesIO(data)).pages)
-        except Exception:  # noqa: BLE001 - an unreadable PDF is a discrepancy for a person, not a crash
+        except Exception:  # an unreadable PDF is a discrepancy for a person, not a crash
             return ""
     return ""
 

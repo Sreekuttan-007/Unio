@@ -18,6 +18,9 @@ jobs:
           cache: pip
           cache-dependency-path: backend/requirements-dev.txt
       - run: pip install -r requirements-dev.txt
+      - run: python -m ruff check app tests tools
+      - name: mypy (advisory - reports but does not fail the build)
+        run: python -m mypy app || true
       - run: python -m pytest -q
 
   frontend:

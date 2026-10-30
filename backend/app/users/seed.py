@@ -81,14 +81,14 @@ async def seed_roles(services: Services) -> None:
 
 async def seed_demo_data(services: Services) -> None:
     settings = services.settings
-    for department in DEPARTMENTS:
-        await _insert_if_missing(services.db["departments"], dict(department))
+    for dept_row in DEPARTMENTS:
+        await _insert_if_missing(services.db["departments"], dict(dept_row))
     # With no password configured, one-tap sign-in still works but password sign-in does not.
     password = settings.demo_user_password or secrets.token_urlsafe(24)
     password_hash = await services.passwords.hash(password)
     now = utcnow()
     for user_id, name, email, role, department, demo_chip, managed, limit in DEMO_USERS:
-        document = {
+        document: dict[str, Any] = {
             "_id": user_id,
             "name": name,
             "email": email,

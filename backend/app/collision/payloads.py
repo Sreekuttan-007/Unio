@@ -92,7 +92,7 @@ def parse_payload(action_type: ActionType, raw: dict[str, Any]) -> dict[str, Any
     try:
         model = PAYLOADS[action_type].model_validate(raw)
     except ValueError as error:
-        first = error.errors()[0] if hasattr(error, "errors") else {}  # type: ignore[attr-defined]
+        first = error.errors()[0] if hasattr(error, "errors") else {}
         where = ".".join(str(part) for part in first.get("loc", ())) or "payload"
         raise rule("INVALID_ACTION", f"The {action_type.value.lower().replace('_', ' ')} request is not valid ({where}: {first.get('msg', 'invalid')}).") from error
     return model.model_dump()

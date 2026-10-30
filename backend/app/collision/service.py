@@ -10,7 +10,14 @@ from app.audit.service import AuditDomain, AuditService
 from app.collision.alternatives import AlternativeSuggestionService
 from app.collision.engine import CollisionEngine, RuleConfig, gate
 from app.collision.models import (
-    Acknowledgement, ActionType, CollisionResult, Decision, ProposedAction, Severity, Stage, fingerprint,
+    Acknowledgement,
+    ActionType,
+    CollisionResult,
+    Decision,
+    ProposedAction,
+    Severity,
+    Stage,
+    fingerprint,
 )
 from app.collision.payloads import jsonable, parse_payload
 from app.collision.reader import LiveStateReader, StateReader

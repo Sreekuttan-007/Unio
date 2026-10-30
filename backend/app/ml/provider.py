@@ -55,7 +55,7 @@ class GeminiProvider:
         prompt = f"{instruction}\n\n<data>\n{content}\n</data>"
         try:
             return await asyncio.wait_for(asyncio.to_thread(self._call, prompt, schema), timeout=self._timeout)
-        except Exception as error:  # noqa: BLE001 - any failure means "use the fallback"
+        except Exception as error:  # any failure means "use the fallback"
             log.warning("Gemini call failed: %s", type(error).__name__)
             return None
 

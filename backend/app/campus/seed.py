@@ -263,11 +263,11 @@ def generate_campus(anchor: date, campus_id: str = "CAMPUS-1") -> dict[str, list
                 if "AIR_CONDITIONING" in features:
                     asset(f"AST-AC-{room_id}", f"Air conditioner {room_id}", "HVAC", building_id, room_id, 2)
 
-            for k, start in enumerate(range(0, len(floor_rooms), 2), start=1):
+            for k, slot in enumerate(range(0, len(floor_rooms), 2), start=1):
                 access_point = f"AST-AP-{code}-F{floor}-{k}"
-                asset(access_point, f"Wi-Fi access point {code} floor {floor} #{k}", "NETWORK", building_id, floor_rooms[start], 3)
+                asset(access_point, f"Wi-Fi access point {code} floor {floor} #{k}", "NETWORK", building_id, floor_rooms[slot], 3)
                 edge(floor_switch, "ASSET", access_point, "CONNECTS")
-                for room_id in floor_rooms[start : start + 2]:
+                for room_id in floor_rooms[slot : slot + 2]:
                     edge(access_point, "ROOM", room_id, "SERVES")
 
     # The campus core switch lives in the administration block and feeds every building switch.

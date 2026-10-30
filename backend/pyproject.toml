@@ -4,3 +4,35 @@ asyncio_default_fixture_loop_scope = "session"
 asyncio_default_test_loop_scope = "session"
 testpaths = ["tests"]
 filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 320  # this codebase writes dense one-liners deliberately; catch real bugs, not wrapping
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "B", "RUF"]
+ignore = [
+    "B008",  # FastAPI's Depends()/Query()/... as a default argument is the framework's own idiom
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "tests"]
+
+[tool.mypy]
+python_version = "3.12"
+packages = ["app"]
+ignore_missing_imports = true
+# A real codebase, not a from-scratch one: start permissive, tighten later rather than blocking
+# every PR on a full-strict pass on day one.
+check_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true  # the codebase's existing `# type: ignore[no-any-return]` comments assume this
+
+# Known baseline, not yet fixed (advisory in CI, does not block): several service classes
+# (ApprovalService, BookingService, IncidentService, WorkOrderService) define an async method
+# named `list`. That's fine at runtime - Python has no block scoping conflict - but it makes mypy
+# misread a bare `list[...]` type annotation elsewhere in the same class as a reference to the
+# method, not the builtin generic. Fixing it means renaming those methods (list() -> e.g.
+# list_all()) across every call site; worth doing, but it's a deliberate rename, not a quick lint
+# fix, so it's left as the dominant chunk of `python -m mypy app`'s current ~66 findings.

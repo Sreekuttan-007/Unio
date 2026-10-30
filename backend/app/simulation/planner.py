@@ -18,8 +18,8 @@ from app.collision.models import ActionType, Decision, ProposedAction, Severity
 from app.collision.payloads import parse_payload
 from app.collision.reader import StateReader
 from app.core.clock import ensure_utc, local_time
-from app.sla.timer import evaluate as sla_evaluate
 from app.simulation.snapshot import Snapshot, SnapshotReader
+from app.sla.timer import evaluate as sla_evaluate
 from app.workorders.scoring import ceil_slot, plan_window, round_minutes
 
 HORIZON_HOURS = 24

@@ -128,7 +128,7 @@ async def test_stock_vs_buy_plan_separates_available_from_needs_purchase(world):
 
 
 async def test_a_plan_never_moves_a_class_into_another_affected_room(world):
-    incident_id, session = await incident_with_class(world)
+    incident_id, _session = await incident_with_class(world)
     await world.call("FACILITIES_ADMIN", "POST", f"/api/v1/cascading/impact/{incident_id}/recompute", json={"rootAssetIds": ["AST-TR-ARB"]})
     run = await simulate(world, incident_id)
     a = run["plans"][0]

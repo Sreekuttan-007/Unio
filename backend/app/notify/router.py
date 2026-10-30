@@ -159,7 +159,7 @@ async def system_health(user: AuthUser = Depends(require(P.ANALYTICS_READ_SYSTEM
     try:
         await db.command("ping")
         database = "UP"
-    except Exception:  # noqa: BLE001 - any failure means the database is not reachable
+    except Exception:  # any failure means the database is not reachable
         database = "DOWN"
     latency = round((time.perf_counter() - started) * 1000)
     names = await db.list_collection_names()
