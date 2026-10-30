@@ -1,11 +1,14 @@
 """SLA timers. Targets are data (the sla_policies collection), and state is always computed from time,
 so a sleeping server never shows a stale answer."""
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any
 
 from app.core.clock import ensure_utc, utcnow
 from app.core.ids import next_id
+from app.sla.timer import AT_RISK_PERCENT, evaluate
+
+__all__ = ["AT_RISK_PERCENT", "SlaService", "default_policies", "evaluate"]
 
 CATEGORIES = ("ELECTRICAL", "NETWORK", "PLUMBING", "HVAC", "CARPENTRY", "EQUIPMENT", "HOUSEKEEPING", "SAFETY", "OTHER")
 PRIORITIES = ("P1", "P2", "P3", "P4")
@@ -13,7 +16,6 @@ PRIORITIES = ("P1", "P2", "P3", "P4")
 # priority: (respond within, resolve within) in minutes
 DEFAULT_TARGETS = {"P1": (15, 240), "P2": (60, 480), "P3": (120, 1440), "P4": (480, 4320)}
 CATEGORY_OVERRIDES = {("ELECTRICAL", "P1"): (10, 180), ("SAFETY", "P1"): (5, 120), ("SAFETY", "P2"): (15, 240)}
-AT_RISK_PERCENT = 75
 LADDER = [{"level": 1, "atPercent": 75, "notify": "Department Manager"}, {"level": 2, "atPercent": 100, "notify": "Facilities Administrator"}]
 
 
@@ -35,43 +37,6 @@ def default_policies() -> list[dict[str, Any]]:
                 }
             )
     return policies
-
-
-def _duration(minutes: float) -> str:
-    total = abs(round(minutes))
-    if total < 60:
-        return f"{total} min"
-    hours, rest = divmod(total, 60)
-    return f"{hours} h {rest} min" if rest else f"{hours} h"
-
-
-def evaluate(instance: dict[str, Any], now: datetime | None = None) -> dict[str, Any]:
-    """State, percentage used, and wording, from the stored times. Pure, so it is easy to test."""
-    now = ensure_utc(now or utcnow())
-    started = ensure_utc(instance["startedAt"])
-    window = instance["resolutionMinutes"]
-    paused = float(instance.get("pausedMinutes", 0))
-    open_pause = next((pause for pause in instance.get("pauses", []) if pause.get("to") is None), None)
-    resolved_at = ensure_utc(instance["resolvedAt"]) if instance.get("resolvedAt") else None
-    end = resolved_at or now
-    if open_pause and not resolved_at:
-        paused += (now - ensure_utc(open_pause["from"])).total_seconds() / 60
-    elapsed = max(0.0, (end - started).total_seconds() / 60 - paused)
-    percent = elapsed / window * 100 if window else 0
-    due = started + timedelta(minutes=window + paused)
-    remaining = window - elapsed
-    if resolved_at:
-        state = "MET" if percent <= 100 else "BREACHED"
-        text = "Closed within target" if state == "MET" else f"Closed {_duration(elapsed - window)} late"
-    elif open_pause:
-        state, text = "PAUSED", f"Paused: {open_pause.get('reason', 'waiting')}"
-    elif percent >= 100:
-        state, text = "BREACHED", f"overdue by {_duration(-remaining)}"
-    elif percent >= instance.get("atRiskPercent", AT_RISK_PERCENT):
-        state, text = "AT_RISK", f"{_duration(remaining)} left"
-    else:
-        state, text = "ON_TRACK", f"{_duration(remaining)} left"
-    return {"state": state, "percentElapsed": round(min(percent, 999)), "remaining": text, "dueAt": due.isoformat()}
 
 
 class SlaService:

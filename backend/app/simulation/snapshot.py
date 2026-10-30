@@ -20,7 +20,10 @@ from app.core.clock import ensure_utc
 
 # The collections the rules read, each limited to what a recovery plan for the next day can touch.
 WINDOWED = ("timetable_sessions", "bookings", "shifts")
-WHOLE = ("rooms", "buildings", "assets", "technicians", "work_orders", "inventory_items", "inventory_balances", "stock_locations", "reservations", "users", "approvals", "incidents", "collision_rules")
+WHOLE = (
+    "rooms", "buildings", "assets", "technicians", "work_orders", "inventory_items", "inventory_balances", "stock_locations", "reservations", "users", "approvals", "incidents", "collision_rules",
+    "sla_instances",
+)
 WINDOW_HOURS = 48
 
 _COMPARE = {"$lt": operator.lt, "$lte": operator.le, "$gt": operator.gt, "$gte": operator.ge}
