@@ -47,11 +47,11 @@ export function AnalyticsScreen({ title, description }: { title: string; descrip
               </Card>
               <Card>
                 <CardHeader title="Shortages" description="Parts at or below zero" />
-                {data.shortages.map((item) => <ListRow key={item.name} title={item.name} subtitle={`Reorder level ${item.threshold}`} trailing={item.blocked ? <Badge tone="danger">Blocks {item.blocked} work</Badge> : <Badge tone="warning">Out of stock</Badge>} />)}
+                {data.shortages.map((item) => <ListRow key={item.name} title={item.name} subtitle={`Reorder level ${item.threshold}`} trailing={item.blocked ? <Badge tone="danger">Blocks {item.blocked} work</Badge> : <Badge tone="warning">{item.onHand === 0 ? 'Out of stock' : `${item.onHand} left`}</Badge>} />)}
               </Card>
               <Card>
                 <CardHeader title="Recurring incidents" description="The same thing breaking again" />
-                {data.recurring.map((item) => <ListRow key={item.name} title={item.name} subtitle={`${item.location} · last ${item.last}`} trailing={<Badge tone={item.count >= 5 ? 'danger' : 'warning'}>{item.count} times</Badge>} />)}
+                {data.recurring.map((item) => <ListRow key={`${item.name}-${item.location}`} title={item.name} subtitle={`${item.location} · last ${item.last}`} trailing={<Badge tone={item.count >= 5 ? 'danger' : 'warning'}>{item.count} times</Badge>} />)}
               </Card>
             </div>
           </>

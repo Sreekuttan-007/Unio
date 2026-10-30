@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { ArrowRight } from 'lucide-react'
-import { Badge, Banner, Button, Card, CardBody, CardHeader, ImpactChain, ListRow, PageHeader, SelectField, TextField, type ImpactStep } from '@/ui'
-import type { BookingCheck, BookingRow, ImpactReport, TodaySession } from '@/types/domain'
+import { Badge, Banner, Button, Card, CardBody, CardHeader, ImpactChain, ListRow, PageHeader, SelectField, Sheet, TextArea, TextField, type ImpactStep } from '@/ui'
+import type { BookingCheck, BookingRow, Finding, ImpactReport, TodaySession } from '@/types/domain'
+import { ApiError } from '@/platform/api/client'
 import { describeError } from '../shared/errors'
 import { dateTime, inputDate, titleCase } from '../shared/format'
 import { QueryBoundary } from '../shared/QueryBoundary'
@@ -190,9 +191,59 @@ export function BookRoomScreen() {
   )
 }
 
+/** Moves a booking to a new time. The backend checks it like a new booking; a warning needs a reason. */
+function RescheduleSheet({ booking, onClose }: { booking: BookingRow | null; onClose: () => void }) {
+  const reschedule = useAction<{ start: string; end: string; acknowledgedCodes?: string[]; overrideReason?: string }, BookingRow>('POST', `/bookings/${booking?.id ?? 'none'}/reschedule`, ['/bookings', '/timetable'])
+  const [date, setDate] = useState(booking ? inputDate(new Date(booking.start)) : '')
+  const [start, setStart] = useState(booking ? timeOf(booking.start) : '09:00')
+  const [end, setEnd] = useState(booking ? timeOf(booking.end) : '10:00')
+  const [warnings, setWarnings] = useState<Finding[]>([])
+  const [reason, setReason] = useState('')
+  const [error, setError] = useState<string | null>(null)
+
+  const submit = async (withReason: boolean) => {
+    setError(null)
+    const body = { start: when(date, start), end: when(date, end) }
+    try {
+      await reschedule.mutateAsync(withReason ? { ...body, acknowledgedCodes: warnings.map((item) => item.code), overrideReason: reason } : body)
+      setWarnings([])
+      onClose()
+    } catch (failure) {
+      if (failure instanceof ApiError && failure.code === 'COLLISION_WARNING') {
+        setWarnings(((failure.details.findings as Finding[]) ?? []).filter((item) => item.severity === 'SOFT'))
+      } else {
+        setError(describeError(failure))
+      }
+    }
+  }
+
+  return (
+    <Sheet open={!!booking} title={booking ? `Reschedule ${booking.roomCode}` : ''} onClose={onClose}>
+      <div className="space-y-4">
+        {error ? <Banner tone="danger" title="That time does not work" role="alert">{error}</Banner> : null}
+        <TextField label="Date" type="date" value={date} onChange={(event) => setDate(event.target.value)} />
+        <div className="grid grid-cols-2 gap-3">
+          <TextField label="From" type="time" step={900} value={start} onChange={(event) => setStart(event.target.value)} />
+          <TextField label="To" type="time" step={900} value={end} onChange={(event) => setEnd(event.target.value)} />
+        </div>
+        {warnings.length > 0 ? (
+          <div className="space-y-2 rounded-md bg-warning-soft p-3">
+            {warnings.map((item) => <p key={item.code} className="text-sm text-warning-ink">{item.message}</p>)}
+            <TextArea label="Reason for going ahead" value={reason} onChange={(event) => setReason(event.target.value)} />
+            <Button disabled={reason.trim().length < 5} loading={reschedule.isPending} onClick={() => void submit(true)}>Reschedule anyway</Button>
+          </div>
+        ) : (
+          <Button className="w-full" loading={reschedule.isPending} onClick={() => void submit(false)}>Check and reschedule</Button>
+        )}
+      </div>
+    </Sheet>
+  )
+}
+
 export function MyBookingsScreen({ title = 'My Bookings', description = 'Upcoming, past and rescheduled.' }: { title?: string; description?: string }) {
   const bookings = useApi<{ items: BookingRow[] }>('/bookings')
   const [error, setError] = useState<string | null>(null)
+  const [moving, setMoving] = useState<BookingRow | null>(null)
   const cancel = useAction<{ id: string }>('POST', (body) => `/bookings/${body.id}/cancel`, ['/bookings'])
   const TONE = { CONFIRMED: 'success', REQUESTED: 'info', RESCHEDULED: 'warning', CANCELLED: 'neutral', REJECTED: 'danger' } as const
 
@@ -214,6 +265,7 @@ export function MyBookingsScreen({ title = 'My Bookings', description = 'Upcomin
           <Card>
             {data.items.map((booking) => {
               const canCancel = booking.availableActions?.some((action) => action.key === 'booking.cancel')
+              const canMove = booking.availableActions?.some((action) => action.key === 'booking.reschedule')
               const why = booking.unavailableActions?.find((action) => action.key === 'booking.cancel')?.reason
               return (
                 <ListRow
@@ -223,6 +275,7 @@ export function MyBookingsScreen({ title = 'My Bookings', description = 'Upcomin
                   trailing={
                     <span className="flex items-center gap-2">
                       <Badge tone={TONE[booking.status]}>{titleCase(booking.status)}</Badge>
+                      {canMove ? <Button variant="ghost" compact onClick={() => setMoving(booking)}>Reschedule</Button> : null}
                       {canCancel ? <Button variant="ghost" compact onClick={() => void onCancel(booking.id)}>Cancel</Button> : null}
                     </span>
                   }
@@ -232,6 +285,7 @@ export function MyBookingsScreen({ title = 'My Bookings', description = 'Upcomin
           </Card>
         )}
       </QueryBoundary>
+      {moving ? <RescheduleSheet key={moving.id} booking={moving} onClose={() => setMoving(null)} /> : null}
     </div>
   )
 }

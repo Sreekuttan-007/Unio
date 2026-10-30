@@ -6,7 +6,7 @@ import pytest_asyncio
 
 from app.cascade.graph import walk
 from app.cascade.service import rank_sessions
-from app.core.clock import ensure_utc
+from app.core.clock import ensure_utc, utcnow
 from tests.conftest import open_env
 from tests.test_incidents import report
 
@@ -163,3 +163,18 @@ async def test_the_map_lights_up_buildings_reached_through_a_shared_dependency(w
 
     overlays = await region_overlays(world.db, operational=True)
     assert all(overlays[region]["state"] in ("AFFECTED", "CLOSED", "MAINTENANCE") for region in snapshot["affectedRegionIds"])
+
+
+async def test_only_a_coordinator_is_offered_moving_an_affected_class(world):
+    incident_id = await socket_incident(world)
+    session = await world.db["timetable_sessions"].find_one({"roomId": "ARB-204", "kind": "LECTURE"}, sort=[("_id", 1)])
+    start = ensure_utc(utcnow() + timedelta(hours=26)).replace(hour=4, minute=30, second=0, microsecond=0)  # 10:00 campus time tomorrow or later
+    await world.db["timetable_sessions"].update_one({"_id": session["_id"]}, {"$set": {"startAt": start, "endAt": start + timedelta(hours=1)}})
+    incident = await world.db["incidents"].find_one({"_id": incident_id})
+    snapshot = await world.services.cascade.compute(incident, now=start - timedelta(hours=2))
+    await world.db["impact_snapshots"].replace_one({"_id": incident_id}, {"_id": incident_id, **snapshot, "computedAt": utcnow()}, upsert=True)
+    facilities = (await world.call("FACILITIES_ADMIN", "GET", f"/api/v1/cascading/impact/{incident_id}")).json()
+    row = next(item for item in facilities["affectedSessions"] if item["id"] == session["_id"])
+    assert row["alternative"] and row["availableActions"] == [{"key": "session.move", "label": f"Move to {row['alternative']['roomCode']}"}]
+    faculty = (await world.call("FACULTY", "GET", f"/api/v1/cascading/impact/{incident_id}")).json()
+    assert all(item["availableActions"] == [] for item in faculty["affectedSessions"])

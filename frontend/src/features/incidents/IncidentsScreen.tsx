@@ -1,7 +1,8 @@
 import { Link2, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { Badge, Banner, Button, Card, CardBody, ImpactChain, ListRow, PageHeader, SegmentedControl, Sheet, StatTile, Timeline, type ImpactStep } from '@/ui'
-import type { ImpactReport, Incident } from '@/types/domain'
+import type { Finding, ImpactReport, ImpactSession, Incident } from '@/types/domain'
+import { ApiError } from '@/platform/api/client'
 import { CategoryBadge, IncidentStatusBadge, PriorityBadge, SlaSummary } from '../shared/badges'
 import { describeError } from '../shared/errors'
 import { ago } from '../shared/format'
@@ -9,6 +10,61 @@ import { QueryBoundary } from '../shared/QueryBoundary'
 import { useAction, useApi } from '../shared/useApi'
 
 type Filter = 'all' | 'open' | 'p1'
+
+/** Classes this incident takes out of their room. Moving one goes through the same booking rules as any move. */
+function AffectedClasses({ incidentId, sessions }: { incidentId: string; sessions: ImpactSession[] }) {
+  const move = useAction<{ id: string; roomCode: string; acknowledgedCodes?: string[]; overrideReason?: string }, { room: string; notified: number }>(
+    'POST', (body) => `/timetable/sessions/${body.id}/move`, ['/cascading', '/timetable'],
+  )
+  const [warning, setWarning] = useState<{ session: ImpactSession; findings: Finding[] } | null>(null)
+  const [note, setNote] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const attempt = async (session: ImpactSession, findings?: Finding[]) => {
+    setError(null)
+    const roomCode = session.alternative?.roomCode ?? ''
+    try {
+      const moved = await move.mutateAsync(findings ? { id: session.id, roomCode, acknowledgedCodes: findings.map((item) => item.code), overrideReason: `Room affected by ${incidentId}` } : { id: session.id, roomCode })
+      setWarning(null)
+      setNote(`${session.course} moved to ${moved.room}. ${moved.notified} people were told.`)
+    } catch (failure) {
+      if (failure instanceof ApiError && failure.code === 'COLLISION_WARNING') setWarning({ session, findings: ((failure.details.findings as Finding[]) ?? []).filter((item) => item.severity === 'SOFT') })
+      else setError(describeError(failure))
+    }
+  }
+
+  if (sessions.length === 0) return null
+  return (
+    <section aria-label="Affected classes" className="space-y-2">
+      <h3 className="text-sm font-semibold text-ink">Affected classes</h3>
+      {note ? <Banner tone="success" title="Class moved" role="status">{note}</Banner> : null}
+      {error ? <Banner tone="danger" title="The class was not moved" role="alert">{error}</Banner> : null}
+      {warning ? (
+        <Banner tone="warning" title="This move raises a warning" action={<Button compact loading={move.isPending} onClick={() => void attempt(warning.session, warning.findings)}>Move anyway</Button>}>
+          {warning.findings.map((item) => item.message).join(' ')}
+        </Banner>
+      ) : null}
+      <Card>
+        {sessions.map((session) => {
+          const offer = session.availableActions?.find((item) => item.key === 'session.move')
+          return (
+            <ListRow
+              key={session.id}
+              title={`${session.course} · ${session.group}`}
+              subtitle={`${session.start} to ${session.end} · ${session.room} · ${session.headcount} people${session.alternative ? ` · free: ${session.alternative.roomCode}` : ' · no free room found'}`}
+              trailing={
+                <span className="flex items-center gap-2">
+                  <Badge tone={session.kind === 'EXAM' ? 'danger' : 'warning'}>{session.kind === 'EXAM' ? 'Exam' : 'Class'}</Badge>
+                  {offer ? <Button variant="secondary" compact loading={move.isPending} onClick={() => void attempt(session)}>{offer.label}</Button> : null}
+                </span>
+              }
+            />
+          )
+        })}
+      </Card>
+    </section>
+  )
+}
 
 function IncidentDetail({ incident }: { incident: Incident }) {
   const impact = useApi<ImpactReport>(`/cascading/impact/${incident.id}`)
@@ -76,6 +132,8 @@ function IncidentDetail({ incident }: { incident: Incident }) {
         <h3 className="mb-3 text-sm font-semibold text-ink">What this affects</h3>
         <QueryBoundary query={impact}>{(data) => <ImpactChain steps={data.chain as ImpactStep[]} />}</QueryBoundary>
       </section>
+
+      {impact.data ? <AffectedClasses incidentId={incident.id} sessions={impact.data.affectedSessions} /> : null}
 
       <section aria-label="History">
         <h3 className="mb-3 text-sm font-semibold text-ink">History</h3>

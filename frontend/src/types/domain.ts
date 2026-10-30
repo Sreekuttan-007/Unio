@@ -194,6 +194,8 @@ export interface ImpactSession {
   kind: 'LECTURE' | 'PRACTICAL' | 'EXAM'
   headcount: number
   alternative: { roomCode: string; note: string } | null
+  /** session.move, only for people who may move classes. */
+  availableActions?: ActionHint[]
 }
 
 export interface ImpactReport {

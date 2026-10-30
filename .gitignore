@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+!.env.mock
 
 # Python environments and caches (installed libraries live here, never commit them)
 .venv/

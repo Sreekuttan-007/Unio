@@ -178,13 +178,21 @@ class CascadeService:
         snapshot = await self._db["impact_snapshots"].find_one({"_id": incident_id})
         if snapshot is None or utcnow() - ensure_utc(snapshot["computedAt"]) > STALE_AFTER:
             snapshot = await self.refresh(incident_id)
-        return self.view(snapshot)
+        return self.view(snapshot, user)
 
     @staticmethod
-    def view(snapshot: dict[str, Any]) -> dict[str, Any]:
+    def view(snapshot: dict[str, Any], user: AuthUser | None = None) -> dict[str, Any]:
+        # Only a timetable coordinator may move a class, and only where a free room was found.
+        mover = user is not None and user.has(P.BOOKING_COORDINATE)
         return {
             "incidentId": snapshot["incidentId"], "chain": snapshot["chain"], "totals": snapshot["totals"], "affectedRegionIds": snapshot["affectedRegionIds"],
-            "affectedSessions": [{key: value for key, value in row.items() if key not in ("facultyId", "departmentId", "startAt")} for row in snapshot["affectedSessions"]],
+            "affectedSessions": [
+                {
+                    **{key: value for key, value in row.items() if key not in ("facultyId", "departmentId", "startAt")},
+                    "availableActions": [{"key": "session.move", "label": f"Move to {row['alternative']['roomCode']}"}] if mover and row.get("alternative") else [],
+                }
+                for row in snapshot["affectedSessions"]
+            ],
             "computedAt": ensure_utc(snapshot["computedAt"]).isoformat(),
         }
 
@@ -201,7 +209,7 @@ class CascadeService:
                 user, action="incident.root_assets", domain=AuditDomain.OPERATIONS, entity_type="INCIDENT", entity_id=incident_id,
                 before={"assetIds": incident.get("assetIds", [])}, after={"assetIds": sorted(found)},
             )
-        return self.view(await self.refresh(incident_id))
+        return self.view(await self.refresh(incident_id), user)
 
     async def academic(self, user: AuthUser) -> list[dict[str, Any]]:
         """Classes hit by open incidents, limited to the classes this person teaches, manages or attends."""
