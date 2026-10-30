@@ -12,6 +12,8 @@ import type {
   Invoice,
   ReportSummary,
   TechnicianCard,
+  Webhook,
+  WebhookDelivery,
   WorkOrder,
 } from '@/types/domain'
 import type { RegionOverlay } from '@/ui'
@@ -136,6 +138,10 @@ export function createDomainHandlers() {
   const receipts = buildReceipts(clock)
   const rules = buildRules()
   const integrations = buildIntegrations(clock)
+  const webhookDeliveries: (WebhookDelivery & { webhookId: string })[] = integrations.webhooks.flatMap((hook, index) => [
+    { webhookId: hook.id, eventId: `EVT-${hook.id}-1`, eventType: hook.events[0] ?? 'workorder.assigned', status: 200, error: null, at: clock.at(-6 - index) },
+    { webhookId: hook.id, eventId: `EVT-${hook.id}-2`, eventType: hook.events[1] ?? hook.events[0] ?? 'approval.approved', status: 200, error: null, at: clock.at(-1) },
+  ])
   const executedPlans = new Set<string>()
   const postedReceipts = new Map<string, { sku: string; qty: number }[]>()
   let reportSequence = 5600
@@ -786,6 +792,35 @@ export function createDomainHandlers() {
       feature.enabled = enabled
       feature.mode = enabled ? 'AI' : 'RULES'
       return HttpResponse.json(integrations)
+    }),
+    http.get(`${BASE}/admin/webhooks`, ({ request }) => (roleOf(request) ? HttpResponse.json(integrations.webhooks) : unauthenticated())),
+    http.post(`${BASE}/admin/webhooks`, async ({ request }) => {
+      if (!roleOf(request)) return unauthenticated()
+      const body = (await request.json()) as { url: string; events: string[] }
+      const hook: Webhook = { id: `WH-${100 + integrations.webhooks.length}`, url: body.url, events: body.events, enabled: true, lastStatus: 0, lastAt: '' }
+      integrations.webhooks.push(hook)
+      return HttpResponse.json(hook, { status: 201 })
+    }),
+    http.patch(`${BASE}/admin/webhooks/:id`, async ({ params, request }) => {
+      if (!roleOf(request)) return unauthenticated()
+      const hook = integrations.webhooks.find((item) => item.id === params.id)
+      if (!hook) return problem(404, 'NOT_FOUND', 'Webhook was not found.')
+      const body = (await request.json()) as Partial<Pick<Webhook, 'url' | 'events' | 'enabled'>>
+      if (body.url !== undefined) hook.url = body.url
+      if (body.events !== undefined) hook.events = body.events
+      if (body.enabled !== undefined) hook.enabled = body.enabled
+      return HttpResponse.json(hook)
+    }),
+    http.get(`${BASE}/admin/webhooks/:id/deliveries`, ({ params, request }) => {
+      if (!roleOf(request)) return unauthenticated()
+      const rows = webhookDeliveries.filter((row) => row.webhookId === params.id).map(({ eventId, eventType, status, error, at }) => ({ eventId, eventType, status, error, at }))
+      return HttpResponse.json(rows)
+    }),
+    http.post(`${BASE}/admin/webhooks/:id/deliveries/:eventId/replay`, ({ params, request }) => {
+      if (!roleOf(request)) return unauthenticated()
+      const row = webhookDeliveries.find((item) => item.webhookId === params.id && item.eventId === params.eventId)
+      if (!row) return problem(404, 'NOT_FOUND', 'Delivery was not found.')
+      return HttpResponse.json({ status: row.status, message: "Sent again. The receiver's dedup key means a repeat changes nothing." })
     }),
     http.post(`${BASE}/admin/webhooks/:id/test`, async ({ params, request }) => {
       if (!roleOf(request)) return unauthenticated()

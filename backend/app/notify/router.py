@@ -22,6 +22,17 @@ class FeatureBody(ApiModel):
     enabled: bool
 
 
+class WebhookCreateBody(ApiModel):
+    url: str = Field(min_length=8, max_length=500)
+    events: list[str] = Field(min_length=1)
+
+
+class WebhookUpdateBody(ApiModel):
+    url: str | None = Field(default=None, min_length=8, max_length=500)
+    events: list[str] | None = Field(default=None, min_length=1)
+    enabled: bool | None = None
+
+
 class ReadBody(ApiModel):
     id: str | None = Field(default=None, max_length=40)
 
@@ -105,9 +116,40 @@ async def set_feature(key: str, body: FeatureBody, user: AuthUser = Depends(requ
     return await _integrations(services)
 
 
+@router.get("/admin/webhooks")
+async def list_webhooks(user: AuthUser = Depends(require(P.ADMIN_INTEGRATIONS)), services: Services = Depends(get_services)) -> Any:
+    return await services.webhooks.views()
+
+
+@router.post("/admin/webhooks", status_code=201)
+async def create_webhook(body: WebhookCreateBody, user: AuthUser = Depends(require(P.ADMIN_INTEGRATIONS)), services: Services = Depends(get_services)) -> Any:
+    hook = await services.webhooks.create(body.url, body.events)
+    await services.audit.record_as(user, action="webhook.create", domain=AuditDomain.SYSTEM, entity_type="WEBHOOK", entity_id=hook["id"], after={"url": body.url, "events": body.events})
+    return hook
+
+
+@router.patch("/admin/webhooks/{webhook_id}")
+async def update_webhook(webhook_id: str, body: WebhookUpdateBody, user: AuthUser = Depends(require(P.ADMIN_INTEGRATIONS)), services: Services = Depends(get_services)) -> Any:
+    hook = await services.webhooks.update(webhook_id, url=body.url, events=body.events, enabled=body.enabled)
+    await services.audit.record_as(user, action="webhook.update", domain=AuditDomain.SYSTEM, entity_type="WEBHOOK", entity_id=webhook_id, after=body.model_dump(exclude_none=True))
+    return hook
+
+
+@router.get("/admin/webhooks/{webhook_id}/deliveries")
+async def webhook_deliveries(webhook_id: str, user: AuthUser = Depends(require(P.ADMIN_INTEGRATIONS)), services: Services = Depends(get_services)) -> Any:
+    return await services.webhooks.deliveries(webhook_id)
+
+
 @router.post("/admin/webhooks/{webhook_id}/test")
 async def test_webhook(webhook_id: str, user: AuthUser = Depends(require(P.ADMIN_INTEGRATIONS)), services: Services = Depends(get_services)) -> Any:
     return await services.webhooks.test(webhook_id)
+
+
+@router.post("/admin/webhooks/{webhook_id}/deliveries/{event_id}/replay")
+async def replay_webhook_delivery(webhook_id: str, event_id: str, user: AuthUser = Depends(require(P.ADMIN_INTEGRATIONS)), services: Services = Depends(get_services)) -> Any:
+    result = await services.webhooks.replay(webhook_id, event_id)
+    await services.audit.record_as(user, action="webhook.replay", domain=AuditDomain.SYSTEM, entity_type="WEBHOOK", entity_id=webhook_id, after={"eventId": event_id, "status": result["status"]})
+    return result
 
 
 @router.get("/admin/system/health")

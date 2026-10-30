@@ -119,6 +119,47 @@ async def test_the_receiver_refuses_a_bad_signature():
         assert await env.services.webhooks._receive_internally(body, sign(hook["secret"], body)) == 200
 
 
+async def test_managing_webhooks_create_update_and_a_disabled_hook_gets_nothing(world):
+    created = await world.call("SYSTEM_ADMIN", "POST", "/api/v1/admin/webhooks", json={"url": "https://example.test/hook", "events": ["workorder.*"]})
+    assert created.status_code == 201, created.text
+    webhook_id = created.json()["id"]
+    assert created.json()["enabled"] is True
+
+    disabled = await world.call("SYSTEM_ADMIN", "PATCH", f"/api/v1/admin/webhooks/{webhook_id}", json={"enabled": False})
+    assert disabled.status_code == 200 and disabled.json()["enabled"] is False
+
+    await world.services.outbox.enqueue("workorder.blocked", {"workOrderId": "WO-7", "reason": "ACCESS"})
+    await world.services.outbox.dispatch_due()
+    assert await world.db["webhook_deliveries"].count_documents({"webhookId": webhook_id}) == 0  # disabled gets nothing
+
+    enabled = await world.call("SYSTEM_ADMIN", "PATCH", f"/api/v1/admin/webhooks/{webhook_id}", json={"enabled": True})
+    assert enabled.status_code == 200 and enabled.json()["enabled"] is True
+    await world.services.outbox.enqueue("workorder.blocked", {"workOrderId": "WO-8", "reason": "ACCESS"})
+    await world.services.outbox.dispatch_due()
+    assert await world.db["webhook_deliveries"].count_documents({"webhookId": webhook_id}) == 1
+
+    only_student_lists = await world.call("STUDENT", "GET", "/api/v1/admin/webhooks")
+    assert only_student_lists.status_code == 403
+
+
+async def test_replaying_a_delivery_resends_it_but_changes_nothing(world):
+    hook = await world.db["webhooks"].find_one({"url": INTERNAL_RECEIVER})
+    await world.services.outbox.enqueue("workorder.blocked", {"workOrderId": "WO-9", "reason": "ACCESS"})
+    await world.services.outbox.dispatch_due()
+    delivered = await world.db["webhook_deliveries"].find_one({"webhookId": hook["_id"], "eventType": "workorder.blocked"})
+    before = await world.db["webhook_received"].count_documents({})
+
+    replayed = await world.call("SYSTEM_ADMIN", "POST", f"/api/v1/admin/webhooks/{hook['_id']}/deliveries/{delivered['eventId']}/replay")
+    assert replayed.status_code == 200 and replayed.json()["status"] == 200
+    assert await world.db["webhook_received"].count_documents({}) == before  # the receiver's dedup key: nothing changed
+
+    log = (await world.call("SYSTEM_ADMIN", "GET", f"/api/v1/admin/webhooks/{hook['_id']}/deliveries")).json()
+    assert any(row["eventId"] == delivered["eventId"] for row in log)
+
+    missing = await world.call("SYSTEM_ADMIN", "POST", f"/api/v1/admin/webhooks/{hook['_id']}/deliveries/NOPE/replay")
+    assert missing.status_code == 404
+
+
 async def test_a_failing_webhook_is_retried_by_the_outbox():
     async with open_env() as env:
         await env.db["webhooks"].insert_one({"_id": "WH-BAD", "url": "http://127.0.0.1:9/nowhere", "events": ["*"], "enabled": True, "secret": "s"})

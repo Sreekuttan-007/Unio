@@ -20,6 +20,7 @@ from pymongo.errors import DuplicateKeyError
 from app.core.authuser import AuthUser
 from app.core.clock import ensure_utc, utcnow
 from app.core.errors import not_found, rule
+from app.core.ids import next_id
 
 INTERNAL_RECEIVER = "internal://receiver"
 SIGNATURE_HEADER = "X-Unio-Signature"
@@ -144,7 +145,7 @@ class WebhookService:
             error = None
         except Exception as exc:  # noqa: BLE001 - recorded, then re-raised for a retry
             status, error = 0, str(exc)[:300]
-        record = {"_id": key, "webhookId": hook["_id"], "eventId": event_id, "eventType": event_type, "status": status, "error": error, "at": utcnow()}
+        record = {"_id": key, "webhookId": hook["_id"], "eventId": event_id, "eventType": event_type, "payload": payload, "status": status, "error": error, "at": utcnow()}
         await self._db["webhook_deliveries"].replace_one({"_id": key}, record, upsert=True)
         await self._db["webhooks"].update_one({"_id": hook["_id"]}, {"$set": {"lastStatus": status, "lastAt": record["at"]}})
         if not 200 <= status < 300:
@@ -184,3 +185,38 @@ class WebhookService:
             {"id": row["_id"], "url": row["url"], "events": row["events"], "enabled": row["enabled"], "lastStatus": row.get("lastStatus", 0), "lastAt": ensure_utc(row["lastAt"]).isoformat() if row.get("lastAt") else ""}
             async for row in self._db["webhooks"].find({}).sort("_id", 1)
         ]
+
+    async def create(self, url: str, events: list[str]) -> dict[str, Any]:
+        webhook_id = await next_id(self._db, "WH", 2)  # WH-1 is the seeded internal receiver
+        await self._db["webhooks"].insert_one({"_id": webhook_id, "url": url, "events": events, "enabled": True, "secret": secrets.token_hex(24)})
+        return next(row for row in await self.views() if row["id"] == webhook_id)
+
+    async def update(self, webhook_id: str, *, url: str | None, events: list[str] | None, enabled: bool | None) -> dict[str, Any]:
+        hook = await self._db["webhooks"].find_one({"_id": webhook_id})
+        if hook is None:
+            raise not_found("Webhook")
+        changes = {key: value for key, value in {"url": url, "events": events, "enabled": enabled}.items() if value is not None}
+        if changes:
+            await self._db["webhooks"].update_one({"_id": webhook_id}, {"$set": changes})
+        return next(row for row in await self.views() if row["id"] == webhook_id)
+
+    async def deliveries(self, webhook_id: str, limit: int = 50) -> list[dict[str, Any]]:
+        if await self._db["webhooks"].find_one({"_id": webhook_id}) is None:
+            raise not_found("Webhook")
+        rows = await self._db["webhook_deliveries"].find({"webhookId": webhook_id}).sort("at", -1).to_list(length=limit)
+        return [{"eventId": row["eventId"], "eventType": row["eventType"], "status": row["status"], "error": row.get("error"), "at": ensure_utc(row["at"]).isoformat()} for row in rows]
+
+    async def replay(self, webhook_id: str, event_id: str) -> dict[str, Any]:
+        """Re-sends a past delivery. The dedup key means this changes nothing when it already
+        succeeded — the visible, clickable proof that a redelivered event is safe (C4)."""
+        hook = await self._db["webhooks"].find_one({"_id": webhook_id})
+        if hook is None:
+            raise not_found("Webhook")
+        delivery = await self._db["webhook_deliveries"].find_one({"_id": f"{webhook_id}:{event_id}"})
+        if delivery is None:
+            raise not_found("Delivery")
+        try:
+            record = await self.deliver(hook, event_id, delivery["eventType"], delivery.get("payload", {}))
+        except RuntimeError as exc:
+            raise rule("WEBHOOK_FAILED", str(exc)) from None
+        return {"status": record["status"], "message": "Sent again. The receiver's dedup key means a repeat changes nothing."}
