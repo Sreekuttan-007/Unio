@@ -35,12 +35,17 @@ export interface StatTileProps {
 export function StatTile({ label, value, hint, tone = 'neutral', icon, trend, className }: StatTileProps) {
   const TrendIcon = trend?.direction === 'up' ? ArrowUpRight : trend?.direction === 'down' ? ArrowDownRight : ArrowRight
   return (
-    <div className={cn('rounded-lg border border-line bg-surface p-4 shadow-card', className)}>
+    <div
+      className={cn(
+        'rounded-2xl border border-line bg-surface p-5 shadow-card transition-all duration-300 hover:shadow-pop hover:-translate-y-0.5',
+        className,
+      )}
+    >
       <div className="flex items-start justify-between gap-3">
-        <p className="text-sm text-muted">{label}</p>
-        {icon ? <span className={cn('grid size-9 shrink-0 place-items-center rounded-md', TONE_ICON[tone])}>{icon}</span> : null}
+        <p className="text-sm font-medium text-muted">{label}</p>
+        {icon ? <span className={cn('grid size-10 shrink-0 place-items-center rounded-xl', TONE_ICON[tone])}>{icon}</span> : null}
       </div>
-      <p className={cn('mt-2 text-3xl font-semibold tracking-tight', TONE_TEXT[tone])}>{value}</p>
+      <p className={cn('mt-2 text-3xl font-bold tracking-tight', TONE_TEXT[tone])}>{value}</p>
       <div className="mt-1 flex flex-wrap items-center gap-x-2 text-xs text-muted">
         {trend ? (
           <span className={cn('inline-flex items-center gap-0.5 font-medium', trend.good === undefined ? 'text-muted' : trend.good ? 'text-success-ink' : 'text-danger-ink')}>

@@ -5,9 +5,9 @@ import { Card } from './Card'
 
 function StateCard({ icon, title, description, action }: { icon: ReactNode; title: string; description?: string; action?: ReactNode }) {
   return (
-    <Card className="mx-auto flex max-w-lg flex-col items-center gap-3 px-6 py-10 text-center">
-      <div className="grid size-12 place-items-center rounded-full bg-accent-soft text-accent-ink">{icon}</div>
-      <h2 className="text-lg font-semibold text-ink">{title}</h2>
+    <Card className="mx-auto flex max-w-lg flex-col items-center gap-3 rounded-2xl border border-line bg-surface p-10 text-center shadow-card">
+      <div className="grid size-12 place-items-center rounded-full bg-accent-soft text-accent-ink ring-4 ring-surface shadow-xs">{icon}</div>
+      <h2 className="text-base font-semibold text-ink">{title}</h2>
       {description ? <p className="text-sm text-muted">{description}</p> : null}
       {action}
     </Card>

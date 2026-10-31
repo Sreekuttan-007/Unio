@@ -57,43 +57,124 @@ function InvoiceReview({ invoice }: { invoice: Invoice }) {
   const validate = useAction<Record<string, never>, Invoice>('POST', `/invoices/${invoice.id}/validate`, ['/invoices'])
 
   const columns: Column<InvoiceLine>[] = [
-    { key: 'item', header: 'Line', cell: (line) => <span>{line.lineNo}. {line.description}</span> },
-    { key: 'qty', header: 'Invoice qty', className: 'text-right tabular-nums', cell: (line) => `${line.qty}${line.poQty !== null && line.poQty !== line.qty ? ` (order ${line.poQty})` : ''}` },
-    { key: 'price', header: 'Unit price', className: 'text-right tabular-nums', cell: (line) => `${money(line.unitPaise)}${line.poUnitPaise !== null && line.poUnitPaise !== line.unitPaise ? ` (order ${money(line.poUnitPaise)})` : ''}` },
-    { key: 'match', header: 'Check', cell: (line) => <Badge tone={MATCH[line.match].tone}>{MATCH[line.match].label}</Badge> },
-    { key: 'conf', header: 'Read confidence', className: 'text-right tabular-nums', cell: (line) => `${Math.round(line.confidence * 100)}%` },
+    {
+      key: 'item',
+      header: 'Line',
+      cell: (line) => (
+        <span className="font-medium text-ink">
+          {line.lineNo}. {line.description}
+        </span>
+      ),
+    },
+    {
+      key: 'qty',
+      header: 'Invoice qty',
+      className: 'text-center tabular-nums',
+      cell: (line) => (
+        <span>
+          {line.qty}
+          {line.poQty !== null && line.poQty !== line.qty ? (
+            <span className="block text-xs text-muted sm:inline sm:ml-1.5">(order {line.poQty})</span>
+          ) : null}
+        </span>
+      ),
+    },
+    {
+      key: 'price',
+      header: 'Unit price',
+      className: 'text-right tabular-nums',
+      cell: (line) => (
+        <span className="font-medium">
+          {money(line.unitPaise)}
+          {line.poUnitPaise !== null && line.poUnitPaise !== line.unitPaise ? (
+            <span className="block text-xs font-normal text-muted sm:inline sm:ml-1.5">(order {money(line.poUnitPaise)})</span>
+          ) : null}
+        </span>
+      ),
+    },
+    {
+      key: 'match',
+      header: 'Check',
+      className: 'text-center',
+      cell: (line) => <Badge tone={MATCH[line.match].tone}>{MATCH[line.match].label}</Badge>,
+    },
+    {
+      key: 'conf',
+      header: 'Confidence',
+      className: 'text-right tabular-nums',
+      cell: (line) => <span className="text-muted">{Math.round(line.confidence * 100)}%</span>,
+    },
   ]
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-4 lg:grid-cols-[16rem_1fr]">
-        <Card>
-          <CardBody className="space-y-2 text-center">
-            <FileText aria-hidden="true" className="mx-auto size-10 text-muted" />
-            <p className="break-all text-sm font-medium text-ink">{invoice.fileName}</p>
-            <p className="text-xs text-muted">The original stays beside the extracted values, so you can check them.</p>
-            <Badge tone={invoice.extractionSource === 'AI' ? 'accent' : 'neutral'}>{invoice.extractionSource === 'AI' ? 'Read by AI' : 'Typed in by hand'}</Badge>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardHeader title={`${invoice.supplier} · ${invoice.invoiceNumber}`} description={`Dated ${invoice.invoiceDate} · matched against ${invoice.purchaseOrderId}`} action={<Badge tone={INVOICE_STATUS[invoice.status]}>{titleCase(invoice.status)}</Badge>} />
-          <DataTable caption="Invoice lines" columns={columns} rows={invoice.lines} rowKey={(line) => String(line.lineNo)} />
-          <p className="border-t border-line px-4 py-3 text-right text-sm">Invoice total <span className="font-semibold tabular-nums">{money(invoice.totalPaise)}</span></p>
-        </Card>
-      </div>
+    <div className="grid gap-5 lg:grid-cols-[17rem_1fr] items-start">
+      {/* Left Column: Source Document Card */}
+      <Card className="h-full">
+        <CardHeader title="Original File" description="Extracted values" />
+        <CardBody className="flex flex-col items-center justify-center space-y-3 py-6 text-center">
+          <div className="grid size-16 place-items-center rounded-2xl bg-accent-soft text-accent-ink shadow-xs">
+            <FileText aria-hidden="true" className="size-8" />
+          </div>
+          <p className="break-all text-sm font-semibold text-ink">{invoice.fileName}</p>
+          <p className="text-xs leading-relaxed text-muted">The original stays beside the extracted values, so you can check them.</p>
+          <Badge tone={invoice.extractionSource === 'AI' ? 'accent' : 'neutral'}>
+            {invoice.extractionSource === 'AI' ? 'Read by AI' : 'Typed in by hand'}
+          </Badge>
+        </CardBody>
+      </Card>
 
-      {invoice.discrepancies.map((item) => (
-        <Banner key={item.code} tone={item.resolved ? 'success' : 'danger'} title={item.resolved ? 'Resolved' : 'Needs a decision'} action={!item.resolved ? <Button variant="secondary" compact loading={resolve.isPending} onClick={() => resolve.mutate({ code: item.code })}>{item.code === 'PRICE_MISMATCH' ? 'Hold to the order price' : 'Reject this line'}</Button> : undefined}>
-          {item.message}
-        </Banner>
-      ))}
-      {error ? <Banner tone="danger" title="Cannot validate yet" role="alert">{error}</Banner> : null}
-      {['DISCREPANCY', 'MATCHED'].includes(invoice.status) ? (
-        <div className="flex flex-wrap items-center gap-3">
-          <Button loading={validate.isPending} onClick={() => validate.mutate({}, { onError: (failure) => setError(describeError(failure)), onSuccess: () => setError(null) })}>Validate this invoice</Button>
-          <span className="text-xs text-muted">Validating does not change stock. Only a goods receipt does.</span>
-        </div>
-      ) : null}
+      {/* Right Column: Invoice Details, Line Items Table, Decisions & Validation */}
+      <div className="space-y-4">
+        <Card>
+          <CardHeader
+            title={`${invoice.supplier} · ${invoice.invoiceNumber}`}
+            description={`Dated ${invoice.invoiceDate} · matched against ${invoice.purchaseOrderId}`}
+            action={<Badge tone={INVOICE_STATUS[invoice.status]}>{titleCase(invoice.status)}</Badge>}
+          />
+          <DataTable caption="Invoice lines" columns={columns} rows={invoice.lines} rowKey={(line) => String(line.lineNo)} />
+          <div className="flex items-center justify-between border-t border-line px-5 py-3 text-sm">
+            <span className="font-medium text-muted">Invoice total</span>
+            <span className="text-base font-bold tabular-nums text-ink">{money(invoice.totalPaise)}</span>
+          </div>
+        </Card>
+
+        {invoice.discrepancies.map((item) => (
+          <Banner
+            key={item.code}
+            tone={item.resolved ? 'success' : 'danger'}
+            title={item.resolved ? 'Resolved' : 'Needs a decision'}
+            action={
+              !item.resolved ? (
+                <Button
+                  variant="secondary"
+                  compact
+                  loading={resolve.isPending}
+                  onClick={() => resolve.mutate({ code: item.code })}
+                  className="sm:min-w-44 justify-center"
+                >
+                  {item.code === 'PRICE_MISMATCH' ? 'Hold to the order price' : 'Reject this line'}
+                </Button>
+              ) : undefined
+            }
+          >
+            {item.message}
+          </Banner>
+        ))}
+
+        {error ? <Banner tone="danger" title="Cannot validate yet" role="alert">{error}</Banner> : null}
+
+        {['DISCREPANCY', 'MATCHED'].includes(invoice.status) ? (
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <Button
+              loading={validate.isPending}
+              onClick={() => validate.mutate({}, { onError: (failure) => setError(describeError(failure)), onSuccess: () => setError(null) })}
+            >
+              Validate this invoice
+            </Button>
+            <span className="text-xs text-muted">Validating does not change stock. Only a goods receipt does.</span>
+          </div>
+        ) : null}
+      </div>
     </div>
   )
 }

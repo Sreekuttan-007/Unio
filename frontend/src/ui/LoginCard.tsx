@@ -1,7 +1,6 @@
 import { ArrowRight, GitMerge, ScrollText, ShieldCheck } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { BrandMark } from './Brand'
-import { Button } from './Button'
 import { TextField } from './fields'
 import { WakingBanner } from './states'
 
@@ -24,9 +23,9 @@ export interface LoginCardProps {
 }
 
 const PROMISES = [
-  { icon: GitMerge, title: 'One report, one incident', text: 'Fourteen people report the same outage and it becomes one problem with one status.' },
-  { icon: ShieldCheck, title: 'Conflicts stop before they happen', text: 'Double bookings, wrong technicians and self-approval are refused with a reason.' },
-  { icon: ScrollText, title: 'Every decision is on the record', text: 'Who did what, when and why, from the first report to closure.' },
+  { icon: GitMerge, title: 'One report, one incident' },
+  { icon: ShieldCheck, title: 'Conflicts stop before they happen' },
+  { icon: ScrollText, title: 'Every decision is on the record' },
 ]
 
 const initials = (name: string) => name.split(' ').filter((part) => /^[A-Za-z]/.test(part)).map((part) => part[0]).join('').slice(0, 2).toUpperCase()
@@ -34,7 +33,15 @@ const initials = (name: string) => name.split(' ').filter((part) => /^[A-Za-z]/.
 export function LoginCard({ demoAccounts, busyEmail, submitting, error, waking, onDemoLogin, onSubmit }: LoginCardProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
   const anyBusy = submitting || busyEmail !== null
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = Math.round(((e.clientX - rect.left) / rect.width) * 100)
+    const y = Math.round(((e.clientY - rect.top) / rect.height) * 100)
+    setMousePos({ x, y })
+  }
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
@@ -43,31 +50,43 @@ export function LoginCard({ demoAccounts, busyEmail, submitting, error, waking, 
 
   return (
     <div className="grid min-h-dvh lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
-      <aside className="relative hidden overflow-hidden bg-ink p-12 text-bg lg:flex lg:flex-col lg:justify-between">
-        <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-32 size-[28rem] rounded-full bg-accent opacity-25 blur-3xl" />
-        <div aria-hidden="true" className="pointer-events-none absolute -bottom-40 -left-24 size-[26rem] rounded-full bg-info opacity-20 blur-3xl" />
-        <div className="relative flex items-center gap-3">
-          <BrandMark className="size-10" />
-          <span className="text-xl font-semibold tracking-tight">UNIO</span>
+      <aside
+        onMouseMove={handleMouseMove}
+        style={{ '--mouse-x': `${mousePos.x}%`, '--mouse-y': `${mousePos.y}%` } as React.CSSProperties}
+        className="relative hidden overflow-hidden bg-ink p-12 text-bg lg:flex lg:flex-col lg:justify-between select-none"
+      >
+        {/* Dynamic cursor-following radial gradient glow and illuminated mesh grid */}
+        <div aria-hidden="true" className="interactive-grid-base" />
+        <div aria-hidden="true" className="interactive-grid-glow" />
+        <div aria-hidden="true" className="interactive-gradient-spotlight" />
+        <div aria-hidden="true" className="interactive-ambient-orb-1" />
+        <div aria-hidden="true" className="interactive-ambient-orb-2" />
+
+        <div className="relative z-10 flex items-center gap-4">
+          <BrandMark className="size-15" />
+          <span className="text-3xl font-bold tracking-tight text-white">UNIO</span>
         </div>
-        <div className="relative max-w-md space-y-8">
+        <div className="relative z-10 max-w-md space-y-8">
           <h2 className="text-4xl font-semibold leading-tight tracking-tight">Campus operations that fix the problem, not just log it.</h2>
-          <ul className="space-y-5">
-            {PROMISES.map(({ icon: Icon, title, text }) => (
-              <li key={title} className="flex gap-4">
-                <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-surface/10"><Icon aria-hidden="true" className="size-5" /></span>
-                <span><span className="block font-medium">{title}</span><span className="block text-sm opacity-70">{text}</span></span>
+          <ul className="space-y-4">
+            {PROMISES.map(({ icon: Icon, title }) => (
+              <li key={title} className="flex items-center gap-3.5">
+                <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-surface/10 text-white backdrop-blur-xs">
+                  <Icon aria-hidden="true" className="size-4.5" />
+                </span>
+                <span className="font-medium text-base text-bg">{title}</span>
               </li>
             ))}
           </ul>
         </div>
-        <p className="relative text-sm opacity-60">A fictional campus. All names, rooms and numbers are invented for the demo.</p>
+        {/* Clean bottom anchor */}
+        <div className="relative z-10" />
       </aside>
 
       <main className="flex items-center justify-center px-5 py-10">
         <div className="w-full max-w-md space-y-6">
           <div className="space-y-2 lg:hidden">
-            <div className="flex items-center gap-2.5"><BrandMark /><span className="text-lg font-semibold tracking-tight text-ink">UNIO</span></div>
+            <div className="flex items-center gap-3"><BrandMark className="size-11" /><span className="text-2xl font-bold tracking-tight text-ink">UNIO</span></div>
           </div>
           <div className="space-y-1.5">
             <h1 className="text-3xl font-semibold tracking-tight text-ink">Welcome back</h1>
@@ -80,7 +99,18 @@ export function LoginCard({ demoAccounts, busyEmail, submitting, error, waking, 
             <TextField label="Email" type="email" autoComplete="username" inputMode="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
             <TextField label="Password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required />
             {error ? <p role="alert" data-testid="login-error" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger-ink">{error}</p> : null}
-            <Button type="submit" className="w-full" loading={submitting} disabled={anyBusy || !email || !password}>Sign in</Button>
+            <div className="button-wrap relative z-10 w-full rounded-full bg-transparent">
+              <button
+                type="submit"
+                disabled={anyBusy || !email || !password}
+                className="glass-button glass-button-primary relative z-30 flex w-full cursor-pointer items-center justify-center rounded-full py-3 text-center outline-none focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none"
+              >
+                <span className="button-text relative z-10 block select-none text-base font-semibold tracking-tight text-white">
+                  {submitting ? 'Signing in...' : 'Sign in'}
+                </span>
+                <div className="button-shine" />
+              </button>
+            </div>
           </form>
 
           {demoAccounts.length > 0 ? (
@@ -100,7 +130,7 @@ export function LoginCard({ demoAccounts, busyEmail, submitting, error, waking, 
                       data-testid={`demo-${account.email}`}
                       disabled={anyBusy}
                       onClick={() => onDemoLogin(account.email)}
-                      className="group flex min-h-16 w-full items-center gap-3 rounded-lg border border-line bg-surface px-3 py-2 text-left shadow-card transition hover:-translate-y-px hover:border-accent hover:shadow-pop disabled:opacity-60"
+                      className="group flex min-h-16 w-full items-center gap-3 rounded-2xl border border-line/70 bg-surface/90 px-3.5 py-2.5 text-left shadow-card backdrop-blur-xs transition hover:-translate-y-px hover:border-accent hover:shadow-pop disabled:opacity-60"
                     >
                       <span aria-hidden="true" className="grid size-10 shrink-0 place-items-center rounded-full bg-accent text-sm font-semibold text-accent-contrast">{initials(account.name)}</span>
                       <span className="min-w-0 flex-1">

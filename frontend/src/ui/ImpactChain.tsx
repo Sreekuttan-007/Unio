@@ -34,7 +34,7 @@ export function ImpactChain({ steps }: { steps: ImpactStep[] }) {
             </li>
           ) : null}
           <li style={{ marginLeft: `${Math.min(step.depth, 4) * 0.75}rem` }}>
-            <div className={cn('flex flex-wrap items-center gap-3 rounded-md border px-4 py-3', index === 0 ? 'border-danger bg-danger-soft' : 'border-line bg-surface')}>
+            <div className={cn('flex flex-wrap items-center gap-3 rounded-xl border px-4 py-3 shadow-xs', index === 0 ? 'border-danger/60 bg-danger-soft' : 'border-line/70 bg-surface/90')}>
               <span className="rounded-sm bg-surface-3 px-2 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-wide text-muted">{step.kind}</span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-ink">{step.title}</p>

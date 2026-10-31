@@ -7,11 +7,11 @@ const KEY = 'unio.theme'
 function readPreference(): ThemePreference {
   try {
     const stored = window.localStorage.getItem(KEY)
-    if (stored === 'light' || stored === 'dark' || stored === 'system') return stored
+    if (stored === 'light' || stored === 'dark') return stored
   } catch {
     // storage blocked
   }
-  return 'system'
+  return 'light'
 }
 
 interface ThemeContextValue {

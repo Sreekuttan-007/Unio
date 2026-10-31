@@ -267,17 +267,22 @@ export function createDomainHandlers() {
               return { id: incident.id, x: centre.x - 40 + index * 22, y: centre.y + 6, label: `${incident.id} ${incident.title}`, tone: incident.priority === 'P1' ? ('danger' as const) : ('warning' as const) }
             })
         : []
-      return HttpResponse.json({ viewBox: campus.map.viewBox, decor: campus.map.decor, regions: campus.map.regions, overlays: mapOverlays(operational), markers, view: operational ? 'OPERATIONAL' : 'PUBLIC' })
+      return HttpResponse.json({ viewBox: { w: 1600, h: 1195 }, decor: campus.map.decor, regions: campus.map.regions, overlays: mapOverlays(operational), markers, view: operational ? 'OPERATIONAL' : 'PUBLIC' })
     }),
     http.get(`${BASE}/campus/buildings/:id`, async ({ params, request }) => {
       const role = roleOf(request)
       if (!role) return unauthenticated()
-      const building = campus.buildings.find((item) => item.id === params.id || item.mapRegionId === params.id)
+      const building = buildingById(String(params.id))
       if (!building) return problem(404, 'NOT_FOUND', 'Building was not found.')
       const operational = role === 'DEPARTMENT_MANAGER' || role === 'FACILITIES_ADMIN' || role === 'SYSTEM_ADMIN'
-      const rooms = campus.rooms
-        .filter((room) => room.buildingId === building.id)
-        .map((room) => ({ code: room.code, type: room.type, capacity: room.capacity, features: room.features, status: room.code.startsWith('ARB-2') ? 'CLOSED' : 'OPEN', note: room.code.startsWith('ARB-2') ? 'No power, INC-1041' : null }))
+      const existingRooms = campus.rooms.filter((room) => room.buildingId === building.id)
+      const rooms = existingRooms.length > 0
+        ? existingRooms.map((room) => ({ code: room.code, type: room.type, capacity: room.capacity, features: room.features, status: room.code.startsWith('ARB-2') ? 'CLOSED' : 'OPEN', note: room.code.startsWith('ARB-2') ? 'No power, INC-1041' : null }))
+        : [
+            { code: `${building.code}-101`, type: 'Lecture Hall', capacity: 60, features: ['Projector', 'AC'], status: 'OPEN', note: null },
+            { code: `${building.code}-102`, type: 'Seminar / Lab', capacity: 45, features: ['Lab benches', 'Ethernet'], status: 'OPEN', note: null },
+            { code: `${building.code}-201`, type: 'Classroom', capacity: 40, features: ['Smart board'], status: 'OPEN', note: null },
+          ]
       return HttpResponse.json({
         id: building.id,
         name: building.name,

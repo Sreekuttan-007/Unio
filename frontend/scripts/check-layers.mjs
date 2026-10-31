@@ -5,8 +5,9 @@
 //   everything    no raw hex colours, colour functions or arbitrary pixel sizes in components.
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const ROOT = new URL('../src/', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')
+const ROOT = fileURLToPath(new URL('../src/', import.meta.url))
 const failures = []
 
 function walk(directory) {

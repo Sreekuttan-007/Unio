@@ -10,6 +10,7 @@ import {
   DataTable,
   EmptyState,
   ErrorState,
+  GlassButton,
   LoginCard,
   NotPermitted,
   OfflineState,
@@ -100,15 +101,19 @@ export function UiGallery() {
         </CardBody>
       </Card>
 
-      <Section title="Buttons">
-        <div className="flex flex-wrap gap-3">
+      <Section title="Buttons & Glassmorphism">
+        <div className="flex flex-wrap items-center gap-4">
           <Button>Primary</Button>
           <Button variant="secondary">Secondary</Button>
+          <Button variant="glass">Glass</Button>
           <Button variant="ghost">Ghost</Button>
           <Button variant="danger">Danger</Button>
           <Button loading>Saving</Button>
           <Button disabled>Disabled</Button>
           <Button compact>Compact</Button>
+        </div>
+        <div className="pt-2">
+          <GlassButton>Generate</GlassButton>
         </div>
       </Section>
 

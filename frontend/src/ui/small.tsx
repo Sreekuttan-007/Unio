@@ -107,7 +107,7 @@ export function ListRow({
     </>
   )
   const cls = cn(
-    'flex min-h-14 w-full items-center gap-3 border-b border-line px-4 py-2 last:border-0',
+    'flex min-h-14 w-full items-center gap-3 border-b border-line/50 px-5 py-3 transition-colors last:border-0',
     onClick && 'hover:bg-surface-2',
     selected && 'bg-accent-soft',
   )

@@ -30,11 +30,32 @@
   --color-info: var(--info);
   --color-info-soft: var(--info-soft);
   --color-info-ink: var(--info-ink);
+  --color-pistachio: var(--pistachio);
+  --color-pistachio-soft: var(--pistachio-soft);
+  --color-pistachio-ink: var(--pistachio-ink);
+  --color-lavender: var(--lavender);
+  --color-lavender-soft: var(--lavender-soft);
+  --color-lavender-ink: var(--lavender-ink);
+  --color-lilac: var(--lilac);
+  --color-lilac-soft: var(--lilac-soft);
+  --color-lilac-ink: var(--lilac-ink);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-light: var(--brand-light);
+  --color-brand-pale: var(--brand-pale);
+  --color-brand-bg: var(--brand-bg);
+  --color-brand-white: var(--brand-white);
+  --color-brand-text: var(--brand-text);
+  --color-brand-muted: var(--brand-muted);
+  --color-brand-border: var(--brand-border);
+  --color-brand-lavender: var(--brand-lavender);
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius);
   --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
   --shadow-card: var(--shadow-sm);
   --shadow-pop: var(--shadow-md);
+  --shadow-pill: var(--shadow-pill);
   --font-sans: var(--font-sans);
 }
 

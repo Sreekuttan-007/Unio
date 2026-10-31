@@ -5,10 +5,10 @@ import type { Tone } from './Badge'
 const DOT: Record<Tone, string> = {
   neutral: 'bg-line-strong',
   accent: 'bg-accent',
-  success: 'bg-success',
+  success: 'bg-pistachio',
   warning: 'bg-warning',
   danger: 'bg-danger',
-  info: 'bg-info',
+  info: 'bg-lavender',
 }
 
 export interface TimelineEvent {
@@ -23,7 +23,7 @@ export interface TimelineEvent {
 
 export function Timeline({ events, className }: { events: TimelineEvent[]; className?: string }) {
   return (
-    <ol className={cn('relative space-y-5 border-l border-line pl-6', className)}>
+    <ol className={cn('relative space-y-5 border-l border-line/60 pl-6', className)}>
       {events.map((event) => (
         <li key={event.id} className="relative">
           <span aria-hidden="true" className={cn('absolute -left-[1.9rem] top-1.5 size-3 rounded-full ring-4 ring-surface', DOT[event.tone ?? 'neutral'])} />

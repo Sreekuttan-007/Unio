@@ -25,8 +25,12 @@ export function CommandCentreScreen() {
   const impact = useApi<ImpactReport>(`/cascading/impact/${lead?.id ?? 'none'}`, { enabled: !!lead })
 
   return (
-    <div className="space-y-5">
-      <PageHeader title="Command Centre" eyebrow="Right now" description="Everything that needs a decision, in one place. Updates every few seconds." />
+    <div className="space-y-6">
+      <PageHeader
+        title="Command Centre"
+        eyebrow="Right now"
+        description="Everything that needs a decision, in one place. Updates every few seconds."
+      />
 
       {lead ? (
         <Banner
@@ -108,8 +112,11 @@ export function DeptOverviewScreen() {
   const waiting = (approvals.data?.items ?? []).filter((item) => ['SUBMITTED', 'UNDER_REVIEW'].includes(item.status))
 
   return (
-    <div className="space-y-5">
-      <PageHeader title="Overview" description="Computer Science: what is open, what is at risk, and what you are waiting on." />
+    <div className="space-y-6">
+      <PageHeader
+        title="Overview"
+        description="Computer Science: what is open, what is at risk, and what you are waiting on."
+      />
       {blocked.length > 0 ? (
         <Banner tone="warning" title={`${blocked.length} work order blocked on a part`} action={<Button variant="secondary" compact onClick={() => go('dept.approvals')}>See your request</Button>}>
           Your purchase request {blocked[0]?.approvalId} is waiting for a Procurement decision. You cannot approve it yourself.
@@ -139,8 +146,11 @@ export function ProcOverviewScreen() {
   const { go } = useNavTo()
   const waiting = (approvals.data?.items ?? []).filter((item) => ['SUBMITTED', 'UNDER_REVIEW'].includes(item.status))
   return (
-    <div className="space-y-5">
-      <PageHeader title="Overview" description="What is waiting for your decision, and what is waiting to be received." />
+    <div className="space-y-6">
+      <PageHeader
+        title="Overview"
+        description="What is waiting for your decision, and what is waiting to be received."
+      />
       <div className="grid gap-4 sm:grid-cols-4">
         <StatTile label="Waiting for decision" value={waiting.length} tone="warning" />
         <StatTile label="Value waiting" value={money(waiting.reduce((sum, item) => sum + item.amountPaise, 0))} tone="accent" />

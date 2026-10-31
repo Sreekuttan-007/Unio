@@ -2,8 +2,8 @@ import { useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttribu
 import { cn } from './cn'
 
 const CONTROL =
-  'min-h-11 w-full rounded-md border border-line-strong bg-surface px-3 text-sm text-ink placeholder:text-faint ' +
-  'disabled:cursor-not-allowed disabled:opacity-60 aria-[invalid=true]:border-danger'
+  'min-h-11 w-full rounded-full border border-line bg-surface/90 px-4 text-sm text-ink placeholder:text-faint shadow-xs ' +
+  'focus:border-ink focus:outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-60 aria-[invalid=true]:border-danger'
 
 function FieldShell({ id, label, hint, error, children }: { id: string; label: string; hint?: string; error?: string; children: ReactNode }) {
   return (

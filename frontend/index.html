@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -10,6 +10,15 @@
     <meta name="description" content="UNIO: report once, understand the impact, validate the response, track it to closure." />
     <link rel="icon" type="image/svg+xml" href="/brand/unio-mark.svg" />
     <title>UNIO</title>
+    <script>
+      try {
+        const t = localStorage.getItem('unio.theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+        else document.documentElement.setAttribute('data-theme', 'light');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

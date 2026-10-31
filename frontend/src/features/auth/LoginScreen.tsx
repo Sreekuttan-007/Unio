@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { api } from '@/platform/api/client'
 import type { DemoAccount } from '@/platform/api/types'
 import { useAuth } from '@/platform/auth/AuthProvider'
@@ -13,6 +13,14 @@ export function LoginScreen() {
   const [busyEmail, setBusyEmail] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const role = params.get('role')?.toLowerCase()
+    if (role === 'student') {
+      void signInDemo('student@unio.demo')
+    }
+  }, [signInDemo])
 
   // The server mounts this list only in demo mode, so a 404 simply means no demo chips.
   const demo = useQuery({

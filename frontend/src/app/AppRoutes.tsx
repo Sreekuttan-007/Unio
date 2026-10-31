@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { LoginScreen } from '@/features/auth/LoginScreen'
 import { UiGallery } from '@/features/dev/UiGallery'
+import { LandingPage } from '@/features/landing/LandingPage'
 import { AppShell } from '@/features/shell/AppShell'
 import { useAuth } from '@/platform/auth/AuthProvider'
 import { WorkspaceRouter } from '@/platform/workspaces/WorkspaceRouter'
@@ -52,6 +53,8 @@ export function AppRoutes() {
   return (
     <Routes>
       {import.meta.env.DEV ? <Route path="/dev/ui" element={<UiGallery />} /> : null}
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/landing" element={<LandingPage />} />
       <Route path="/login" element={<LoginRoute />} />
       <Route path="/not-permitted" element={<NotPermittedRoute />} />
       <Route

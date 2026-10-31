@@ -23,9 +23,18 @@ function renderApp(path: string) {
 
 const navKeys = () => screen.queryAllByTestId(/^nav-/).map((node) => node.dataset.testid!.replace('nav-', ''))
 
-describe('signing in', () => {
-  it('sends a signed-out visitor to the login screen with one demo chip per role', async () => {
+describe('landing page', () => {
+  it('renders the cinematic landing page with hero, navigation and CTAs', async () => {
     renderApp('/')
+    expect(await screen.findByRole('heading', { level: 1, name: /One Campus/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Get Started/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Explore UNIO/i })).toBeInTheDocument()
+  })
+})
+
+describe('signing in', () => {
+  it('sends a visitor to the login screen with one demo chip per role', async () => {
+    renderApp('/login')
     expect(await screen.findByRole('heading', { name: /welcome back/i })).toBeInTheDocument()
     expect(await screen.findAllByTestId(/^demo-/)).toHaveLength(7)
   })
@@ -34,7 +43,7 @@ describe('signing in', () => {
     '%s lands on its own workspace and sees only its own navigation',
     async (roleKey, email) => {
       const expected = bootstrap[roleKey!]!
-      renderApp('/')
+      renderApp('/login')
       await userEvent.click(await screen.findByTestId(`demo-${email}`))
 
       expect(await screen.findByRole('heading', { level: 1, name: expected.navigation[0]!.label })).toBeInTheDocument()

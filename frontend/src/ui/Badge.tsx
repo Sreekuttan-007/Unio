@@ -6,10 +6,10 @@ export type Tone = 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'in
 const TONES: Record<Tone, string> = {
   neutral: 'bg-surface-3 text-muted',
   accent: 'bg-accent-soft text-accent-ink',
-  success: 'bg-success-soft text-success-ink',
+  success: 'bg-pistachio-soft text-pistachio-ink',
   warning: 'bg-warning-soft text-warning-ink',
   danger: 'bg-danger-soft text-danger-ink',
-  info: 'bg-info-soft text-info-ink',
+  info: 'bg-lavender-soft text-lavender-ink',
 }
 
 /** Always carries text, and an optional icon, so meaning never depends on colour alone. */

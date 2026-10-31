@@ -26,7 +26,13 @@ export interface PlanCardProps {
 /** One recovery option in the simulator: whether it is allowed, what it costs, and exactly why not. */
 export function PlanCard({ title, summary, feasible, recommended, metrics, findings, action }: PlanCardProps) {
   return (
-    <article className={cn('flex flex-col rounded-lg border bg-surface p-5 shadow-card', recommended ? 'border-accent ring-2 ring-accent-soft' : 'border-line')} aria-label={title}>
+    <article
+      className={cn(
+        'flex flex-col rounded-2xl border bg-surface/90 p-6 shadow-card backdrop-blur-xs transition-all duration-300 hover:shadow-pop hover:-translate-y-0.5',
+        recommended ? 'border-accent ring-2 ring-accent-soft' : 'border-line/70',
+      )}
+      aria-label={title}
+    >
       <header className="flex flex-wrap items-center gap-2">
         <h3 className="text-base font-semibold text-ink">{title}</h3>
         {recommended ? <Badge tone="accent">Recommended</Badge> : null}
@@ -46,7 +52,7 @@ export function PlanCard({ title, summary, feasible, recommended, metrics, findi
       {findings.length > 0 ? (
         <ul className="mt-4 space-y-2">
           {findings.map((finding) => (
-            <li key={finding.message} className={cn('rounded-md px-3 py-2 text-sm', finding.severity === 'HARD' ? 'bg-danger-soft text-danger-ink' : 'bg-warning-soft text-warning-ink')}>
+            <li key={finding.message} className={cn('rounded-xl px-3.5 py-2.5 text-sm', finding.severity === 'HARD' ? 'bg-danger-soft text-danger-ink' : 'bg-warning-soft text-warning-ink')}>
               <span className="font-semibold">{finding.severity === 'HARD' ? 'Blocks: ' : 'Warns: '}</span>
               {finding.message}
             </li>

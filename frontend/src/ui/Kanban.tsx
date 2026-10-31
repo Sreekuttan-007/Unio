@@ -13,7 +13,7 @@ export function Kanban({ columns, emptyLabel = 'Nothing here' }: { columns: Kanb
     <div className="-mx-4 overflow-x-auto px-4 pb-2 lg:mx-0 lg:px-0">
       <div className="flex min-w-max gap-4">
         {columns.map((column) => (
-          <section key={column.id} aria-label={column.title} className="w-72 shrink-0 rounded-lg bg-surface-2 p-3">
+          <section key={column.id} aria-label={column.title} className="w-72 shrink-0 rounded-2xl border border-line/60 bg-surface-2/80 p-3.5 shadow-xs backdrop-blur-xs">
             <header className="mb-3 flex items-center justify-between px-1">
               <h3 className="text-sm font-semibold text-ink">{column.title}</h3>
               <Badge>{column.cards.length}</Badge>
