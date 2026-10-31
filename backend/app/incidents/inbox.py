@@ -100,7 +100,7 @@ class InboxService:
                 {"$inc": {"deliveries": 1}, "$set": {"note": "The same message arrived more than once. The extra copies were recognised and ignored."}},
                 return_document=True,
             )
-            return existing, True  # type: ignore[return-value]
+            return existing, True
         return email, False
 
     async def process(self, user: AuthUser, email_id: str) -> dict[str, Any]:
@@ -112,13 +112,13 @@ class InboxService:
         # claim it, so two clicks or two workers cannot turn one email into two reports
         claimed = await self._db["inbound_emails"].find_one_and_update({"_id": email_id, "status": "PENDING"}, {"$set": {"status": "PROCESSING"}})
         if claimed is None:
-            return self.view(await self._db["inbound_emails"].find_one({"_id": email_id}))  # type: ignore[arg-type]
+            return self.view(await self._db["inbound_emails"].find_one({"_id": email_id}))
         try:
             await self._convert(user, email)
         except Exception:
             await self._db["inbound_emails"].update_one({"_id": email_id}, {"$set": {"status": "PENDING"}})
             raise
-        return self.view(await self._db["inbound_emails"].find_one({"_id": email_id}))  # type: ignore[arg-type]
+        return self.view(await self._db["inbound_emails"].find_one({"_id": email_id}))
 
     async def _convert(self, user: AuthUser, email: dict[str, Any]) -> None:
         sender = await self._db["users"].find_one({"email": email["from"].lower()})

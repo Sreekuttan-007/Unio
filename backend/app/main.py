@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo import AsyncMongoClient
 
+from app.approvals.policy import ensure_procurement_policy
 from app.audit.router import router as audit_router
 from app.bookings.router import router as bookings_router
 from app.campus.router import router as campus_router
@@ -25,13 +26,13 @@ from app.core.outbox import run_outbox_loop
 from app.db import ensure_indexes
 from app.files.router import router as files_router
 from app.incidents.router import router as incidents_router
-from app.approvals.policy import ensure_procurement_policy
 from app.notify.router import router as notify_router
 from app.procurement.router import router as procurement_router
 from app.scenarios.router import router as scenarios_router
 from app.services import build_services
 from app.simulation.router import router as simulation_router
-from app.system.router import reserved, router as system_router
+from app.system.router import reserved
+from app.system.router import router as system_router
 from app.users.router import admin_router, auth_router, demo_router, me_router
 from app.users.seed import seed_reference_data
 from app.workorders.router import router as workorders_router
@@ -61,7 +62,7 @@ def create_app(settings: Settings | None = None, db: Any = None) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-        client = None
+        client: AsyncMongoClient | None = None
         database = db
         if database is None:
             client = AsyncMongoClient(settings.mongodb_uri, tz_aware=True, serverSelectionTimeoutMS=8000)

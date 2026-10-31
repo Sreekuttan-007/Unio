@@ -12,10 +12,40 @@ const TYPE_LABEL: Record<Approval['type'], string> = { PURCHASE: 'Purchase', COS
 const EVIDENCE_TONE = { neutral: 'text-ink', warning: 'text-warning-ink', danger: 'text-danger-ink', success: 'text-success-ink' } as const
 const OPEN = ['SUBMITTED', 'UNDER_REVIEW', 'NEEDS_CLARIFICATION']
 
+function ClarificationAnswer({ approval, onDone }: { approval: Approval; onDone: () => void }) {
+  const [text, setText] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const answer = useAction<{ id: string; text: string }, Approval>('POST', (job) => `/approvals/${job.id}/answer`, ['/approvals'])
+  const question = [...approval.decisions].reverse().find((item) => item.decision === 'CLARIFICATION REQUESTED')?.reason
+
+  const send = async () => {
+    setError(null)
+    try {
+      await answer.mutateAsync({ id: approval.id, text })
+      onDone()
+    } catch (failure) {
+      setError(describeError(failure))
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      <Banner tone="warning" title="They asked a question">{question ?? 'Someone asked a question about this request.'}</Banner>
+      {error ? <Banner tone="danger" title="Refused" role="alert"><span data-testid="approval-error">{error}</span></Banner> : null}
+      <TextArea label="Your answer" value={text} onChange={(event) => setText(event.target.value)} />
+      <Button loading={answer.isPending} disabled={!text.trim()} onClick={() => void send()}>Send answer</Button>
+    </div>
+  )
+}
+
 function Detail({ approval, onDone }: { approval: Approval; onDone: () => void }) {
   const [reason, setReason] = useState('')
   const [error, setError] = useState<string | null>(null)
   const decide = useAction<{ id: string; decision: 'APPROVE' | 'REJECT' | 'CLARIFY'; reason: string }, Approval>('POST', (job) => `/approvals/${job.id}/decide`, ['/approvals'])
+  // The server never offers an "answer" action key: the requester always gets an empty
+  // availableActions plus this one specific unavailable "approve" hint. That combination is
+  // what distinguishes "this is my own request" from "I simply can't decide this one."
+  const awaitingMyAnswer = approval.status === 'NEEDS_CLARIFICATION' && approval.availableActions.length === 0 && approval.unavailableActions.some((action) => action.key === 'approval.approve')
 
   const act = async (decision: 'APPROVE' | 'REJECT' | 'CLARIFY') => {
     setError(null)
@@ -67,7 +97,9 @@ function Detail({ approval, onDone }: { approval: Approval; onDone: () => void }
 
       {error ? <Banner tone="danger" title="Refused" role="alert"><span data-testid="approval-error">{error}</span></Banner> : null}
 
-      {approval.availableActions.length > 0 ? (
+      {awaitingMyAnswer ? <ClarificationAnswer approval={approval} onDone={onDone} /> : null}
+
+      {!awaitingMyAnswer && approval.availableActions.length > 0 ? (
         <div className="space-y-3">
           <TextArea label="Reason (kept in the audit trail)" value={reason} onChange={(event) => setReason(event.target.value)} />
           <div className="flex flex-wrap gap-2">
@@ -78,7 +110,7 @@ function Detail({ approval, onDone }: { approval: Approval; onDone: () => void }
           </div>
         </div>
       ) : null}
-      {approval.unavailableActions.map((action) => (
+      {!awaitingMyAnswer && approval.unavailableActions.map((action) => (
         <div key={action.key} className="space-y-2">
           <Button disabled>{action.label}</Button>
           <p className="text-sm text-muted" data-testid="approval-blocked">{action.reason}</p>

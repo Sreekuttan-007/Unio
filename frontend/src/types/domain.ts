@@ -403,8 +403,25 @@ export interface SlaPolicy {
 export interface IntegrationState {
   ai: { provider: string; model: string; features: { key: string; label: string; enabled: boolean; mode: 'AI' | 'RULES' }[] }
   email: { address: string; polling: string; lastPoll: string; processed: number }
-  webhooks: { id: string; url: string; events: string[]; enabled: boolean; lastStatus: number; lastAt: string }[]
+  webhooks: Webhook[]
   channels: { key: string; label: string; enabled: boolean }[]
+}
+
+export interface Webhook {
+  id: string
+  url: string
+  events: string[]
+  enabled: boolean
+  lastStatus: number
+  lastAt: string
+}
+
+export interface WebhookDelivery {
+  eventId: string
+  eventType: string
+  status: number
+  error: string | null
+  at: string
 }
 
 export interface SystemHealth {

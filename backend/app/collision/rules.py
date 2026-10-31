@@ -4,7 +4,7 @@ A rule never writes and never calls another rule. The engine combines what they 
 """
 
 from datetime import timedelta
-from typing import Any
+from typing import Any, ClassVar
 
 from app.collision.models import ROOM_ACTIONS, ActionType, Finding, ProposedAction, Severity, rupees
 from app.collision.reader import StateReader
@@ -22,7 +22,7 @@ class Rule:
     severity = Severity.HARD
     actions: frozenset[ActionType] = frozenset()
     locked = False
-    default_params: dict[str, Any] = {}
+    default_params: ClassVar[dict[str, Any]] = {}
     parameter_label: str | None = None
 
     async def check(self, action: ProposedAction, reader: StateReader, params: dict[str, Any]) -> list[Finding]:
@@ -246,7 +246,7 @@ class TechShift(Rule):
     description = "The job should fall inside a shift. Allowed with a reason, for urgent work."
     severity = Severity.SOFT
     actions = frozenset({ActionType.ASSIGN_TECHNICIAN})
-    default_params = {"graceMinutes": 0}
+    default_params: ClassVar[dict[str, Any]] = {"graceMinutes": 0}
     parameter_label = "Grace period in minutes"
 
     def describe(self, params: dict[str, Any]) -> str | None:
@@ -271,7 +271,7 @@ class TechWorkload(Rule):
     description = "Warns when another job would take a technician past the number of tasks they can hold."
     severity = Severity.SOFT
     actions = frozenset({ActionType.ASSIGN_TECHNICIAN})
-    default_params: dict[str, Any] = {"maxConcurrent": None}
+    default_params: ClassVar[dict[str, Any]] = {"maxConcurrent": None}
     parameter_label = "Maximum open tasks (blank uses each technician's own limit)"
 
     def describe(self, params: dict[str, Any]) -> str | None:

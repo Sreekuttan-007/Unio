@@ -1,3 +1,4 @@
+import itertools
 from collections import defaultdict
 from datetime import date
 
@@ -56,7 +57,7 @@ def _overlaps(key: str) -> int:
     clashes = 0
     for sessions in grouped.values():
         sessions.sort(key=lambda item: item["startAt"])
-        clashes += sum(1 for a, b in zip(sessions, sessions[1:], strict=False) if b["startAt"] < a["endAt"])
+        clashes += sum(1 for a, b in itertools.pairwise(sessions) if b["startAt"] < a["endAt"])
     return clashes
 
 

@@ -1,7 +1,7 @@
 import { CheckCircle2, Lock, XCircle } from 'lucide-react'
 import { useState } from 'react'
-import { Avatar, Badge, Banner, Button, Card, CardBody, CardHeader, DataTable, ListRow, PageHeader, StatTile, Toggle, type Column, type Tone } from '@/ui'
-import type { CollisionRule, IntegrationState, ScenarioInfo, SlaPolicy, StockRow, SystemHealth, TechnicianCard } from '@/types/domain'
+import { Avatar, Badge, Banner, Button, Card, CardBody, CardHeader, DataTable, ListRow, PageHeader, Sheet, StatTile, TextField, Toggle, type Column, type Tone } from '@/ui'
+import type { CollisionRule, IntegrationState, ScenarioInfo, SlaPolicy, StockRow, SystemHealth, TechnicianCard, Webhook, WebhookDelivery } from '@/types/domain'
 import { describeError } from '../shared/errors'
 import { ago, titleCase } from '../shared/format'
 import { QueryBoundary } from '../shared/QueryBoundary'
@@ -158,11 +158,80 @@ export function SlaPoliciesScreen() {
   )
 }
 
+const STATUS_TONE = (status: number): Tone => (status >= 200 && status < 300 ? 'success' : status === 0 ? 'warning' : 'danger')
+
+function DeliveryLog({ hook, onClose }: { hook: Webhook; onClose: () => void }) {
+  const deliveries = useApi<WebhookDelivery[]>(`/admin/webhooks/${hook.id}/deliveries`)
+  const replay = useAction<{ eventId: string }, { status: number; message: string }>('POST', (job) => `/admin/webhooks/${hook.id}/deliveries/${job.eventId}/replay`, [`/admin/webhooks/${hook.id}/deliveries`])
+  const [note, setNote] = useState<string | null>(null)
+
+  return (
+    <div className="space-y-4">
+      <p className="text-sm text-muted">{hook.url}</p>
+      {note ? <Banner tone="info" title="Replay" role="status">{note}</Banner> : null}
+      <QueryBoundary query={deliveries} isEmpty={(rows) => rows.length === 0} emptyTitle="No deliveries yet" emptyDescription="Nothing has been sent to this webhook.">
+        {(rows) => (
+          <Card>
+            {rows.map((row) => (
+              <ListRow
+                key={row.eventId}
+                title={row.eventType}
+                subtitle={`${row.eventId} · ${ago(row.at)}${row.error ? ` · ${row.error}` : ''}`}
+                trailing={
+                  <div className="flex items-center gap-2">
+                    <Badge tone={STATUS_TONE(row.status)}>{row.status || 'No response'}</Badge>
+                    <Button
+                      variant="secondary"
+                      compact
+                      loading={replay.isPending}
+                      onClick={() => replay.mutate({ eventId: row.eventId }, { onSuccess: (response) => setNote(response.message) })}
+                    >
+                      Replay
+                    </Button>
+                  </div>
+                }
+              />
+            ))}
+          </Card>
+        )}
+      </QueryBoundary>
+      <Button variant="ghost" onClick={onClose}>Close</Button>
+    </div>
+  )
+}
+
+function AddWebhook() {
+  const create = useAction<{ url: string; events: string[] }, Webhook>('POST', '/admin/webhooks', ['/admin/integrations'], { idempotent: true })
+  const [url, setUrl] = useState('')
+  const [events, setEvents] = useState('workorder.*, approval.*')
+  const [error, setError] = useState<string | null>(null)
+
+  const submit = () => {
+    setError(null)
+    const list = events.split(',').map((item) => item.trim()).filter(Boolean)
+    create.mutate({ url: url.trim(), events: list }, { onSuccess: () => { setUrl(''); setEvents('workorder.*, approval.*') }, onError: (failure) => setError(describeError(failure)) })
+  }
+
+  return (
+    <Card>
+      <CardHeader title="Add a webhook" description="A pattern ending in .* matches every event of that kind, and * matches everything." />
+      <CardBody className="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+        <TextField label="URL" value={url} onChange={(event) => setUrl(event.target.value)} placeholder="https://example.com/hooks/unio" />
+        <TextField label="Events (comma-separated)" value={events} onChange={(event) => setEvents(event.target.value)} />
+        <Button loading={create.isPending} disabled={!url.trim() || !events.trim()} onClick={submit}>Add</Button>
+        {error ? <p className="sm:col-span-3 text-sm text-danger-ink">{error}</p> : null}
+      </CardBody>
+    </Card>
+  )
+}
+
 export function IntegrationsScreen() {
   const state = useApi<IntegrationState>('/admin/integrations')
   const setFeature = useAction<{ key: string; enabled: boolean }, IntegrationState>('PATCH', (job) => `/admin/integrations/features/${job.key}`, ['/admin/integrations'])
   const test = useAction<{ id: string }, { status: number; message: string }>('POST', (job) => `/admin/webhooks/${job.id}/test`, ['/admin/integrations'])
+  const toggleHook = useAction<{ id: string; enabled: boolean }, Webhook>('PATCH', (job) => `/admin/webhooks/${job.id}`, ['/admin/integrations'])
   const [result, setResult] = useState<string | null>(null)
+  const [openDeliveries, setOpenDeliveries] = useState<Webhook | null>(null)
 
   return (
     <div className="space-y-5">
@@ -199,10 +268,25 @@ export function IntegrationsScreen() {
             <Card>
               <CardHeader title="Webhooks" description="Signed, and safe to receive twice" />
               {data.webhooks.map((hook) => (
-                <ListRow key={hook.id} title={hook.url} subtitle={`${hook.events.join(', ')} · last ${hook.lastStatus} ${ago(hook.lastAt)}`} trailing={<Button variant="secondary" compact loading={test.isPending} onClick={() => test.mutate({ id: hook.id }, { onSuccess: (response) => setResult(response.message) })}>Send test</Button>} />
+                <ListRow
+                  key={hook.id}
+                  title={hook.url}
+                  subtitle={`${hook.events.join(', ')} · last ${hook.lastStatus || 'never'} ${hook.lastAt ? ago(hook.lastAt) : ''}`}
+                  trailing={
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Toggle label="On" checked={hook.enabled} onChange={(enabled) => toggleHook.mutate({ id: hook.id, enabled })} />
+                      <Button variant="secondary" compact onClick={() => setOpenDeliveries(hook)}>Deliveries</Button>
+                      <Button variant="secondary" compact loading={test.isPending} onClick={() => test.mutate({ id: hook.id }, { onSuccess: (response) => setResult(response.message) })}>Send test</Button>
+                    </div>
+                  }
+                />
               ))}
             </Card>
             {result ? <Banner tone="success" title="Webhook test" role="status">{result}</Banner> : null}
+            <AddWebhook />
+            <Sheet open={!!openDeliveries} title={openDeliveries ? `Deliveries · ${openDeliveries.id}` : ''} onClose={() => setOpenDeliveries(null)}>
+              {openDeliveries ? <DeliveryLog hook={openDeliveries} onClose={() => setOpenDeliveries(null)} /> : null}
+            </Sheet>
           </>
         )}
       </QueryBoundary>

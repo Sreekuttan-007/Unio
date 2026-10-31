@@ -344,7 +344,7 @@ class IncidentService:
             await self._sla.reprioritise(target["_id"], target["category"], priority)
             await self._db["incidents"].update_one({"_id": target["_id"]}, {"$push": {"timeline": public_event(f"p{count}", f"Priority raised to {priority}", "warning", "Many people reported it.")}})
         await self._outbox.enqueue("incident.joined", {"incidentId": target["_id"], "reporterId": report["reporterId"], "reportCount": count})
-        return await self._db["incidents"].find_one({"_id": target["_id"]})  # type: ignore[return-value]
+        return await self._db["incidents"].find_one({"_id": target["_id"]})  # type: ignore[no-any-return]
 
     async def _refresh_summary(self, incident_id: str) -> None:
         incident = await self._db["incidents"].find_one({"_id": incident_id})
@@ -442,7 +442,7 @@ class IncidentService:
         )
         await self._outbox.enqueue("incident.status", {"incidentId": incident_id, "status": target.value, "reporterIds": incident["reporterIds"]})
         await self.refresh_impact(incident_id)
-        return await self._db["incidents"].find_one({"_id": incident_id})  # type: ignore[return-value]
+        return await self._db["incidents"].find_one({"_id": incident_id})  # type: ignore[no-any-return]
 
     async def advance(self, incident_id: str, event: IncidentEvent, actor_id: str, actor_role: str) -> dict[str, Any] | None:
         """A move made by the system on behalf of someone else, such as work starting. A move that does not fit is skipped."""
@@ -472,7 +472,7 @@ class IncidentService:
             return
         try:
             await self.cascade.refresh(incident_id)
-        except Exception:  # noqa: BLE001 - the impact view is derived data and can be recomputed on demand
+        except Exception:  # the impact view is derived data and can be recomputed on demand
             log.exception("Impact refresh failed for %s", incident_id)
 
     @staticmethod
@@ -522,7 +522,7 @@ class IncidentService:
         merged_into: str | None = None
         target, _ = await self._link_target({**extraction, "category": placed["category"]}, text, exclude=incident_id)
         if target is not None and target["_id"] != incident_id:
-            await self._merge(placed, target["_id"])  # type: ignore[arg-type]
+            await self._merge(placed, target["_id"])
             merged_into = target["_id"]
         await self._audit.record(
             actor_id=reporter_id, actor_role="EMAIL", action="incident.clarified", domain=AuditDomain.OPERATIONS, entity_type="INCIDENT", entity_id=incident_id,

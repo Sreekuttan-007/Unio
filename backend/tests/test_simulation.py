@@ -66,7 +66,8 @@ async def test_a_simulation_compares_three_plans_and_writes_nothing_live(world):
     run = await simulate(world, incident_id)
     assert await live_hash(world.db) == before  # the only write is the run itself
     assert await world.db["simulation_runs"].count_documents({}) == 1
-    assert [plan["id"] for plan in run["plans"]] == ["A", "B", "C"] and run["snapshotHash"]
+    assert [plan["id"] for plan in run["plans"]] == ["A", "B", "C", "D", "E"] and run["snapshotHash"]
+    assert all(any(metric["label"] == "SLA margin" for metric in plan["metrics"]) for plan in run["plans"])
     b = run["plans"][1]
     assert b["feasible"] and any(session["roomId"] in step and "Move" in step for step in b["actions"])
     assert run["recommendedPlanId"] in ("A", "B")
@@ -81,8 +82,53 @@ async def test_the_repair_plan_is_blocked_with_a_reason_when_no_work_order_exist
     assert c["feasible"] is False and "work order" in c["findings"][0]["message"] and c["findings"][0]["severity"] == "HARD"
 
 
+async def test_the_next_window_plan_waits_past_a_busy_slot_the_now_plan_cannot_fill(world):
+    incident_id, _ = await incident_with_class(world)
+    await world.call("FACILITIES_ADMIN", "POST", f"/api/v1/incidents/{incident_id}/actions/incident.createWorkOrder")
+    now = utcnow()
+    busy_end = now + timedelta(minutes=90)
+    # Both technicians with a shift in this world are already busy right now, but free again well inside their shift.
+    await world.db["work_orders"].insert_many(
+        [
+            {"_id": "WO-BUSY-1", "assignedTechnicianId": "T-01", "status": "ASSIGNED", "scheduledStartAt": now, "scheduledEndAt": busy_end},
+            {"_id": "WO-BUSY-2", "assignedTechnicianId": "T-02", "status": "ASSIGNED", "scheduledStartAt": now, "scheduledEndAt": busy_end},
+        ]
+    )
+    run = await simulate(world, incident_id)
+    c = next(plan for plan in run["plans"] if plan["id"] == "C")
+    d = next(plan for plan in run["plans"] if plan["id"] == "D")
+    assert c["feasible"] is False and "No qualified technician is free to start" in c["findings"][0]["message"]
+    assert d["feasible"] is True and d["actions"] and "starting" in d["actions"][0]
+    wait = next(metric["value"] for metric in d["metrics"] if metric["label"] == "Wait before start (minutes)")
+    assert int(wait) >= 90  # it genuinely waited past the busy block, not just copied plan C
+
+
+async def test_stock_vs_buy_plan_separates_available_from_needs_purchase(world):
+    incident_id, _ = await incident_with_class(world)
+    await world.db["inventory_balances"].update_many({"itemId": "ITM-MCB-16A-1P"}, {"$set": {"onHand": 0, "reserved": 0}})
+    await world.db["inventory_balances"].update_one({"itemId": "ITM-MCB-16A-1P", "locationId": "LOC-MAIN"}, {"$set": {"onHand": 5}})
+    now = utcnow()
+    await world.db["work_orders"].insert_one(
+        {
+            "_id": "WO-SIM-E", "incidentId": incident_id, "title": "Replace breakers", "status": "BLOCKED", "blockReason": "WAITING_FOR_PARTS", "priority": "P2", "category": "ELECTRICAL",
+            "partRequirements": [
+                {"itemId": "ITM-MCB-16A-1P", "sku": "MCB-16A-1P", "name": "MCB 16A single pole", "qty": 1, "state": "SHORT", "reservationId": None},
+                {"itemId": "ITM-MCB-32A-3P", "sku": "MCB-32A-3P", "name": "MCB 32A three pole", "qty": 2, "state": "SHORT", "reservationId": None},
+            ],
+            "version": 0, "createdAt": now, "updatedAt": now,
+        }
+    )
+    run = await simulate(world, incident_id)
+    e = next(plan for plan in run["plans"] if plan["id"] == "E")
+    metrics = {metric["label"]: metric["value"] for metric in e["metrics"]}
+    assert metrics["Parts short"] == "2" and metrics["Available from stock"] == "1" and metrics["Needs a purchase"] == "1"
+    assert metrics["Estimated purchase cost"] != "₹0"
+    assert e["feasible"] is True  # a needed purchase is a finding, not a block
+    assert "MCB 32A three pole" in e["findings"][0]["message"]
+
+
 async def test_a_plan_never_moves_a_class_into_another_affected_room(world):
-    incident_id, session = await incident_with_class(world)
+    incident_id, _session = await incident_with_class(world)
     await world.call("FACILITIES_ADMIN", "POST", f"/api/v1/cascading/impact/{incident_id}/recompute", json={"rootAssetIds": ["AST-TR-ARB"]})
     run = await simulate(world, incident_id)
     a = run["plans"][0]

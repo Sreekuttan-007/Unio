@@ -1,7 +1,9 @@
-// Phone-width check: signs in as every demo role and opens every screen in its navigation at 360px,
+// Viewport/theme check: signs in as every demo role and opens every screen in its navigation,
 // failing on sideways page scroll, a crashed screen or a console error.
 // Run against a served app, for example `npm run dev:mock -- --port 5199`, then:
-//   node scripts/phone-check.mjs http://localhost:5199
+//   node scripts/phone-check.mjs http://localhost:5199              phone width, light
+//   node scripts/phone-check.mjs http://localhost:5199 1440         desktop width, light
+//   node scripts/phone-check.mjs http://localhost:5199 360 --dark   phone width, dark
 import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 
@@ -9,13 +11,22 @@ import { createRequire } from 'node:module'
 const { chromium } = createRequire(import.meta.url)('playwright')
 
 const base = process.argv[2] ?? 'http://localhost:5199'
+const dark = process.argv.includes('--dark')
+const width = Number(process.argv.find((arg, index) => index >= 3 && !arg.startsWith('--')) ?? 360)
+const mobile = width <= 480
 const fixtures = JSON.parse(readFileSync(new URL('../src/mocks/fixtures/generated.json', import.meta.url), 'utf8'))
 const problems = []
 let screens = 0
 
 const browser = await chromium.launch()
 for (const [role, boot] of Object.entries(fixtures.bootstrap)) {
-  const context = await browser.newContext({ viewport: { width: 360, height: 780 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true })
+  const context = await browser.newContext({
+    viewport: { width, height: mobile ? 780 : 900 },
+    deviceScaleFactor: mobile ? 2 : 1,
+    isMobile: mobile,
+    hasTouch: mobile,
+    colorScheme: dark ? 'dark' : 'light',
+  })
   const page = await context.newPage()
   const errors = []
   page.on('pageerror', (error) => errors.push(error.message))
@@ -46,9 +57,10 @@ for (const [role, boot] of Object.entries(fixtures.bootstrap)) {
 }
 await browser.close()
 
-console.log(`Checked ${screens} screens at 360px.`)
+const label = `${width}px, ${dark ? 'dark' : 'light'}`
+console.log(`Checked ${screens} screens at ${label}.`)
 if (problems.length) {
   console.log(problems.join('\n'))
   process.exit(1)
 }
-console.log('No sideways scroll, no crashed screens, no console errors.')
+console.log(`No sideways scroll, no crashed screens, no console errors, at ${label}.`)

@@ -5,10 +5,10 @@ from pydantic import Field
 
 from app.core.access import GuardedRouter, authenticated, require
 from app.core.authuser import AuthUser
+from app.core.errors import rule
 from app.core.pagination import PageParams, page_params
 from app.core.permission import Permission as P
 from app.core.schema import ApiModel
-from app.core.errors import rule
 from app.services import Services, get_services
 
 router = GuardedRouter(prefix="/api/v1", tags=["incidents"])
@@ -128,7 +128,7 @@ async def list_inbox(user: AuthUser = Depends(require(P.INBOX_READ)), services: 
 
 @router.post("/inbox/simulate", status_code=201)
 async def simulate_email(body: SimulateEmail, user: AuthUser = Depends(require(P.INBOX_TRIAGE)), services: Services = Depends(get_services)) -> Any:
-    email, repeat = await services.inbox.receive(body.from_, body.subject, body.text, message_id=body.message_id, in_reply_to=body.in_reply_to)
+    email, _repeat = await services.inbox.receive(body.from_, body.subject, body.text, message_id=body.message_id, in_reply_to=body.in_reply_to)
     return services.inbox.view(email)
 
 

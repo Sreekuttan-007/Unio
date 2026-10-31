@@ -16,13 +16,13 @@ async def test_a_student_gets_the_public_map_with_no_operational_detail(campus_e
     assert body["markers"] == []
     assert len(body["regions"]) == 8
     assert all("badge" not in overlay for overlay in body["overlays"].values())
-    assert body["viewBox"] == {"w": 1200, "h": 760}
+    assert body["viewBox"] == {"w": 1600, "h": 1195}
 
 
 async def test_facilities_gets_the_operational_map(campus_env):
     body = (await campus_env.call("FACILITIES_ADMIN", "GET", "/api/v1/campus/map")).json()
     assert body["view"] == "OPERATIONAL"
-    assert body["overlays"]["bld-arb"]["state"] == "OPEN"  # nothing is wrong until something is reported
+    assert body["overlays"]["EEC-MAIN"]["state"] == "OPEN"  # nothing is wrong until something is reported
 
 
 async def test_procurement_has_no_map(campus_env):
@@ -30,9 +30,9 @@ async def test_procurement_has_no_map(campus_env):
 
 
 async def test_building_detail_shows_rooms_to_staff_only(campus_env):
-    public = (await campus_env.call("STUDENT", "GET", "/api/v1/campus/buildings/bld-arb")).json()
+    public = (await campus_env.call("STUDENT", "GET", "/api/v1/campus/buildings/EEC-MAIN")).json()
     staff = (await campus_env.call("FACILITIES_ADMIN", "GET", "/api/v1/campus/buildings/B-ARB")).json()
-    assert public["name"] == staff["name"] == "Aryabhata Block"
+    assert public["name"] == staff["name"] == "EEC Main Block"
     assert public["rooms"] == [] and public["assetCount"] is None and public["incidents"] == []
     assert len(staff["rooms"]) == 24 and staff["assetCount"] > 20
     assert {room["code"] for room in staff["rooms"]} >= {"ARB-204", "ARB-304"}
@@ -55,26 +55,26 @@ async def test_closing_a_room_marks_its_building_affected_and_is_audited():
         done = await env.call("SYSTEM_ADMIN", "PATCH", "/api/v1/admin/campus/rooms/ARB-204/status", json={"status": "CLOSED", "reason": "No power"})
         assert done.status_code == 200
         student = (await env.call("STUDENT", "GET", "/api/v1/campus/map")).json()
-        assert student["overlays"]["bld-arb"] == {"state": "AFFECTED", "caption": "Some rooms closed"}
+        assert student["overlays"]["EEC-MAIN"] == {"state": "AFFECTED", "caption": "Some rooms closed"}
         rooms = (await env.call("FACULTY", "GET", "/api/v1/campus/rooms?bookable=true")).json()
         assert next(room for room in rooms if room["code"] == "ARB-204")["status"] == "CLOSED"
         audit = (await env.call("FACILITIES_ADMIN", "GET", "/api/v1/audit")).json()
         assert any(item["action"] == "room.status.update" and item["entityId"] == "ARB-204" for item in audit["items"])
         reopened = await env.call("SYSTEM_ADMIN", "PATCH", "/api/v1/admin/campus/rooms/ARB-204/status", json={"status": "OPEN"})
         assert reopened.json()["closedReason"] is None
-        assert (await env.call("STUDENT", "GET", "/api/v1/campus/map")).json()["overlays"]["bld-arb"]["state"] == "OPEN"
+        assert (await env.call("STUDENT", "GET", "/api/v1/campus/map")).json()["overlays"]["EEC-MAIN"]["state"] == "OPEN"
 
 
 async def test_a_closed_building_shows_hatched_closed_with_its_reason():
     async with open_env(seed_campus=True) as env:
-        await env.call("SYSTEM_ADMIN", "PATCH", "/api/v1/admin/campus/buildings/bld-caf/status", json={"status": "CLOSED", "reason": "Deep cleaning"})
-        overlay = (await env.call("STUDENT", "GET", "/api/v1/campus/map")).json()["overlays"]["bld-caf"]
+        await env.call("SYSTEM_ADMIN", "PATCH", "/api/v1/admin/campus/buildings/WORKSHOP/status", json={"status": "CLOSED", "reason": "Deep cleaning"})
+        overlay = (await env.call("STUDENT", "GET", "/api/v1/campus/map")).json()["overlays"]["WORKSHOP"]
         assert overlay == {"state": "CLOSED", "caption": "Deep cleaning"}
 
 
 async def test_a_department_manager_sees_only_their_own_departments_rooms(campus_env):
     body = (await campus_env.call("DEPARTMENT_MANAGER", "GET", "/api/v1/campus/resources")).json()
-    assert body["department"] == "Computer Science"
+    assert body["department"] == "Computer Science and Engineering"
     assert body["rooms"] and all(room["code"].startswith("ARB-") for room in body["rooms"])
     assert body["assets"] and all(asset["id"].startswith(("AST-TR-ARB", "AST-DB-ARB", "AST-SW-ARB", "AST-SW-CORE")) for asset in body["assets"])
     assert len(body["technicians"]) == 6
@@ -110,7 +110,7 @@ async def test_a_new_permission_reaches_an_existing_role_but_removed_ones_stay_r
         # simulate a database seeded before campus.read existed, where an admin also removed a permission
         legacy = [p for p in (await roles.find_one({"_id": "FACILITIES_ADMIN"}))["permissions"] if p not in ("campus.read", "map.read.operational")]
         baseline = [p for p in legacy]
-        await roles.update_one({"_id": "FACILITIES_ADMIN"}, {"$set": {"permissions": legacy, "seedBaseline": baseline + ["map.read.operational"]}})
+        await roles.update_one({"_id": "FACILITIES_ADMIN"}, {"$set": {"permissions": legacy, "seedBaseline": [*baseline, "map.read.operational"]}})
         await seed_roles(env.services)
         role = await roles.find_one({"_id": "FACILITIES_ADMIN"})
         assert "campus.read" in role["permissions"]

@@ -14,7 +14,7 @@
       },
       "department": {
         "id": "D-CSE",
-        "name": "Computer Science"
+        "name": "Computer Science and Engineering"
       },
       "permissions": [
         "incident.summary.read",
@@ -91,7 +91,7 @@
       },
       "department": {
         "id": "D-CSE",
-        "name": "Computer Science"
+        "name": "Computer Science and Engineering"
       },
       "permissions": [
         "booking.read.own",
@@ -181,7 +181,7 @@
       },
       "department": {
         "id": "D-CSE",
-        "name": "Computer Science"
+        "name": "Computer Science and Engineering"
       },
       "permissions": [
         "analytics.read.department",
@@ -794,191 +794,399 @@
   },
   "campus": {
     "map": {
-      "version": 1,
+      "version": 2,
       "viewBox": {
-        "w": 1200,
-        "h": 760
+        "w": 1600,
+        "h": 1195
       },
       "decor": [
         {
+          "kind": "path",
+          "x": 920,
+          "y": 312,
+          "w": 120,
+          "h": 50
+        },
+        {
+          "kind": "path",
+          "x": 1050,
+          "y": 335,
+          "w": 60,
+          "h": 42
+        },
+        {
+          "kind": "path",
+          "x": 900,
+          "y": 522,
+          "w": 75,
+          "h": 106
+        },
+        {
+          "kind": "path",
+          "x": 978,
+          "y": 535,
+          "w": 114,
+          "h": 25
+        },
+        {
+          "kind": "path",
+          "x": 1138,
+          "y": 442,
+          "w": 77,
+          "h": 226
+        },
+        {
+          "kind": "path",
+          "x": 1218,
+          "y": 465,
+          "w": 107,
+          "h": 207
+        },
+        {
+          "kind": "path",
+          "x": 924,
+          "y": 650,
+          "w": 166,
+          "h": 52
+        },
+        {
+          "kind": "path",
+          "x": 925,
+          "y": 703,
+          "w": 55,
+          "h": 38
+        },
+        {
+          "kind": "path",
+          "x": 133,
+          "y": 795,
+          "w": 117,
+          "h": 53
+        },
+        {
+          "kind": "path",
+          "x": 273,
+          "y": 790,
+          "w": 132,
+          "h": 60
+        },
+        {
+          "kind": "path",
+          "x": 1246,
+          "y": 706,
+          "w": 66,
+          "h": 132
+        },
+        {
+          "kind": "path",
+          "x": 118,
+          "y": 622,
+          "w": 110,
+          "h": 25
+        },
+        {
+          "kind": "path",
+          "d": "M975,595 L1075,595 L1075,598 L1090,598 L1090,632 L975,632 Z",
+          "x": 975,
+          "y": 595,
+          "w": 115,
+          "h": 37
+        },
+        {
+          "kind": "path",
+          "d": "M468,805 L520,800 L560,820 L690,845 L815,885 L810,910 L700,890 L560,860 L468,832 Z",
+          "x": 468,
+          "y": 800,
+          "w": 347,
+          "h": 110
+        },
+        {
+          "kind": "path",
+          "d": "M1442,502 L1476,502 L1476,812 L1450,826 L1442,820 Z",
+          "x": 1442,
+          "y": 502,
+          "w": 34,
+          "h": 324
+        },
+        {
+          "kind": "path",
+          "d": "M1168,707 L1235,707 L1235,850 L1170,850 Z",
+          "x": 1168,
+          "y": 707,
+          "w": 67,
+          "h": 143
+        },
+        {
+          "kind": "path",
+          "d": "M927,797 L1000,797 L1000,725 L1092,725 L1092,797 L1065,797 L1065,878 L927,878 Z",
+          "x": 927,
+          "y": 725,
+          "w": 165,
+          "h": 153
+        },
+        {
+          "kind": "path",
+          "d": "M1168,322 L1290,348 L1286,398 L1186,398 L1166,380 Z",
+          "x": 1166,
+          "y": 322,
+          "w": 124,
+          "h": 76
+        },
+        {
+          "kind": "path",
+          "d": "M108,645 L145,645 L165,628 L195,645 L237,655 L255,685 L240,710 L248,740 L245,780 L215,790 L175,800 L140,790 L95,780 L85,750 L95,720 L82,695 L90,665 Z",
+          "x": 82,
+          "y": 628,
+          "w": 173,
+          "h": 172
+        },
+        {
+          "kind": "path",
+          "d": "M230,553 L284,553 L284,613 L262,613 L258,640 L252,613 L230,613 Z",
+          "x": 230,
+          "y": 553,
+          "w": 54,
+          "h": 87
+        },
+        {
           "kind": "green",
-          "x": 40,
-          "y": 40,
-          "w": 1120,
-          "h": 680,
-          "r": 28
-        },
-        {
-          "kind": "road",
-          "x": 40,
-          "y": 292,
-          "w": 1120,
-          "h": 24
-        },
-        {
-          "kind": "road",
-          "x": 40,
-          "y": 492,
-          "w": 1120,
-          "h": 24
-        },
-        {
-          "kind": "road",
-          "x": 396,
-          "y": 40,
-          "w": 24,
-          "h": 680
-        },
-        {
-          "kind": "road",
-          "x": 706,
-          "y": 40,
-          "w": 24,
-          "h": 680
-        },
-        {
-          "kind": "road",
-          "x": 960,
-          "y": 40,
-          "w": 24,
-          "h": 480
-        },
-        {
-          "kind": "water",
-          "x": 110,
-          "y": 540,
-          "w": 250,
-          "h": 120,
-          "r": 60
+          "x": 770,
+          "y": 445,
+          "w": 135,
+          "h": 75,
+          "r": 12
         },
         {
           "kind": "green",
-          "x": 750,
-          "y": 540,
-          "w": 200,
-          "h": 120,
-          "r": 20
+          "x": 895,
+          "y": 885,
+          "w": 215,
+          "h": 90,
+          "r": 12
         },
         {
-          "kind": "gate",
-          "x": 540,
-          "y": 690,
-          "w": 50,
-          "h": 22,
-          "r": 6
+          "kind": "green",
+          "d": "M908,145 L1150,145 L1148,318 L1125,320 L1040,300 L908,300 Z",
+          "x": 908,
+          "y": 145,
+          "w": 242,
+          "h": 175
+        },
+        {
+          "kind": "green",
+          "d": "M378,498 L440,498 L440,520 L425,520 L425,545 L440,545 L440,570 L378,570 Z",
+          "x": 378,
+          "y": 498,
+          "w": 62,
+          "h": 72
+        },
+        {
+          "kind": "green",
+          "d": "M465,718 L500,685 L560,665 L620,663 L680,676 L680,820 L692,836 L600,810 L540,795 L500,785 L470,750 Z",
+          "x": 465,
+          "y": 663,
+          "w": 227,
+          "h": 173
+        },
+        {
+          "kind": "green",
+          "d": "M1487,430 L1600,430 L1600,940 L1487,940 Z",
+          "x": 1487,
+          "y": 430,
+          "w": 113,
+          "h": 510
+        },
+        {
+          "kind": "road",
+          "d": "M0,822 L120,835 L400,935 L700,980 L860,1000 L1100,1000 L1400,985 L1600,945 L1600,1005 L1400,1042 L1100,1052 L870,1054 L700,1036 L400,962 L0,882 Z",
+          "x": 0,
+          "y": 822,
+          "w": 1600,
+          "h": 232
+        },
+        {
+          "kind": "road",
+          "d": "M908,105 L1325,92 L1345,120 L1325,125 L908,150 Z",
+          "x": 908,
+          "y": 92,
+          "w": 437,
+          "h": 58
+        },
+        {
+          "kind": "road",
+          "d": "M1330,165 L1362,165 L1375,470 L1328,470 Z",
+          "x": 1328,
+          "y": 165,
+          "w": 47,
+          "h": 305
+        },
+        {
+          "kind": "road",
+          "d": "M1315,445 L1342,448 L1344,880 L1318,880 Z",
+          "x": 1315,
+          "y": 445,
+          "w": 29,
+          "h": 435
+        },
+        {
+          "kind": "road",
+          "d": "M1442,0 L1478,0 L1600,230 L1600,278 L1440,60 Z",
+          "x": 1440,
+          "y": 0,
+          "w": 160,
+          "h": 278
+        },
+        {
+          "kind": "road",
+          "d": "M1112,365 L1140,365 L1140,972 L1112,972 Z",
+          "x": 1112,
+          "y": 365,
+          "w": 28,
+          "h": 607
+        },
+        {
+          "kind": "road",
+          "d": "M258,648 L500,596 L500,520 L545,535 L640,545 L645,598 L760,606 L900,628 L900,650 L1138,650 L1138,682 L905,682 L905,975 L862,975 L862,832 L832,832 L832,690 L420,690 L258,665 Z",
+          "x": 258,
+          "y": 520,
+          "w": 880,
+          "h": 455
+        },
+        {
+          "kind": "road",
+          "d": "M415,950 L445,950 L432,1080 L400,1080 Z",
+          "x": 400,
+          "y": 950,
+          "w": 45,
+          "h": 130
+        },
+        {
+          "kind": "road",
+          "d": "M1225,1030 L1250,1030 L1247,1085 L1222,1085 Z",
+          "x": 1222,
+          "y": 1030,
+          "w": 28,
+          "h": 55
+        },
+        {
+          "kind": "road",
+          "x": 920,
+          "y": 1050,
+          "w": 45,
+          "h": 43
         }
       ],
       "regions": [
         {
-          "regionId": "bld-arb",
+          "regionId": "EEC-MAIN",
           "entityType": "BUILDING",
           "entityId": "B-ARB",
-          "label": "Aryabhata Block",
+          "label": "EEC Main Block",
           "shape": {
-            "type": "rect",
-            "x": 110,
-            "y": 120,
-            "w": 270,
-            "h": 150,
-            "r": 14
+            "type": "path",
+            "d": "M340,490 L380,450 L450,450 L495,500 L495,590 L450,600 L400,610 L340,605 L330,540 Z",
+            "x": 330,
+            "y": 450,
+            "w": 165,
+            "h": 160
           }
         },
         {
-          "regionId": "bld-bhb",
+          "regionId": "ELEC-2",
           "entityType": "BUILDING",
           "entityId": "B-BHB",
-          "label": "Bhaskara Block",
+          "label": "Electronics Block 2",
           "shape": {
             "type": "rect",
-            "x": 110,
-            "y": 330,
-            "w": 270,
-            "h": 130,
-            "r": 14
+            "x": 755,
+            "y": 537,
+            "w": 127,
+            "h": 70,
+            "r": 10
           }
         },
         {
-          "regionId": "bld-rmb",
+          "regionId": "ACAD-1",
           "entityType": "BUILDING",
           "entityId": "B-RMB",
-          "label": "Ramanujan Block",
+          "label": "Academic Block 1",
           "shape": {
-            "type": "rect",
-            "x": 440,
-            "y": 120,
-            "w": 250,
-            "h": 150,
-            "r": 14
+            "type": "path",
+            "d": "M1368,532 L1414,532 L1414,836 L1348,836 L1350,770 L1368,748 Z",
+            "x": 1348,
+            "y": 532,
+            "w": 66,
+            "h": 304
           }
         },
         {
-          "regionId": "bld-rlb",
+          "regionId": "ELEC-1",
           "entityType": "BUILDING",
           "entityId": "B-RLB",
-          "label": "Raman Research Labs",
+          "label": "Electronics Block 1",
           "shape": {
             "type": "rect",
-            "x": 440,
-            "y": 330,
-            "w": 250,
-            "h": 130,
-            "r": 14
+            "x": 645,
+            "y": 548,
+            "w": 100,
+            "h": 55,
+            "r": 10
           }
         },
         {
-          "regionId": "bld-lib",
+          "regionId": "IST-8",
           "entityType": "BUILDING",
           "entityId": "B-LIB",
-          "label": "Central Library",
+          "label": "Institute of Science & Technology",
           "shape": {
-            "type": "rect",
-            "x": 750,
-            "y": 120,
-            "w": 190,
-            "h": 150,
-            "r": 14
+            "type": "path",
+            "d": "M1362,270 L1395,268 L1395,300 L1400,395 L1470,425 L1470,450 L1425,478 L1400,455 L1385,448 L1350,445 L1350,405 L1362,380 Z",
+            "x": 1350,
+            "y": 268,
+            "w": 120,
+            "h": 210
           }
         },
         {
-          "regionId": "bld-caf",
-          "entityType": "BUILDING",
-          "entityId": "B-CAF",
-          "label": "Cafeteria and Sports Pavilion",
-          "shape": {
-            "type": "rect",
-            "x": 750,
-            "y": 330,
-            "w": 190,
-            "h": 130,
-            "r": 14
-          }
-        },
-        {
-          "regionId": "bld-klh",
-          "entityType": "BUILDING",
-          "entityId": "B-KLH",
-          "label": "Kalam Hostel",
-          "shape": {
-            "type": "rect",
-            "x": 1000,
-            "y": 120,
-            "w": 150,
-            "h": 340,
-            "r": 14
-          }
-        },
-        {
-          "regionId": "bld-adm",
+          "regionId": "BMS-12",
           "entityType": "BUILDING",
           "entityId": "B-ADM",
-          "label": "Administration and Seminar Hall",
+          "label": "New BMS Block",
           "shape": {
             "type": "rect",
-            "x": 440,
-            "y": 540,
-            "w": 250,
-            "h": 120,
-            "r": 14
+            "x": 938,
+            "y": 376,
+            "w": 174,
+            "h": 127,
+            "r": 10
+          }
+        },
+        {
+          "regionId": "WORKSHOP",
+          "entityType": "BUILDING",
+          "entityId": "B-CAF",
+          "label": "Workshop",
+          "shape": {
+            "type": "path",
+            "d": "M1360,112 L1455,108 L1487,150 L1485,178 L1358,160 Z",
+            "x": 1358,
+            "y": 108,
+            "w": 129,
+            "h": 70
+          }
+        },
+        {
+          "regionId": "BOYS-8",
+          "entityType": "BUILDING",
+          "entityId": "B-KLH",
+          "label": "Boys Hostel",
+          "shape": {
+            "type": "path",
+            "d": "M1158,143 L1230,145 L1228,190 L1190,192 L1192,215 L1225,205 L1225,260 L1262,262 L1292,300 L1290,347 L1170,318 L1170,285 L1150,280 Z",
+            "x": 1150,
+            "y": 143,
+            "w": 142,
+            "h": 204
           }
         }
       ]
@@ -987,11 +1195,11 @@
       {
         "id": "B-ARB",
         "code": "ARB",
-        "name": "Aryabhata Block",
+        "name": "EEC Main Block",
         "kind": "ACADEMIC",
         "departmentId": "D-CSE",
         "floors": 4,
-        "mapRegionId": "bld-arb",
+        "mapRegionId": "EEC-MAIN",
         "status": "OPEN",
         "openingHours": "07:00-21:00",
         "assetCount": 44
@@ -999,11 +1207,11 @@
       {
         "id": "B-BHB",
         "code": "BHB",
-        "name": "Bhaskara Block",
+        "name": "Electronics Block 2",
         "kind": "ACADEMIC",
         "departmentId": "D-ECE",
         "floors": 3,
-        "mapRegionId": "bld-bhb",
+        "mapRegionId": "ELEC-2",
         "status": "OPEN",
         "openingHours": "07:00-21:00",
         "assetCount": 32
@@ -1011,11 +1219,11 @@
       {
         "id": "B-RMB",
         "code": "RMB",
-        "name": "Ramanujan Block",
+        "name": "Academic Block 1",
         "kind": "ACADEMIC",
         "departmentId": null,
         "floors": 3,
-        "mapRegionId": "bld-rmb",
+        "mapRegionId": "ACAD-1",
         "status": "OPEN",
         "openingHours": "07:00-21:00",
         "assetCount": 32
@@ -1023,11 +1231,11 @@
       {
         "id": "B-RLB",
         "code": "RLB",
-        "name": "Raman Research Labs",
+        "name": "Electronics Block 1",
         "kind": "LAB",
         "departmentId": "D-ECE",
         "floors": 2,
-        "mapRegionId": "bld-rlb",
+        "mapRegionId": "ELEC-1",
         "status": "OPEN",
         "openingHours": "07:00-21:00",
         "assetCount": 22
@@ -1035,11 +1243,11 @@
       {
         "id": "B-LIB",
         "code": "LIB",
-        "name": "Central Library",
+        "name": "Institute of Science & Technology",
         "kind": "LIBRARY",
         "departmentId": null,
         "floors": 2,
-        "mapRegionId": "bld-lib",
+        "mapRegionId": "IST-8",
         "status": "OPEN",
         "openingHours": "07:00-21:00",
         "assetCount": 12
@@ -1047,11 +1255,11 @@
       {
         "id": "B-ADM",
         "code": "ADM",
-        "name": "Administration and Seminar Hall",
+        "name": "New BMS Block",
         "kind": "ADMIN",
         "departmentId": null,
         "floors": 2,
-        "mapRegionId": "bld-adm",
+        "mapRegionId": "BMS-12",
         "status": "OPEN",
         "openingHours": "07:00-21:00",
         "assetCount": 13
@@ -1059,11 +1267,11 @@
       {
         "id": "B-CAF",
         "code": "CAF",
-        "name": "Cafeteria and Sports Pavilion",
+        "name": "Workshop",
         "kind": "COMMON",
         "departmentId": null,
         "floors": 1,
-        "mapRegionId": "bld-caf",
+        "mapRegionId": "WORKSHOP",
         "status": "OPEN",
         "openingHours": "07:00-21:00",
         "assetCount": 6
@@ -1071,11 +1279,11 @@
       {
         "id": "B-KLH",
         "code": "KLH",
-        "name": "Kalam Hostel",
+        "name": "Boys Hostel",
         "kind": "HOSTEL",
         "departmentId": null,
         "floors": 3,
-        "mapRegionId": "bld-klh",
+        "mapRegionId": "BOYS-8",
         "status": "OPEN",
         "openingHours": "24 hours",
         "assetCount": 17
@@ -2573,7 +2781,7 @@
       {
         "id": "AST-TR-ARB",
         "assetCode": "AST-TR-ARB",
-        "name": "Aryabhata Block transformer",
+        "name": "EEC Main Block transformer",
         "category": "ELECTRICAL",
         "buildingId": "B-ARB",
         "roomId": null,
@@ -2585,7 +2793,7 @@
       {
         "id": "AST-SW-ARB",
         "assetCode": "AST-SW-ARB",
-        "name": "Aryabhata Block network switch",
+        "name": "EEC Main Block network switch",
         "category": "NETWORK",
         "buildingId": "B-ARB",
         "roomId": null,
@@ -2597,7 +2805,7 @@
       {
         "id": "AST-DB-ARB-F1",
         "assetCode": "AST-DB-ARB-F1",
-        "name": "Aryabhata Block floor 1 power panel",
+        "name": "EEC Main Block floor 1 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-ARB",
         "roomId": null,
@@ -2609,7 +2817,7 @@
       {
         "id": "AST-DB-ARB-F2",
         "assetCode": "AST-DB-ARB-F2",
-        "name": "Aryabhata Block floor 2 power panel",
+        "name": "EEC Main Block floor 2 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-ARB",
         "roomId": null,
@@ -2621,7 +2829,7 @@
       {
         "id": "AST-DB-ARB-F3",
         "assetCode": "AST-DB-ARB-F3",
-        "name": "Aryabhata Block floor 3 power panel",
+        "name": "EEC Main Block floor 3 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-ARB",
         "roomId": null,
@@ -2633,7 +2841,7 @@
       {
         "id": "AST-DB-ARB-F4",
         "assetCode": "AST-DB-ARB-F4",
-        "name": "Aryabhata Block floor 4 power panel",
+        "name": "EEC Main Block floor 4 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-ARB",
         "roomId": null,
@@ -2645,7 +2853,7 @@
       {
         "id": "AST-TR-BHB",
         "assetCode": "AST-TR-BHB",
-        "name": "Bhaskara Block transformer",
+        "name": "Electronics Block 2 transformer",
         "category": "ELECTRICAL",
         "buildingId": "B-BHB",
         "roomId": null,
@@ -2657,7 +2865,7 @@
       {
         "id": "AST-SW-BHB",
         "assetCode": "AST-SW-BHB",
-        "name": "Bhaskara Block network switch",
+        "name": "Electronics Block 2 network switch",
         "category": "NETWORK",
         "buildingId": "B-BHB",
         "roomId": null,
@@ -2669,7 +2877,7 @@
       {
         "id": "AST-DB-BHB-F1",
         "assetCode": "AST-DB-BHB-F1",
-        "name": "Bhaskara Block floor 1 power panel",
+        "name": "Electronics Block 2 floor 1 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-BHB",
         "roomId": null,
@@ -2681,7 +2889,7 @@
       {
         "id": "AST-DB-BHB-F2",
         "assetCode": "AST-DB-BHB-F2",
-        "name": "Bhaskara Block floor 2 power panel",
+        "name": "Electronics Block 2 floor 2 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-BHB",
         "roomId": null,
@@ -2693,7 +2901,7 @@
       {
         "id": "AST-DB-BHB-F3",
         "assetCode": "AST-DB-BHB-F3",
-        "name": "Bhaskara Block floor 3 power panel",
+        "name": "Electronics Block 2 floor 3 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-BHB",
         "roomId": null,
@@ -2705,7 +2913,7 @@
       {
         "id": "AST-TR-RMB",
         "assetCode": "AST-TR-RMB",
-        "name": "Ramanujan Block transformer",
+        "name": "Academic Block 1 transformer",
         "category": "ELECTRICAL",
         "buildingId": "B-RMB",
         "roomId": null,
@@ -2717,7 +2925,7 @@
       {
         "id": "AST-SW-RMB",
         "assetCode": "AST-SW-RMB",
-        "name": "Ramanujan Block network switch",
+        "name": "Academic Block 1 network switch",
         "category": "NETWORK",
         "buildingId": "B-RMB",
         "roomId": null,
@@ -2729,7 +2937,7 @@
       {
         "id": "AST-DB-RMB-F1",
         "assetCode": "AST-DB-RMB-F1",
-        "name": "Ramanujan Block floor 1 power panel",
+        "name": "Academic Block 1 floor 1 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-RMB",
         "roomId": null,
@@ -2741,7 +2949,7 @@
       {
         "id": "AST-DB-RMB-F2",
         "assetCode": "AST-DB-RMB-F2",
-        "name": "Ramanujan Block floor 2 power panel",
+        "name": "Academic Block 1 floor 2 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-RMB",
         "roomId": null,
@@ -2753,7 +2961,7 @@
       {
         "id": "AST-DB-RMB-F3",
         "assetCode": "AST-DB-RMB-F3",
-        "name": "Ramanujan Block floor 3 power panel",
+        "name": "Academic Block 1 floor 3 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-RMB",
         "roomId": null,
@@ -2765,7 +2973,7 @@
       {
         "id": "AST-TR-RLB",
         "assetCode": "AST-TR-RLB",
-        "name": "Raman Research Labs transformer",
+        "name": "Electronics Block 1 transformer",
         "category": "ELECTRICAL",
         "buildingId": "B-RLB",
         "roomId": null,
@@ -2777,7 +2985,7 @@
       {
         "id": "AST-SW-RLB",
         "assetCode": "AST-SW-RLB",
-        "name": "Raman Research Labs network switch",
+        "name": "Electronics Block 1 network switch",
         "category": "NETWORK",
         "buildingId": "B-RLB",
         "roomId": null,
@@ -2789,7 +2997,7 @@
       {
         "id": "AST-DB-RLB-F1",
         "assetCode": "AST-DB-RLB-F1",
-        "name": "Raman Research Labs floor 1 power panel",
+        "name": "Electronics Block 1 floor 1 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-RLB",
         "roomId": null,
@@ -2801,7 +3009,7 @@
       {
         "id": "AST-DB-RLB-F2",
         "assetCode": "AST-DB-RLB-F2",
-        "name": "Raman Research Labs floor 2 power panel",
+        "name": "Electronics Block 1 floor 2 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-RLB",
         "roomId": null,
@@ -2813,7 +3021,7 @@
       {
         "id": "AST-TR-LIB",
         "assetCode": "AST-TR-LIB",
-        "name": "Central Library transformer",
+        "name": "Institute of Science & Technology transformer",
         "category": "ELECTRICAL",
         "buildingId": "B-LIB",
         "roomId": null,
@@ -2825,7 +3033,7 @@
       {
         "id": "AST-SW-LIB",
         "assetCode": "AST-SW-LIB",
-        "name": "Central Library network switch",
+        "name": "Institute of Science & Technology network switch",
         "category": "NETWORK",
         "buildingId": "B-LIB",
         "roomId": null,
@@ -2837,7 +3045,7 @@
       {
         "id": "AST-DB-LIB-F1",
         "assetCode": "AST-DB-LIB-F1",
-        "name": "Central Library floor 1 power panel",
+        "name": "Institute of Science & Technology floor 1 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-LIB",
         "roomId": null,
@@ -2849,7 +3057,7 @@
       {
         "id": "AST-DB-LIB-F2",
         "assetCode": "AST-DB-LIB-F2",
-        "name": "Central Library floor 2 power panel",
+        "name": "Institute of Science & Technology floor 2 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-LIB",
         "roomId": null,
@@ -2861,7 +3069,7 @@
       {
         "id": "AST-TR-ADM",
         "assetCode": "AST-TR-ADM",
-        "name": "Administration and Seminar Hall transformer",
+        "name": "New BMS Block transformer",
         "category": "ELECTRICAL",
         "buildingId": "B-ADM",
         "roomId": null,
@@ -2873,7 +3081,7 @@
       {
         "id": "AST-SW-ADM",
         "assetCode": "AST-SW-ADM",
-        "name": "Administration and Seminar Hall network switch",
+        "name": "New BMS Block network switch",
         "category": "NETWORK",
         "buildingId": "B-ADM",
         "roomId": null,
@@ -2885,7 +3093,7 @@
       {
         "id": "AST-DB-ADM-F1",
         "assetCode": "AST-DB-ADM-F1",
-        "name": "Administration and Seminar Hall floor 1 power panel",
+        "name": "New BMS Block floor 1 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-ADM",
         "roomId": null,
@@ -2897,7 +3105,7 @@
       {
         "id": "AST-DB-ADM-F2",
         "assetCode": "AST-DB-ADM-F2",
-        "name": "Administration and Seminar Hall floor 2 power panel",
+        "name": "New BMS Block floor 2 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-ADM",
         "roomId": null,
@@ -2909,7 +3117,7 @@
       {
         "id": "AST-TR-CAF",
         "assetCode": "AST-TR-CAF",
-        "name": "Cafeteria and Sports Pavilion transformer",
+        "name": "Workshop transformer",
         "category": "ELECTRICAL",
         "buildingId": "B-CAF",
         "roomId": null,
@@ -2921,7 +3129,7 @@
       {
         "id": "AST-SW-CAF",
         "assetCode": "AST-SW-CAF",
-        "name": "Cafeteria and Sports Pavilion network switch",
+        "name": "Workshop network switch",
         "category": "NETWORK",
         "buildingId": "B-CAF",
         "roomId": null,
@@ -2933,7 +3141,7 @@
       {
         "id": "AST-DB-CAF-F1",
         "assetCode": "AST-DB-CAF-F1",
-        "name": "Cafeteria and Sports Pavilion floor 1 power panel",
+        "name": "Workshop floor 1 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-CAF",
         "roomId": null,
@@ -2945,7 +3153,7 @@
       {
         "id": "AST-TR-KLH",
         "assetCode": "AST-TR-KLH",
-        "name": "Kalam Hostel transformer",
+        "name": "Boys Hostel transformer",
         "category": "ELECTRICAL",
         "buildingId": "B-KLH",
         "roomId": null,
@@ -2957,7 +3165,7 @@
       {
         "id": "AST-SW-KLH",
         "assetCode": "AST-SW-KLH",
-        "name": "Kalam Hostel network switch",
+        "name": "Boys Hostel network switch",
         "category": "NETWORK",
         "buildingId": "B-KLH",
         "roomId": null,
@@ -2969,7 +3177,7 @@
       {
         "id": "AST-DB-KLH-F1",
         "assetCode": "AST-DB-KLH-F1",
-        "name": "Kalam Hostel floor 1 power panel",
+        "name": "Boys Hostel floor 1 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-KLH",
         "roomId": null,
@@ -2981,7 +3189,7 @@
       {
         "id": "AST-DB-KLH-F2",
         "assetCode": "AST-DB-KLH-F2",
-        "name": "Kalam Hostel floor 2 power panel",
+        "name": "Boys Hostel floor 2 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-KLH",
         "roomId": null,
@@ -2993,7 +3201,7 @@
       {
         "id": "AST-DB-KLH-F3",
         "assetCode": "AST-DB-KLH-F3",
-        "name": "Kalam Hostel floor 3 power panel",
+        "name": "Boys Hostel floor 3 power panel",
         "category": "ELECTRICAL",
         "buildingId": "B-KLH",
         "roomId": null,

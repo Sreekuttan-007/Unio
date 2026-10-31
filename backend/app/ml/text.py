@@ -3,6 +3,7 @@
 import math
 import re
 from collections import Counter
+from itertools import pairwise
 
 _TOKEN = re.compile(r"[a-z]+|\d+")
 
@@ -17,7 +18,7 @@ def classifier_features(text: str) -> Counter[str]:
     features: Counter[str] = Counter()
     for word in words:
         features[f"w:{word}"] += 1
-    for first, second in zip(words, words[1:], strict=False):
+    for first, second in pairwise(words):
         features[f"b:{first} {second}"] += 1
     for word in words:
         if len(word) < 4 or word == "#":

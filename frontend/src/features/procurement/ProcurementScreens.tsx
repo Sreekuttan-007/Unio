@@ -125,7 +125,7 @@ function InvoiceReview({ invoice }: { invoice: Invoice }) {
 
       {/* Right Column: Invoice Details, Line Items Table, Decisions & Validation */}
       <div className="space-y-4">
-        <Card>
+        <Card className="min-w-0">
           <CardHeader
             title={`${invoice.supplier} · ${invoice.invoiceNumber}`}
             description={`Dated ${invoice.invoiceDate} · matched against ${invoice.purchaseOrderId}`}

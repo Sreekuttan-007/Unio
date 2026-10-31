@@ -77,12 +77,13 @@ class InventoryService:
 
     async def reserve(self, work_order_id: str, item_id: str, qty: int) -> str | None:
         """Holds qty from one store that has it free. Returns the reservation id, or None if no store has enough."""
+        reservation_id: str | None = None
         for _ in range(RESERVE_ATTEMPTS):
             balances = await self._db["inventory_balances"].find({"itemId": item_id}).to_list(length=20)
             balances.sort(key=lambda row: (-(row["onHand"] - row["reserved"]), row["_id"]))
             pick = next((row for row in balances if row["onHand"] - row["reserved"] >= qty), None)
             if pick is None:
-                return None
+                break
             # The version guard is what makes this safe: a concurrent reservation bumps it and this one retries.
             done = await self._db["inventory_balances"].update_one({"_id": pick["_id"], "version": pick.get("version", 0)}, {"$inc": {"reserved": qty, "version": 1}})
             if done.modified_count == 1:
@@ -90,8 +91,27 @@ class InventoryService:
                 await self._db["reservations"].insert_one(
                     {"_id": reservation_id, "workOrderId": work_order_id, "itemId": item_id, "balanceId": pick["_id"], "locationId": pick["locationId"], "qty": qty, "status": "ACTIVE", "createdAt": utcnow()}
                 )
-                return reservation_id
-        return None
+                break
+        await self._check_reorder(item_id)
+        return reservation_id
+
+    async def _check_reorder(self, item_id: str) -> None:
+        """Enqueues `inventory.low` once when free stock falls to or below the item's reorder point, and
+        clears the flag once it recovers, so the next drop below the line notifies again."""
+        item = await self._db["inventory_items"].find_one({"_id": item_id})
+        if item is None:
+            return
+        balances = await self._db["inventory_balances"].find({"itemId": item_id}).to_list(length=20)
+        available = sum(row["onHand"] - row["reserved"] for row in balances)
+        if available <= item["reorderThreshold"]:
+            # The filter on the flag itself is the CAS: only the request that actually flips it enqueues.
+            claimed = await self._db["inventory_items"].update_one({"_id": item_id, "lowStockAlertSent": {"$ne": True}}, {"$set": {"lowStockAlertSent": True}})
+            if claimed.modified_count == 1:
+                await self._outbox.enqueue(
+                    "inventory.low", {"itemId": item_id, "itemName": item["name"], "available": available, "threshold": item["reorderThreshold"], "roles": ["PROCUREMENT_APPROVER"]}
+                )
+        else:
+            await self._db["inventory_items"].update_one({"_id": item_id, "lowStockAlertSent": True}, {"$set": {"lowStockAlertSent": False}})
 
     async def request_parts(self, user: AuthUser, order: dict[str, Any], parts: list[dict[str, Any]]) -> dict[str, Any]:
         """A technician says what is missing. Free stock is reserved now; anything short raises a purchase request."""
@@ -134,11 +154,15 @@ class InventoryService:
 
     async def release_for_work_order(self, work_order_id: str, actor_id: str, actor_role: str) -> int:
         released = 0
+        freed_items: set[str] = set()
         async for reservation in self._db["reservations"].find({"workOrderId": work_order_id, "status": "ACTIVE"}):
             claimed = await self._db["reservations"].update_one({"_id": reservation["_id"], "status": "ACTIVE"}, {"$set": {"status": "RELEASED", "releasedAt": utcnow()}})
             if claimed.modified_count == 1:
                 await self._db["inventory_balances"].update_one({"_id": reservation["balanceId"]}, {"$inc": {"reserved": -reservation["qty"], "version": 1}})
+                freed_items.add(reservation["itemId"])
                 released += 1
+        for item_id in freed_items:
+            await self._check_reorder(item_id)
         if released:
             await self._audit.record(actor_id=actor_id, actor_role=actor_role, action="inventory.release", domain=AuditDomain.OPERATIONS, entity_type="WORK_ORDER", entity_id=work_order_id, after={"released": released})
         return released
@@ -147,6 +171,8 @@ class InventoryService:
 
     async def allocate(self, item_ids: list[str], actor_id: str, actor_role: str) -> list[str]:
         """Arrived stock goes to blocked work, most urgent first. Work whose parts are all reserved resumes."""
+        for item_id in set(item_ids):
+            await self._check_reorder(item_id)  # catches a receipt that lifts stock back above the line
         resumed: list[str] = []
         orders = await self._db["work_orders"].find({"status": "BLOCKED", "partRequirements": {"$elemMatch": {"state": "SHORT", "itemId": {"$in": item_ids}}}}).to_list(length=200)
         orders.sort(key=lambda row: (PRIORITY_RANK.get(row["priority"], 9), row["createdAt"], row["_id"]))

@@ -68,7 +68,7 @@ async def test_a_room_report_affects_exactly_that_room(world):
     body = (await world.call("FACILITIES_ADMIN", "GET", f"/api/v1/cascading/impact/{incident_id}")).json()
     assert body["incidentId"] == incident_id and body["totals"]["rooms"] == 1
     assert body["chain"][0]["kind"] == "Rooms" and body["chain"][0]["title"] == "ARB-204 reported"
-    assert body["affectedRegionIds"] == ["bld-arb"]
+    assert body["affectedRegionIds"] == ["EEC-MAIN"]
     stored = await world.db["incidents"].find_one({"_id": incident_id})
     assert stored["impactRoomIds"] == ["ARB-204"]  # bookings now avoid this room
 
@@ -82,7 +82,7 @@ async def test_a_transformer_fault_reaches_every_room_the_exam_and_its_students(
     snapshot = await world.services.cascade.compute(incident, now=ensure_utc(the_exam["startAt"]) - timedelta(hours=1))
     arb_rooms = {row["_id"] async for row in world.db["rooms"].find({"buildingId": "B-ARB"})}
     assert set(snapshot["roomIds"]) == arb_rooms and snapshot["totals"]["rooms"] == 24
-    assert snapshot["chain"][0] == {"id": "AST-TR-ARB", "depth": 0, "kind": "Fault", "title": "Aryabhata Block transformer (AST-TR-ARB)", "detail": f"Root of {incident_id}", "severity": "HIGH"}
+    assert snapshot["chain"][0] == {"id": "AST-TR-ARB", "depth": 0, "kind": "Fault", "title": "EEC Main Block transformer (AST-TR-ARB)", "detail": f"Root of {incident_id}", "severity": "HIGH"}
     exams = [row for row in snapshot["chain"] if row["kind"] == "Exam"]
     assert len(exams) == 1 and "CSE-3A" in exams[0]["title"] and exams[0]["detail"] == "58 students"
     assert snapshot["affectedSessions"][0]["kind"] == "EXAM" and snapshot["totals"]["exams"] == 1
@@ -129,6 +129,28 @@ async def test_creating_a_work_order_adds_it_to_the_chain(world):
 
 
 # ---- who sees what -------------------------------------------------------------------------------------------------
+
+
+async def test_a_transformer_fault_notifies_the_exams_students_and_lecturer_once(world):
+    incident_id = await socket_incident(world)
+    await world.call("FACILITIES_ADMIN", "POST", f"/api/v1/cascading/impact/{incident_id}/recompute", json={"rootAssetIds": ["AST-TR-ARB"]})
+    the_exam = await exam(world)
+    snapshot = await world.services.cascade.refresh(incident_id, now=ensure_utc(the_exam["startAt"]) - timedelta(hours=1))
+    recipients = set(snapshot["recipientUserIds"])
+    assert "U-STUDENT" in recipients  # a member of CSE-3A, whose exam this is
+
+    event = await world.db["outbox_events"].find_one({"eventType": "impact.changed"})
+    assert event is not None and set(event["payload"]["recipientIds"]) == recipients
+    await world.services.outbox.dispatch_due()
+    told = {row["userId"] async for row in world.db["notifications"].find({"eventType": "impact.changed"})}
+    assert told == recipients
+    assert "U-FACILITIES" not in told and "U-SYSADMIN" not in told  # nobody outside the affected classes
+
+    # A second refresh with the same chain adds nobody new, so nothing more is enqueued or sent.
+    await world.services.cascade.refresh(incident_id, now=ensure_utc(the_exam["startAt"]) - timedelta(hours=1))
+    assert await world.db["outbox_events"].count_documents({"eventType": "impact.changed"}) == 1
+    await world.services.outbox.dispatch_due()
+    assert await world.db["notifications"].count_documents({"eventType": "impact.changed"}) == len(recipients)
 
 
 async def test_academic_impact_is_limited_to_the_callers_classes(world):

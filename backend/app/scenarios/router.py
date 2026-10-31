@@ -5,8 +5,8 @@ from fastapi import Depends
 from app.core.access import GuardedRouter, require
 from app.core.authuser import AuthUser
 from app.core.permission import Permission as P
-from app.services import Services, get_services
 from app.scenarios.service import ScenarioService
+from app.services import Services, get_services
 
 router = GuardedRouter(prefix="/api/v1", tags=["admin"])
 

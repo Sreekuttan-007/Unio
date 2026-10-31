@@ -12,9 +12,32 @@ log = logging.getLogger("unio.seed")
 SEED_DIR = Path(__file__).resolve().parent.parent / "seed"
 LAKH_PAISE = 10_000_000  # one lakh rupees, in paise
 
+# D-CSE and D-ECE are the two departments campus data (rooms, groups, timetable) actually
+# reference, so their _id is unchanged from the original seed - only the display name changed,
+# to the real SRM Easwari Engineering College (EEC) department name. Every other academic
+# department below is real too (from EEC's AICTE mandatory disclosure) but is additive: nothing
+# in this app's generated campus data points at them yet. D-ELEC and D-NET are this app's own
+# fictional facilities-maintenance departments, not EEC academic ones, and are unchanged.
 DEPARTMENTS = (
-    {"_id": "D-CSE", "name": "Computer Science", "code": "CSE", "kind": "ACADEMIC"},
-    {"_id": "D-ECE", "name": "Electronics & Communication", "code": "ECE", "kind": "ACADEMIC"},
+    {"_id": "D-CSE", "name": "Computer Science and Engineering", "code": "CSE", "kind": "ACADEMIC"},
+    {"_id": "D-ECE", "name": "Electronics and Communication Engineering", "code": "ECE", "kind": "ACADEMIC"},
+    {"_id": "D-AUTO", "name": "Automobile Engineering", "code": "AUTO", "kind": "ACADEMIC"},
+    {"_id": "D-CIVIL", "name": "Civil Engineering", "code": "CIVIL", "kind": "ACADEMIC"},
+    {"_id": "D-EEE", "name": "Electrical and Electronics Engineering", "code": "EEE", "kind": "ACADEMIC"},
+    {"_id": "D-EIE", "name": "Electronics and Instrumentation Engineering", "code": "EIE", "kind": "ACADEMIC"},
+    {"_id": "D-IT", "name": "Information Technology", "code": "IT", "kind": "ACADEMIC"},
+    {"_id": "D-MECH", "name": "Mechanical Engineering", "code": "MECH", "kind": "ACADEMIC"},
+    {"_id": "D-AIDS", "name": "Artificial Intelligence and Data Science", "code": "AIDS", "kind": "ACADEMIC"},
+    {"_id": "D-BME", "name": "Biomedical Engineering", "code": "BME", "kind": "ACADEMIC"},
+    {"_id": "D-RAE", "name": "Robotics and Automation Engineering", "code": "RAE", "kind": "ACADEMIC"},
+    {"_id": "D-CYBER", "name": "CSE - Cyber Security", "code": "CYBER", "kind": "ACADEMIC"},
+    {"_id": "D-AIML", "name": "CSE - Artificial Intelligence and Machine Learning", "code": "AIML", "kind": "ACADEMIC"},
+    {"_id": "D-MBA", "name": "Master of Business Administration", "code": "MBA", "kind": "ACADEMIC"},
+    {"_id": "D-MCA", "name": "Master of Computer Applications", "code": "MCA", "kind": "ACADEMIC"},
+    {"_id": "D-CHEM", "name": "Chemistry", "code": "CHEM", "kind": "ACADEMIC"},
+    {"_id": "D-ENG", "name": "English", "code": "ENG", "kind": "ACADEMIC"},
+    {"_id": "D-MATH", "name": "Mathematics", "code": "MATH", "kind": "ACADEMIC"},
+    {"_id": "D-PHY", "name": "Physics", "code": "PHY", "kind": "ACADEMIC"},
     {"_id": "D-ELEC", "name": "Electrical Maintenance", "code": "ELEC", "kind": "FACILITY"},
     {"_id": "D-NET", "name": "Network Operations", "code": "NET", "kind": "FACILITY"},
 )
@@ -81,14 +104,14 @@ async def seed_roles(services: Services) -> None:
 
 async def seed_demo_data(services: Services) -> None:
     settings = services.settings
-    for department in DEPARTMENTS:
-        await _insert_if_missing(services.db["departments"], dict(department))
+    for dept_row in DEPARTMENTS:
+        await _insert_if_missing(services.db["departments"], dict(dept_row))
     # With no password configured, one-tap sign-in still works but password sign-in does not.
     password = settings.demo_user_password or secrets.token_urlsafe(24)
     password_hash = await services.passwords.hash(password)
     now = utcnow()
     for user_id, name, email, role, department, demo_chip, managed, limit in DEMO_USERS:
-        document = {
+        document: dict[str, Any] = {
             "_id": user_id,
             "name": name,
             "email": email,

@@ -4,6 +4,8 @@ import { cn } from './cn'
 
 export interface MapDecor {
   kind: 'road' | 'path' | 'green' | 'water' | 'gate'
+  /** An exact outline (real building/road footprints aren't always rectangles). When present, this draws instead of the x/y/w/h rect. */
+  d?: string
   x: number
   y: number
   w: number
@@ -11,10 +13,12 @@ export interface MapDecor {
   r?: number
 }
 
+export type MapShape = { type: 'rect'; x: number; y: number; w: number; h: number; r?: number } | { type: 'path'; d: string; x: number; y: number; w: number; h: number }
+
 export interface MapRegion {
   regionId: string
   label: string
-  shape: { type: 'rect'; x: number; y: number; w: number; h: number; r?: number }
+  shape: MapShape
 }
 
 export type RegionState = 'OPEN' | 'AFFECTED' | 'CLOSED' | 'MAINTENANCE'
@@ -51,11 +55,45 @@ const REGION_CLASS: Record<RegionState, string> = {
   MAINTENANCE: 'fill-info-soft stroke-info',
 }
 
+const DECOR_CLASS: Record<MapDecor['kind'], string> = {
+  green: 'fill-success-soft',
+  road: 'fill-surface-3',
+  path: 'fill-surface-2',
+  water: 'fill-info-soft',
+  gate: 'fill-accent',
+}
+
 const STATE_TEXT: Record<RegionState, string> = {
   OPEN: 'Open',
   AFFECTED: 'Affected',
   CLOSED: 'Closed',
   MAINTENANCE: 'Under maintenance',
+}
+
+const LABEL_SIZE = 27
+const CAPTION_SIZE = 19
+
+function wrapLabel(label: string, width: number): string[] {
+  const perLine = Math.max(6, Math.floor((width - 36) / (LABEL_SIZE * 0.56)))
+  const words = label.split(' ')
+  const lines: string[] = []
+  let current = ''
+  for (const word of words) {
+    if (current && `${current} ${word}`.length > perLine) {
+      lines.push(current)
+      current = word
+    } else {
+      current = current ? `${current} ${word}` : word
+    }
+  }
+  if (current) lines.push(current)
+  if (lines.length > 2) return [lines[0]!, `${lines.slice(1).join(' ').slice(0, perLine - 1)}...`]
+  return lines
+}
+
+function clip(text: string, width: number): string {
+  const perLine = Math.floor((width - 36) / (CAPTION_SIZE * 0.52))
+  return text.length > perLine ? `${text.slice(0, Math.max(3, perLine - 1))}...` : text
 }
 
 const STATE_GLYPH: Record<RegionState, string> = {
@@ -75,6 +113,98 @@ const MARKER_FILL = {
 const MIN_ZOOM = 0.8
 const MAX_ZOOM = 4
 const DRAG_THRESHOLD = 5
+
+interface DataDrivenMapLayerProps {
+  decor: MapDecor[]
+  regions: MapRegion[]
+  overlays: Record<string, RegionOverlay>
+  selectedId: string | null
+  markers: MapMarker[]
+  hatchId: string
+  onChoose: (regionId: string) => void
+  onRegionKey: (event: KeyboardEvent, regionId: string) => void
+}
+
+function DataDrivenMapLayer({ decor, regions, overlays, selectedId, markers, hatchId, onChoose, onRegionKey }: DataDrivenMapLayerProps) {
+  return (
+    <>
+      {decor.map((item, index) =>
+        item.d ? (
+          <path key={index} d={item.d} className={DECOR_CLASS[item.kind]} />
+        ) : (
+          <rect key={index} x={item.x} y={item.y} width={item.w} height={item.h} rx={item.r ?? 0} className={DECOR_CLASS[item.kind]} />
+        ),
+      )}
+
+      {regions.map((region) => {
+        const overlay = overlays[region.regionId] ?? { state: 'OPEN' as RegionState }
+        const { x, y, w, h } = region.shape
+        const r = region.shape.type === 'rect' ? region.shape.r : undefined
+        const selected = region.regionId === selectedId
+        const caption = overlay.caption ? `, ${overlay.caption}` : ''
+        const regionClass = cn(REGION_CLASS[overlay.state], selected && 'stroke-accent')
+        return (
+          <g
+            key={region.regionId}
+            role="button"
+            tabIndex={0}
+            aria-pressed={selected}
+            aria-label={`${region.label}, ${STATE_TEXT[overlay.state]}${caption}`}
+            data-testid={`region-${region.regionId}`}
+            data-state={overlay.state}
+            className="cursor-pointer outline-none focus-visible:[&>rect:first-child]:stroke-accent focus-visible:[&>path:first-child]:stroke-accent"
+            onClick={() => onChoose(region.regionId)}
+            onKeyDown={(event) => onRegionKey(event, region.regionId)}
+          >
+            {region.shape.type === 'path' ? (
+              <path d={region.shape.d} strokeWidth={selected ? 5 : 2} className={regionClass} />
+            ) : (
+              <rect x={x} y={y} width={w} height={h} rx={r ?? 10} strokeWidth={selected ? 5 : 2} className={regionClass} />
+            )}
+            {overlay.state === 'CLOSED' ? (
+              region.shape.type === 'path' ? (
+                <path d={region.shape.d} fill={`url(#${hatchId})`} pointerEvents="none" />
+              ) : (
+                <rect x={x} y={y} width={w} height={h} rx={r ?? 10} fill={`url(#${hatchId})`} pointerEvents="none" />
+              )
+            ) : null}
+            {wrapLabel(region.label, w).map((line, index) => (
+              <text key={index} x={x + 18} y={y + 38 + index * (LABEL_SIZE + 4)} fontSize={LABEL_SIZE} fontWeight={650} className="fill-ink" pointerEvents="none">
+                {line}
+              </text>
+            ))}
+            <text x={x + 18} y={y + 38 + wrapLabel(region.label, w).length * (LABEL_SIZE + 4) + 4} fontSize={CAPTION_SIZE} className="fill-muted" pointerEvents="none">
+              {clip(`${STATE_TEXT[overlay.state]}${overlay.caption ? ` · ${overlay.caption}` : ''}`, w)}
+            </text>
+            {overlay.state !== 'OPEN' ? (
+              <g pointerEvents="none">
+                <circle cx={x + w - 26} cy={y + 26} r={17} className="fill-surface stroke-ink" strokeWidth={2} />
+                <text x={x + w - 26} y={y + 33} fontSize={20} fontWeight={700} textAnchor="middle" className="fill-ink">
+                  {STATE_GLYPH[overlay.state]}
+                </text>
+              </g>
+            ) : null}
+            {overlay.badge ? (
+              <g pointerEvents="none">
+                <circle cx={x + w - 28} cy={y + h - 28} r={19} className="fill-danger" />
+                <text x={x + w - 28} y={y + h - 21} fontSize={21} fontWeight={700} textAnchor="middle" className="fill-accent-contrast">
+                  {overlay.badge}
+                </text>
+              </g>
+            ) : null}
+          </g>
+        )
+      })}
+
+      {markers.map((marker) => (
+        <g key={marker.id} data-testid={`marker-${marker.id}`}>
+          <title>{marker.label}</title>
+          <circle cx={marker.x} cy={marker.y} r={13} className={cn(MARKER_FILL[marker.tone], 'stroke-surface')} strokeWidth={3} />
+        </g>
+      ))}
+    </>
+  )
+}
 
 const BUILDING_CENTRES: Record<string, { x: number; y: number }> = {
   "BMS-12": {
@@ -254,6 +384,8 @@ interface View {
 
 export function CampusMap({
   viewBox = { w: 1600, h: 1195 },
+  decor,
+  regions,
   overlays = {},
   selectedId,
   onSelect,
@@ -402,6 +534,19 @@ export function CampusMap({
         </defs>
 
         <g transform={`translate(${view.x} ${view.y}) scale(${view.k})`}>
+          {regions !== undefined || decor !== undefined ? (
+            <DataDrivenMapLayer
+              decor={decor ?? []}
+              regions={regions ?? []}
+              overlays={overlays}
+              selectedId={selectedId}
+              markers={markers}
+              hatchId={hatchId}
+              onChoose={choose}
+              onRegionKey={onRegionKey}
+            />
+          ) : (
+            <>
           <rect className="bg" width="1600" height="1195"/>
 <rect width="1600" height="1195" fill={`url(#${gridId})`}/>
 
@@ -555,7 +700,9 @@ export function CampusMap({
                 <circle cx="0" cy="0" r="11" className={cn(MARKER_FILL[marker.tone], 'stroke-surface')} strokeWidth={3} />
               </g>
             ))}
-          </g>
+            </g>
+            </>
+          )}
         </g>
       </svg>
 

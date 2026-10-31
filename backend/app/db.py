@@ -37,3 +37,8 @@ async def ensure_indexes(db: Any) -> None:
     await db["goods_receipts"].create_index([("purchaseOrderId", 1)])
     await db["notifications"].create_index("dedupeKey", unique=True)
     await db["notifications"].create_index([("userId", 1), ("createdAt", -1)])
+    # Partial: an invoice extraction that couldn't read a supplier or number must not block every
+    # other invoice from uploading, since they'd all collide on the same two empty strings.
+    await db["invoices"].create_index(
+        [("supplier", 1), ("invoiceNumber", 1)], unique=True, partialFilterExpression={"supplier": {"$gt": ""}, "invoiceNumber": {"$gt": ""}}
+    )

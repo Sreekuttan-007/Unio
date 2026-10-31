@@ -237,7 +237,7 @@ class BookingService:
         await self.slots.release(booking_id)
         await self._audit.record_as(user, action="booking.cancel", domain=AuditDomain.OPERATIONS, entity_type="BOOKING", entity_id=booking_id, before={"status": current.value}, after={"status": target.value})
         await self._outbox.enqueue("booking.cancelled", {"bookingId": booking_id, "roomId": booking["roomId"], "recipientIds": sorted({booking["requesterId"], user.id})})
-        return await self.view(await self._db["bookings"].find_one({"_id": booking_id}), user)  # type: ignore[arg-type]
+        return await self.view(await self._db["bookings"].find_one({"_id": booking_id}), user)
 
     async def reschedule(
         self, user: AuthUser, booking_id: str, room_code: str | None, start: datetime, end: datetime, headcount: int | None,
@@ -273,14 +273,14 @@ class BookingService:
             before={"roomId": booking["roomId"], "startAt": ensure_utc(booking["startAt"]).isoformat()}, after={"roomId": room_id, "startAt": start.isoformat(), "endAt": end.isoformat()},
         )
         await self._outbox.enqueue("booking.rescheduled", {"bookingId": booking_id, "roomId": room_id, "recipientIds": sorted({booking["requesterId"], user.id})})
-        return await self.view(await self._db["bookings"].find_one({"_id": booking_id}), user)  # type: ignore[arg-type]
+        return await self.view(await self._db["bookings"].find_one({"_id": booking_id}), user)
 
     # ---- the timetable -----------------------------------------------------------------------------------------------
 
     async def _recipients(self, session: dict[str, Any]) -> list[str]:
         faculty = await self._db["faculty"].find_one({"_id": session["facultyId"]})
         group = await self._db["student_groups"].find_one({"_id": session["studentGroup"]})
-        people = [(faculty or {}).get("userId")] + list((group or {}).get("memberUserIds", []))
+        people = [(faculty or {}).get("userId"), *(group or {}).get("memberUserIds", [])]
         return sorted({person for person in people if person})
 
     async def move_session(

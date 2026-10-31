@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from fastapi import Depends
 
 from app.core.access import GuardedRouter, public
@@ -22,7 +23,7 @@ async def ping(services: Services = Depends(get_services)) -> Ping:
     try:
         await services.db.command("ping")
         database = "UP"
-    except Exception:  # noqa: BLE001 - any failure means the database is not reachable
+    except Exception:  # any failure means the database is not reachable
         database = "DOWN"
     return Ping(service="unio-backend", database=database, server_time=utcnow())
 

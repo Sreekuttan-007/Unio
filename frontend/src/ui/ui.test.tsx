@@ -1,7 +1,7 @@
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { BottomNav, LoginCard, NavIcon, SideNav, KNOWN_ICON_NAMES, type NavEntryView } from '@/ui'
+import { BottomNav, Dropzone, LoginCard, NavIcon, SideNav, KNOWN_ICON_NAMES, type NavEntryView } from '@/ui'
 
 const accounts = [
   { email: 'tech@unio.demo', name: 'Ravi Kumar', roleLabel: 'Technician', accent: 'amber' },
@@ -113,5 +113,42 @@ describe('NavIcon', () => {
   it('falls back instead of crashing on an unknown name', () => {
     const { container } = render(<NavIcon name="not-a-real-icon" />)
     expect(container.querySelector('svg')).toBeInTheDocument()
+  })
+})
+
+describe('Dropzone', () => {
+  const dataTransfer = (files: File[]) => ({ types: ['Files'], files, items: files.map((file) => ({ kind: 'file', type: file.type, getAsFile: () => file })) })
+
+  it('accepts a file picked through the input, same as before', async () => {
+    const onFiles = vi.fn()
+    render(<Dropzone label="Add a photo" accept="image/*" onFiles={onFiles} />)
+    const file = new File(['x'], 'photo.jpg', { type: 'image/jpeg' })
+    await userEvent.upload(screen.getByLabelText('Add a photo'), file)
+    expect(onFiles).toHaveBeenCalledWith([file])
+  })
+
+  it('shows drop feedback while a file is dragged over it, and accepts a dropped file', () => {
+    const onFiles = vi.fn()
+    render(<Dropzone label="Add a photo" accept="image/*" onFiles={onFiles} />)
+    // The drag handlers live on the visible <label>, not the sr-only <input> getByLabelText resolves to.
+    const zone = screen.getByText('Add a photo').closest('label')!
+    const file = new File(['x'], 'photo.jpg', { type: 'image/jpeg' })
+
+    fireEvent.dragEnter(zone, { dataTransfer: dataTransfer([file]) })
+    expect(screen.getByText('Drop it here')).toBeInTheDocument()
+
+    fireEvent.drop(zone, { dataTransfer: dataTransfer([file]) })
+    expect(onFiles).toHaveBeenCalledWith([file])
+    expect(screen.queryByText('Drop it here')).not.toBeInTheDocument()
+  })
+
+  it('does not call onFiles for a drag that leaves without dropping', () => {
+    const onFiles = vi.fn()
+    render(<Dropzone label="Add a photo" accept="image/*" onFiles={onFiles} />)
+    const zone = screen.getByText('Add a photo').closest('label')!
+    fireEvent.dragEnter(zone, { dataTransfer: dataTransfer([new File(['x'], 'photo.jpg')]) })
+    fireEvent.dragLeave(zone, { relatedTarget: document.body })
+    expect(screen.queryByText('Drop it here')).not.toBeInTheDocument()
+    expect(onFiles).not.toHaveBeenCalled()
   })
 })

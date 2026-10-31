@@ -98,9 +98,9 @@ class ScenarioService:
         return f"{incident_id} is a power fault on the ARB floor 2 panel; the CSE-3A exam is affected."
 
     async def _stage_b(self) -> str:
-        first = await self._incident("U-STUDENT", "Wi-Fi is down in Aryabhata Block, nothing loads")
-        await self._incident("U-FACULTY", "The Wi-Fi in Aryabhata Block is down, cannot take attendance")
-        await self._s.inbox.receive("hod.cse@unio.demo", "Wi-Fi outage in ARB", "The wifi in Aryabhata Block is not working on any floor.", message_id="<demo-b-1@unio.demo>", in_reply_to=None)
+        first = await self._incident("U-STUDENT", "Wi-Fi is down in the ARB building, nothing loads")
+        await self._incident("U-FACULTY", "The Wi-Fi in the ARB building is down, cannot take attendance")
+        await self._s.inbox.receive("hod.cse@unio.demo", "Wi-Fi outage in ARB", "The wifi in the ARB building is not working on any floor.", message_id="<demo-b-1@unio.demo>", in_reply_to=None)
         return f"Reports joined {first}; one email waits in the Intake Inbox."
 
     async def _stage_c(self) -> str:

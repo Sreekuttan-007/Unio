@@ -116,7 +116,7 @@ async def test_a_closed_room_is_blocked(world, state):
 async def test_a_room_in_a_closed_building_is_blocked(world):
     await world.db["buildings"].update_one({"_id": "B-ARB"}, {"$set": {"status": "CLOSED"}})
     result = await preview(world, "FACULTY", "BOOK_ROOM", book("ARB-204"))
-    assert result["findings"][0]["code"] == "ROOM_CLOSED" and "Aryabhata Block" in result["findings"][0]["message"]
+    assert result["findings"][0]["code"] == "ROOM_CLOSED" and "EEC Main Block" in result["findings"][0]["message"]
 
 
 async def test_headcount_above_capacity_is_blocked(world):
@@ -478,7 +478,7 @@ async def test_a_locked_rule_cannot_be_switched_off_and_still_runs_if_the_row_sa
 
 async def test_a_soft_rule_can_be_switched_off_and_the_change_is_audited(world):
     admin = await actor(world, "SYSTEM_ADMIN")
-    room, payload = await practical_in_classroom(world)
+    _room, payload = await practical_in_classroom(world)
     assert (await preview(world, "FACULTY", "BOOK_ROOM", payload))["decision"] == "WARN"
     await world.services.collisions.update_rule(admin, "ROOM-004", False, None)
     assert (await preview(world, "FACULTY", "BOOK_ROOM", payload))["decision"] == "ALLOW"
@@ -553,7 +553,7 @@ async def test_an_allowed_action_has_no_alternatives(world):
 async def test_blocked_and_warned_previews_are_recorded_and_clean_ones_are_not(world):
     await preview(world, "FACULTY", "BOOK_ROOM", book("ARB-204"))
     assert await world.db["collision_checks"].count_documents({}) == 0
-    room, payload = await practical_in_classroom(world)
+    _room, payload = await practical_in_classroom(world)
     shown = await preview(world, "FACULTY", "BOOK_ROOM", payload)
     stored = await world.db["collision_checks"].find_one({"_id": shown["checkId"]})
     assert stored["stage"] == "PREVIEW" and stored["decision"] == "WARN" and stored["actorId"] == "U-FACULTY" and stored["stateToken"] == shown["stateToken"]

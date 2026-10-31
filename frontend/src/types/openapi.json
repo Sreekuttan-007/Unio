@@ -1882,6 +1882,75 @@
         },
         "title": "VerifyBody",
         "type": "object"
+      },
+      "WebhookCreateBody": {
+        "properties": {
+          "events": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Events",
+            "type": "array"
+          },
+          "url": {
+            "maxLength": 500,
+            "minLength": 8,
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "events"
+        ],
+        "title": "WebhookCreateBody",
+        "type": "object"
+      },
+      "WebhookUpdateBody": {
+        "properties": {
+          "enabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enabled"
+          },
+          "events": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Events"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "minLength": 8,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "title": "WebhookUpdateBody",
+        "type": "object"
       }
     },
     "securitySchemes": {
@@ -2702,6 +2771,251 @@
         ],
         "summary": "Set User Status",
         "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/webhooks": {
+      "get": {
+        "operationId": "list_webhooks_api_v1_admin_webhooks_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response List Webhooks Api V1 Admin Webhooks Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Webhooks",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
+        ]
+      },
+      "post": {
+        "operationId": "create_webhook_api_v1_admin_webhooks_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookCreateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Create Webhook Api V1 Admin Webhooks Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Webhook",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/webhooks/{webhook_id}": {
+      "patch": {
+        "operationId": "update_webhook_api_v1_admin_webhooks__webhook_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "webhook_id",
+            "required": true,
+            "schema": {
+              "title": "Webhook Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookUpdateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Update Webhook Api V1 Admin Webhooks  Webhook Id  Patch"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Webhook",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/webhooks/{webhook_id}/deliveries": {
+      "get": {
+        "operationId": "webhook_deliveries_api_v1_admin_webhooks__webhook_id__deliveries_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "webhook_id",
+            "required": true,
+            "schema": {
+              "title": "Webhook Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Webhook Deliveries Api V1 Admin Webhooks  Webhook Id  Deliveries Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Webhook Deliveries",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
+          "admin"
+        ]
+      }
+    },
+    "/api/v1/admin/webhooks/{webhook_id}/deliveries/{event_id}/replay": {
+      "post": {
+        "operationId": "replay_webhook_delivery_api_v1_admin_webhooks__webhook_id__deliveries__event_id__replay_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "webhook_id",
+            "required": true,
+            "schema": {
+              "title": "Webhook Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "event_id",
+            "required": true,
+            "schema": {
+              "title": "Event Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Replay Webhook Delivery Api V1 Admin Webhooks  Webhook Id  Deliveries  Event Id  Replay Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Replay Webhook Delivery",
+        "tags": [
+          "notifications",
+          "sla",
+          "analytics",
           "admin"
         ]
       }

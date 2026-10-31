@@ -14,11 +14,11 @@ from the backend.
 import asyncio
 import json
 import sys
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 
 import httpx
-from datetime import date, timedelta
 from mongomock_motor import AsyncMongoMockClient
 
 from app.campus.seed import generate_campus

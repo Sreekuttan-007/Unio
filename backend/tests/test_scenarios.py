@@ -82,7 +82,7 @@ async def test_a_reset_is_refused_outside_demo_mode():
 
         try:
             await ScenarioService(services).reset(None, "A")  # type: ignore[arg-type]
-        except Exception as error:  # noqa: BLE001
+        except Exception as error:
             assert getattr(error, "code", "") == "NOT_A_DEMO"
         else:
             raise AssertionError("a reset must be refused outside demo mode")

@@ -12,6 +12,8 @@ import type {
   Invoice,
   ReportSummary,
   TechnicianCard,
+  Webhook,
+  WebhookDelivery,
   WorkOrder,
 } from '@/types/domain'
 import type { RegionOverlay } from '@/ui'
@@ -136,6 +138,10 @@ export function createDomainHandlers() {
   const receipts = buildReceipts(clock)
   const rules = buildRules()
   const integrations = buildIntegrations(clock)
+  const webhookDeliveries: (WebhookDelivery & { webhookId: string })[] = integrations.webhooks.flatMap((hook, index) => [
+    { webhookId: hook.id, eventId: `EVT-${hook.id}-1`, eventType: hook.events[0] ?? 'workorder.assigned', status: 200, error: null, at: clock.at(-6 - index) },
+    { webhookId: hook.id, eventId: `EVT-${hook.id}-2`, eventType: hook.events[1] ?? hook.events[0] ?? 'approval.approved', status: 200, error: null, at: clock.at(-1) },
+  ])
   const executedPlans = new Set<string>()
   const postedReceipts = new Map<string, { sku: string; qty: number }[]>()
   let reportSequence = 5600
@@ -188,10 +194,10 @@ export function createDomainHandlers() {
   const mapOverlays = (operational: boolean): Record<string, RegionOverlay> => {
     const open = (building: string) => incidents.filter((i) => i.buildingId === building && !['RESOLVED', 'CLOSED'].includes(i.status)).length
     return {
-      'bld-arb': { state: 'AFFECTED', badge: operational ? open('B-ARB') : undefined, caption: operational ? 'Power and Wi-Fi' : 'Some rooms closed' },
-      'bld-klh': { state: 'MAINTENANCE', badge: operational ? open('B-KLH') : undefined, caption: operational ? 'Plumbing repair' : 'Repair work' },
-      'bld-caf': { state: 'CLOSED', caption: 'Deep cleaning' },
-      'bld-rlb': { state: 'OPEN', badge: operational ? open('B-RLB') : undefined },
+      'EEC-MAIN': { state: 'AFFECTED', badge: operational ? open('B-ARB') : undefined, caption: operational ? 'Power and Wi-Fi' : 'Some rooms closed' },
+      'BOYS-8': { state: 'MAINTENANCE', badge: operational ? open('B-KLH') : undefined, caption: operational ? 'Plumbing repair' : 'Repair work' },
+      'WORKSHOP': { state: 'CLOSED', caption: 'Deep cleaning' },
+      'ELEC-1': { state: 'OPEN', badge: operational ? open('B-RLB') : undefined },
     }
   }
 
@@ -321,7 +327,7 @@ export function createDomainHandlers() {
     http.get(`${BASE}/admin/campus/summary`, () =>
       HttpResponse.json({
         totals: { buildings: campus.buildings.length, rooms: campus.rooms.length, assets: campus.buildings.reduce((sum, b) => sum + b.assetCount, 0) },
-        buildings: campus.buildings.map((building) => ({ id: building.id, code: building.code, name: building.name, kind: building.kind, floors: building.floors, rooms: campus.rooms.filter((room) => room.buildingId === building.id).length, assets: building.assetCount, regionBound: true, status: building.mapRegionId === 'bld-caf' ? 'CLOSED' : building.mapRegionId === 'bld-klh' ? 'MAINTENANCE' : 'OPEN' })),
+        buildings: campus.buildings.map((building) => ({ id: building.id, code: building.code, name: building.name, kind: building.kind, floors: building.floors, rooms: campus.rooms.filter((room) => room.buildingId === building.id).length, assets: building.assetCount, regionBound: true, status: building.mapRegionId === 'WORKSHOP' ? 'CLOSED' : building.mapRegionId === 'BOYS-8' ? 'MAINTENANCE' : 'OPEN' })),
       }),
     ),
 
@@ -680,6 +686,18 @@ export function createDomainHandlers() {
       approval.decisions.push({ by: USER_NAME[role] ?? role, decision: decision === 'APPROVE' ? 'APPROVED' : decision === 'REJECT' ? 'REJECTED' : 'CLARIFICATION REQUESTED', reason: reason ?? null, at: clock.at(0) })
       return HttpResponse.json({ ...approval, ...approvalActions(approval, role) })
     }),
+    http.post(`${BASE}/approvals/:id/answer`, async ({ params, request }) => {
+      const role = roleOf(request)
+      if (!role) return unauthenticated()
+      const approval = approvals.find((item) => item.id === params.id)
+      if (!approval) return problem(404, 'NOT_FOUND', 'Approval was not found.')
+      if (approval.requesterName !== USER_NAME[role]) return problem(404, 'NOT_FOUND', 'Approval was not found.')
+      if (approval.status !== 'NEEDS_CLARIFICATION') return problem(422, 'NOTHING_ASKED', 'Nobody has asked a question about this request.')
+      const { text } = (await request.json()) as { text: string }
+      approval.status = 'SUBMITTED'
+      approval.decisions.push({ by: USER_NAME[role] ?? role, decision: 'CLARIFIED', reason: text, at: clock.at(0) })
+      return HttpResponse.json({ ...approval, ...approvalActions(approval, role) })
+    }),
     http.get(`${BASE}/purchase-orders`, ({ request }) => (roleOf(request) ? HttpResponse.json(purchaseOrders) : unauthenticated())),
     http.get(`${BASE}/invoices`, ({ request }) => (roleOf(request) ? HttpResponse.json(invoices) : unauthenticated())),
     http.post(`${BASE}/invoices`, async ({ request }) => {
@@ -779,6 +797,35 @@ export function createDomainHandlers() {
       feature.enabled = enabled
       feature.mode = enabled ? 'AI' : 'RULES'
       return HttpResponse.json(integrations)
+    }),
+    http.get(`${BASE}/admin/webhooks`, ({ request }) => (roleOf(request) ? HttpResponse.json(integrations.webhooks) : unauthenticated())),
+    http.post(`${BASE}/admin/webhooks`, async ({ request }) => {
+      if (!roleOf(request)) return unauthenticated()
+      const body = (await request.json()) as { url: string; events: string[] }
+      const hook: Webhook = { id: `WH-${100 + integrations.webhooks.length}`, url: body.url, events: body.events, enabled: true, lastStatus: 0, lastAt: '' }
+      integrations.webhooks.push(hook)
+      return HttpResponse.json(hook, { status: 201 })
+    }),
+    http.patch(`${BASE}/admin/webhooks/:id`, async ({ params, request }) => {
+      if (!roleOf(request)) return unauthenticated()
+      const hook = integrations.webhooks.find((item) => item.id === params.id)
+      if (!hook) return problem(404, 'NOT_FOUND', 'Webhook was not found.')
+      const body = (await request.json()) as Partial<Pick<Webhook, 'url' | 'events' | 'enabled'>>
+      if (body.url !== undefined) hook.url = body.url
+      if (body.events !== undefined) hook.events = body.events
+      if (body.enabled !== undefined) hook.enabled = body.enabled
+      return HttpResponse.json(hook)
+    }),
+    http.get(`${BASE}/admin/webhooks/:id/deliveries`, ({ params, request }) => {
+      if (!roleOf(request)) return unauthenticated()
+      const rows = webhookDeliveries.filter((row) => row.webhookId === params.id).map(({ eventId, eventType, status, error, at }) => ({ eventId, eventType, status, error, at }))
+      return HttpResponse.json(rows)
+    }),
+    http.post(`${BASE}/admin/webhooks/:id/deliveries/:eventId/replay`, ({ params, request }) => {
+      if (!roleOf(request)) return unauthenticated()
+      const row = webhookDeliveries.find((item) => item.webhookId === params.id && item.eventId === params.eventId)
+      if (!row) return problem(404, 'NOT_FOUND', 'Delivery was not found.')
+      return HttpResponse.json({ status: row.status, message: "Sent again. The receiver's dedup key means a repeat changes nothing." })
     }),
     http.post(`${BASE}/admin/webhooks/:id/test`, async ({ params, request }) => {
       if (!roleOf(request)) return unauthenticated()

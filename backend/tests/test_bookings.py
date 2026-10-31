@@ -88,7 +88,7 @@ async def test_a_booking_is_confirmed_listed_and_audited(world):
     response = await book(world)
     assert response.status_code == 201, response.text
     body = response.json()
-    assert body["id"].startswith("BK-") and body["status"] == "CONFIRMED" and body["roomCode"] == "ARB-204" and body["building"] == "Aryabhata Block"
+    assert body["id"].startswith("BK-") and body["status"] == "CONFIRMED" and body["roomCode"] == "ARB-204" and body["building"] == "EEC Main Block"
     assert {a["key"] for a in body["availableActions"]} == {"booking.reschedule", "booking.cancel"}
     listed = (await world.call("FACULTY", "GET", "/api/v1/bookings")).json()
     assert listed["total"] == 1 and listed["items"][0]["id"] == body["id"]

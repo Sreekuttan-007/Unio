@@ -8,7 +8,7 @@ import random
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
 
-from app.campus.layout import BUILDING_REGIONS, build_map_document
+from app.campus.layout import REGION_ID_FOR_BUILDING, build_map_document
 from app.core.bulk import insert_missing
 from app.core.clock import utcnow
 
@@ -17,15 +17,19 @@ RANDOM_SEED = 20261030
 IST = timedelta(hours=5, minutes=30)
 
 # id, code, name, kind, department, floors, rooms per floor
+# Display names are the real SRM Easwari Engineering College (EEC) block each one is bound to on
+# the map (see app/campus/layout.py). _id and code are unchanged from the original fictional
+# campus on purpose: every room code, asset id and dependency edge is derived from `code`, and
+# this app's whole test suite references those codes as literal strings (ARB-204, AST-TR-ARB...).
 BUILDINGS: tuple[tuple[str, str, str, str, str | None, int, int], ...] = (
-    ("B-ARB", "ARB", "Aryabhata Block", "ACADEMIC", "D-CSE", 4, 6),
-    ("B-BHB", "BHB", "Bhaskara Block", "ACADEMIC", "D-ECE", 3, 6),
-    ("B-RMB", "RMB", "Ramanujan Block", "ACADEMIC", None, 3, 6),
-    ("B-RLB", "RLB", "Raman Research Labs", "LAB", "D-ECE", 2, 5),
-    ("B-LIB", "LIB", "Central Library", "LIBRARY", None, 2, 3),
-    ("B-ADM", "ADM", "Administration and Seminar Hall", "ADMIN", None, 2, 4),
-    ("B-CAF", "CAF", "Cafeteria and Sports Pavilion", "COMMON", None, 1, 3),
-    ("B-KLH", "KLH", "Kalam Hostel", "HOSTEL", None, 3, 6),
+    ("B-ARB", "ARB", "EEC Main Block", "ACADEMIC", "D-CSE", 4, 6),
+    ("B-BHB", "BHB", "Electronics Block 2", "ACADEMIC", "D-ECE", 3, 6),
+    ("B-RMB", "RMB", "Academic Block 1", "ACADEMIC", None, 3, 6),
+    ("B-RLB", "RLB", "Electronics Block 1", "LAB", "D-ECE", 2, 5),
+    ("B-LIB", "LIB", "Institute of Science & Technology", "LIBRARY", None, 2, 3),
+    ("B-ADM", "ADM", "New BMS Block", "ADMIN", None, 2, 4),
+    ("B-CAF", "CAF", "Workshop", "COMMON", None, 1, 3),
+    ("B-KLH", "KLH", "Boys Hostel", "HOSTEL", None, 3, 6),
 )
 
 # group id, department, size, home classroom
@@ -213,7 +217,7 @@ def generate_campus(anchor: date, campus_id: str = "CAMPUS-1") -> dict[str, list
                 "departmentId": department,
                 "campusId": campus_id,
                 "floors": floor_count,
-                "mapRegionId": f"bld-{code.lower()}",
+                "mapRegionId": REGION_ID_FOR_BUILDING[building_id],
                 "status": "OPEN",
                 "openingHours": "07:00-21:00" if kind != "HOSTEL" else "24 hours",
             }
@@ -263,11 +267,11 @@ def generate_campus(anchor: date, campus_id: str = "CAMPUS-1") -> dict[str, list
                 if "AIR_CONDITIONING" in features:
                     asset(f"AST-AC-{room_id}", f"Air conditioner {room_id}", "HVAC", building_id, room_id, 2)
 
-            for k, start in enumerate(range(0, len(floor_rooms), 2), start=1):
+            for k, slot in enumerate(range(0, len(floor_rooms), 2), start=1):
                 access_point = f"AST-AP-{code}-F{floor}-{k}"
-                asset(access_point, f"Wi-Fi access point {code} floor {floor} #{k}", "NETWORK", building_id, floor_rooms[start], 3)
+                asset(access_point, f"Wi-Fi access point {code} floor {floor} #{k}", "NETWORK", building_id, floor_rooms[slot], 3)
                 edge(floor_switch, "ASSET", access_point, "CONNECTS")
-                for room_id in floor_rooms[start : start + 2]:
+                for room_id in floor_rooms[slot : slot + 2]:
                     edge(access_point, "ROOM", room_id, "SERVES")
 
     # The campus core switch lives in the administration block and feeds every building switch.
@@ -510,4 +514,4 @@ async def seed_campus(db: Any, campus_id: str, anchor: date | None = None) -> bo
     return True
 
 
-REGION_IDS = tuple(region[0] for region in BUILDING_REGIONS)
+REGION_IDS = tuple(REGION_ID_FOR_BUILDING.values())
